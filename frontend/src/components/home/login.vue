@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="row">
-      <div class="container bg-light align-items-around m-0">
+      <div class="container  align-items-around m-0">
         <form>
           <div class="col-12 form-group">
             <label for="email">email:</label>
