@@ -1,6 +1,10 @@
 const express = require('express')
 const bodyparser = require('body-parser')
 const helmet = require('helmet')
+const dotenv = require('dotenv')
+dotenv.config()
+
+  
 
 
 const app = express()
