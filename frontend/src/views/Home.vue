@@ -1,16 +1,16 @@
 <template>
-  <div class="connexion-page">
+  <main class="connexion-page">
     <div class='container mt-5'>
       <div class='row'>
         <div class='col-12 col-md-6 col-lg-8'>
-          Bienvenue sur le réseau social de Groupomania
+          <h1>Bienvenue sur le réseau social de Groupomania</h1>
         </div>
-        <div class='col-12 col-md-6 col-lg-4 border p-0'>
+        <section class='col-12 col-md-6 col-lg-4 border p-0'>
           <connexionBlock></connexionBlock>
-        </div>
+        </section>
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>

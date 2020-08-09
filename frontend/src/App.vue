@@ -37,5 +37,10 @@ export default{
     }
   }
 }
-
+body{
+  min-height:100vh;
+}
+main{
+  height:100%;
+}
 </style>
