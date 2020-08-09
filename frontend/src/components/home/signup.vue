@@ -6,11 +6,11 @@
           <div class="row">
             <div class="col-6 form-group">
               <label for="name">Nom</label>
-              <input type="text" class="form-control" name="name" />
+              <input type="text" class="form-control" name="name" v-model='name'/>
             </div>
             <div class="col-6 form-group">
               <label for="first-name">Prénom</label>
-              <input type="text" class="form-control" name="first-name" />
+              <input type="text" class="form-control" name="first-name" v-model='firstName'/>
             </div>
           </div>
           <div class="col-12 form-group">
@@ -21,15 +21,16 @@
               required
               name="email"
               class="form-control"
+              v-model='email'
             />
           </div>
           <div class="col-12 form-group">
             <label for="password">Mot de passe :</label>
-            <input type="password" class="form-control" name="password" />
+            <input type="password" class="form-control" name="password" v-model='password' />
           </div>
           <div class="row">
             <div class="offset-md-3 mx-auto col-12 col-md-9">
-              <button type="submit" class="btn btn-primary">Inscription</button>
+              <button type="submit" class="btn btn-primary" @click.prevent='submitSignup()'>Inscription</button>
             </div>
           </div>
         </form>
@@ -41,7 +42,28 @@
 <script>
 export default {
   name: "signup",
-};
+  data: function () {
+    return {
+      email:'',
+      password:'',
+      name:'',
+      firstName:''
+    };
+  },
+  methods:{
+    submitSignup: function(){
+      const email = this.email;
+      const password = this.password;
+      const name = this.name;
+      const firstName = this.firstName;
+
+      const body = JSON.stringify({email, password, name, firstName})
+
+      fetch('http://localhost:3000/api/auth/login', {method:'POST', body:body})
+  
+    }
+  }
+}
 </script>
 
 <style>
