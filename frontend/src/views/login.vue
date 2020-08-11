@@ -17,7 +17,7 @@
 // @ is an alias to /src
 import connexionBlock from '@/components/home/connexion.vue'
 export default {
-  name: 'Home',
+  name: 'login',
   components:{
     connexionBlock
     
