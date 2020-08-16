@@ -2,9 +2,12 @@ const express = require('express')
 const bodyparser = require('body-parser')
 const helmet = require('helmet')
 const dotenv = require('dotenv')
+const bcrypt = require('bcrypt')
 dotenv.config()
 
-  
+const Sequelize = require('sequelize')
+const dbConfig = require('./db-config.js')
+
 
 
 const app = express()
