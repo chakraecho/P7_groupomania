@@ -17,3 +17,5 @@ const sequelize = new Sequelize(process.env.DB, process.env.DB_USERNAME, process
 
 
   sequelize.sync({ alter: true }).then(  console.log("All models were synchronized successfully.")).catch('error synchronizing')
+
+module.exports = sequelize

@@ -6,14 +6,13 @@ const bcrypt = require('bcrypt')
 dotenv.config()
 
 const Sequelize = require('sequelize')
-const dbConfig = require('./db-config.js')
+const dbConfig = require('./db-config')
 
-
+const userRoutes = require('./routes/users')
 
 const app = express()
 
 app.use(helmet())
-app.use(bodyparser)
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -21,6 +20,9 @@ app.use((req, res, next) => {
     next();
   });
 
+app.use(bodyparser.json())
+
+app.use('/api/users', userRoutes )
 
 
 

@@ -1,6 +1,6 @@
-const Sequelize = require("sequelize");
+const { Sequelize, DataTypes } = require('sequelize');
 
-const Post = sequelize.define('Post', {
+const Post = Sequelize.define('Post', {
     postId:{type: Sequelize.INTEGER.UNSIGNED, autoIncrement: true, primaryKey: true},
     content: {type: Sequelize.TEXT, allowNull: false},
     like:{type: Sequelize.INTEGER },
@@ -10,7 +10,7 @@ const Post = sequelize.define('Post', {
 
 exports.Post = Post;
 
-const Comments = sequelize.define('Comments',{
+const Comments = Sequelize.define('Comments',{
     content:{type: Sequelize.TEXT, allowNull:false}
 })
 

@@ -1,23 +1,22 @@
-const Sequelize = require("sequelize");
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('./../db-config')
 
-const Account = sequelize.define('Account', {
-    accountId: { type: Sequelize.INTEGER.UNSIGNED, autoIncrement: true, primaryKey: true },
-    email: { type: Sequelize.STRING(70), allowNull: false, unique: 'compositeIndex' },
-    password: {type: Sequelize.STRING(255), allowNull:false}
-});
-Account.belongsTo(User)
-exports.Account = Account;
+
 
 /*
  * USER
  */
 const User = sequelize.define('User', {
-    userId: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+    userId: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
     lastName: { type: Sequelize.STRING(50), allowNull: false, },
     firstName: { type: Sequelize.STRING(70), allowNull: false },
     imgUrl:{type:Sequelize.STRING(255)},
-    description:{type:Sequelize.TEXT}
+    description:{type:Sequelize.TEXT},
+    email: { type: Sequelize.STRING(70), allowNull: false, unique: true, validate:{isEmail: true} },
+    password: {type: Sequelize.STRING(255), allowNull:false}
 }
 );
-exports.User = User;
+
+
+module.exports = User
 
