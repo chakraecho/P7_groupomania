@@ -5,8 +5,15 @@ const Post = Sequelize.define('Post', {
     content: {type: Sequelize.TEXT, allowNull: false},
     like:{type: Sequelize.INTEGER },
     dislike:{type: Sequelize.INTEGER},
-    creation:{type:Sequelize.DATE, allowNull:false}
-});
+    creation:{type:Sequelize.DATE, allowNull:false},
+    
+},
+{
+    indexes: [
+      // add a FULLTEXT index
+      { type: 'FULLTEXT', name: 'content', fields: ['content'] }
+    ]
+  });
 
 exports.Post = Post;
 
