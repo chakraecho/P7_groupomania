@@ -50,7 +50,7 @@ app.use(bodyparser.json())
 
 
 //routes
-app.use('/api/users', userRoutes )
+app.use('/api/users/auth', userRoutes )
 
 
 
