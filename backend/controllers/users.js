@@ -37,6 +37,7 @@ exports.login = (req, res, next)=>{
     }
   })
   .then(user =>{
+    console.log(user)
     if(!user){
       return res.status(404).json({message:'utilisateur introuvable !'})
     }

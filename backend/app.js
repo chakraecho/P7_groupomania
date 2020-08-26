@@ -17,7 +17,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
 //routes files
 const userRoutes = require('./routes/users')
-
+const postRoutes = require('./routes/posts')
 
 //cookies session
 var myStore = new SequelizeStore({
@@ -51,7 +51,7 @@ app.use(bodyparser.json())
 
 //routes
 app.use('/api/users/auth', userRoutes )
-
+app.use('/api/post', postRoutes)
 
 
 module.exports = app
