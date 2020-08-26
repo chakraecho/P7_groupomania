@@ -2,6 +2,7 @@ const Users = require('./../models/users');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const {Op} = require('sequelize')
+const session = require('express-session')
 
 exports.signup = (req, res, next) => {
   console.log(req.body)
@@ -48,13 +49,12 @@ exports.login = (req, res, next)=>{
           return res.status(401).json({message:'mot de passe incorrect !'})
         }
         else if(result){
-          return res.status(200).json({
-            token:jwt.sign(
+          req.session.jwtToken = jwt.sign(
               {userId : user.email},
               process.env.JWT_KEY,
               {expiresIn:'24h'}
             )
-          })
+          return res.status(200).json({message:'connecté !'})
         }
       })
       .catch(error => res.status(500).json({ error }));
