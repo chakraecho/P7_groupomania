@@ -27,7 +27,6 @@ exports.signup = (req, res, next) => {
 }
 
 exports.login = (req, res, next)=>{
-  console.log(req.body)
   const email = req.body.email
   const password = req.body.password
   Users.findOne({
@@ -38,7 +37,6 @@ exports.login = (req, res, next)=>{
     }
   })
   .then(user =>{
-    console.log(user)
     if(!user){
       return res.status(404).json({message:'utilisateur introuvable !'})
     }
@@ -53,7 +51,7 @@ exports.login = (req, res, next)=>{
             {userId : user.email},
             process.env.JWT_KEY,
             {expiresIn:'24h'}
-          ),{httpOnly:true}).json({message:'connecté !'})
+          ),{httpOnly:true, secure:false}).json({message:'connecté !'})
         }
       })
       .catch(error => res.status(500).json({ error }));
