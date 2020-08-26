@@ -49,12 +49,11 @@ exports.login = (req, res, next)=>{
           return res.status(401).json({message:'mot de passe incorrect !'})
         }
         else if(result){
-          req.session.jwtToken = jwt.sign(
-              {userId : user.email},
-              process.env.JWT_KEY,
-              {expiresIn:'24h'}
-            )
-          return res.status(200).json({message:'connecté !'})
+          return res.status(200).cookie('aBigSecret', jwt.sign(
+            {userId : user.email},
+            process.env.JWT_KEY,
+            {expiresIn:'24h'}
+          ),{httpOnly:true}).json({message:'connecté !'})
         }
       })
       .catch(error => res.status(500).json({ error }));
