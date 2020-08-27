@@ -13,7 +13,8 @@ const User = sequelize.define('User', {
     description:{type:Sequelize.TEXT},
     email: { type: Sequelize.STRING(70), allowNull: false, unique: true, validate:{isEmail: true} },
     password: {type: Sequelize.STRING(255), allowNull:false},
-    role:{type:Sequelize.STRING(40)}
+    role:{type:Sequelize.STRING(40)},
+    bannerUrl:{type:Sequelize.STRING(255), defaultValue:`/uploads/default_banner.svg`}
 }
 );
 
