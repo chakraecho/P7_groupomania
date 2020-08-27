@@ -47,6 +47,7 @@ exports.login = (req, res, next)=>{
           return res.status(401).json({message:'mot de passe incorrect !'})
         }
         else if(result){
+          req.session.email = req.body.email
           return res.status(200).cookie('aBigSecret', jwt.sign(
             {userId : user.email},
             process.env.JWT_KEY,

@@ -16,23 +16,31 @@ const Post = sequelize.define('Post', {
       { type: 'FULLTEXT', name: 'content', fields: ['content'] }
     ]
   });
-Post.belongsTo(User, {foreignKey:'userId', allowNull: false})
-exports.Post = Post;
+
+
 
 const Comments = sequelize.define('Comments',{
     content:{type: Sequelize.TEXT, allowNull:false}
 })
 
-Comments.belongsTo(User, {foreignKey:'userId', allowNull: false})
-Comments.belongsTo(Post, {foreignKey:'postId', allowNull: false})
-
-exports.Comments = Comments
 
 const userLiked = sequelize.define('userLiked',{
     type:{type :Sequelize.BOOLEAN}
 })
 
+//associations
+
+Comments.belongsTo(User, {foreignKey:'userId', allowNull: false})
+Comments.belongsTo(Post, {foreignKey:'postId', allowNull: false})
+
+
+User.hasMany(Post, {foreignKey: 'userId'})
+Post.belongsTo(User, {foreignKey:'userId', allowNull: false})
+
+
 userLiked.belongsTo(User,{foreignKey:'userId', allowNull: false})
 userLiked.belongsTo(Post, {foreignKey:'postId', allowNull: false})
 
+exports.Comments = Comments
+exports.Post = Post;
 exports.userLiked = userLiked
