@@ -3,9 +3,11 @@ const router = express.Router();
 
 const userCtrl = require('./../controllers/users')
 
-router.post('/signup', userCtrl.signup)
-router.post('/login', userCtrl.login)
+router.post('/auth/signup', userCtrl.signup)
+router.post('/auth/login', userCtrl.login)
 
+router.post('/change/profil', userCtrl.changeImg)
+router.post('/change/banner', userCtrl.changeBanner)
 
 
 module.exports = router;

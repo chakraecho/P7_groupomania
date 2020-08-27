@@ -52,7 +52,7 @@ app.use(bodyparser.json())
 app.use(cookieParser())
 
 //routes
-app.use('/api/users/auth', userRoutes )
+app.use('/api/users', userRoutes )
 app.use('/api/post', postRoutes)
 
 
