@@ -9,11 +9,11 @@ const User = sequelize.define('User', {
     userId: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true},
     lastName: { type: Sequelize.STRING(50), allowNull: false, },
     firstName: { type: Sequelize.STRING(70), allowNull: false },
-    imgUrl:{type:Sequelize.STRING(255)},
+    imgUrl:{type:Sequelize.STRING(255), defaultValue: `/uploads/person.svg`},
     description:{type:Sequelize.TEXT},
     email: { type: Sequelize.STRING(70), allowNull: false, unique: true, validate:{isEmail: true} },
     password: {type: Sequelize.STRING(255), allowNull:false},
-    poste:{type:Sequelize.STRING(40)}
+    role:{type:Sequelize.STRING(40)}
 }
 );
 

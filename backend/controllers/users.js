@@ -59,3 +59,17 @@ exports.login = (req, res, next)=>{
     }
   })
 }
+
+exports.changeImg = (req,res,next)=>{
+  const token = req.cookies.aBigSecret
+  const decoded = jwt.compare(token, process.env.JWT_KEY)
+  req.file ? (
+    User.update({imgUrl:`${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`},{where: {email : decoded} })
+    .then(()=>{
+      res.status(200).json({message:'photo de profil modifié !'})
+    })
+    .catch(error => res.status(500).json({message:'erreur serveur, veuillez contacter un administrateur si le problème persiste.'}))
+  ):(
+    res.status(400).json({message:'image non upload !'})
+  )
+}

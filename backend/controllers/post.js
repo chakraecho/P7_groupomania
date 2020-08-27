@@ -39,7 +39,7 @@ exports.modifyOne = (req, res, next) => {
                     Post.Post.update({
                         content,
                         imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
-                    }))
+                    }, {where:{email : email}}))
                     .then(()=>{
                         const filename = post.imgUrl.split('/uploads/')[1];
                         fs.unlink(`/uploads/${filename}`)
@@ -56,7 +56,7 @@ exports.modifyOne = (req, res, next) => {
         })
 }
 
-exports.deleteOne = (req, res, next) => {
+exports.deleteOne = (req, res) => {
     Post.Post.destroy({ where: { postId: req.body.postId } })
         .then(() => res.status(200).json({ message: 'post supprimé !' }))
         .catch((error) => res.status(500).json({ error }))
