@@ -16,7 +16,7 @@ exports.getOne = (req, res, next) => {
 }
 
 exports.getAll = (req, res, next) => {
-    Post.Post.findAll()
+    Post.Post.findAll({ limit: 10, order: '"updatedAt" DESC' })
         .then(posts => {
             return res.status(200).json({ posts })
         })
