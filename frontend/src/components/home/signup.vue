@@ -56,10 +56,18 @@ export default {
       const password = this.password;
       const name = this.name;
       const firstName = this.firstName;
+     
+      const body = JSON.stringify({email, password, lastName, firstName})
+      console.log(body)
+      const headers = {
+        method:'POST',
+        body:body,
+        headers:{
+        'Content-Type': 'application/json'
+        }
+      }
 
-      const body = JSON.stringify({email, password, name, firstName})
-
-      fetch('http://localhost:3000/api/auth/login', {method:'POST', body:body})
+      fetch('http://localhost:3000/api/users/auth/signup', headers)
   
     }
   }
