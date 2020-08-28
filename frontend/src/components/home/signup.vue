@@ -66,7 +66,6 @@ export default {
         'Content-Type': 'application/json'
         }
       }
-
       fetch('http://localhost:3000/api/users/auth/signup', headers)
   
     }

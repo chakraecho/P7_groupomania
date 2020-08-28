@@ -22,6 +22,7 @@ export default new Vuex.Store({
       }
       else if(session === false){
         commit('authNo')
+        this.router.push()
       }
     }
   },

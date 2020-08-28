@@ -31,6 +31,7 @@
 
 <script>
 import {mapActions} from 'vuex'
+import {router} from './../../router/index.js'
 
 export default {
   name: "login",
@@ -55,6 +56,7 @@ export default {
       .then(res=>{
         if(res.status === 200){
           this.handleAuth(true)
+          router.push("/home")
         }
         else if(res.status >= 400){
           this.handleAuth(false)
