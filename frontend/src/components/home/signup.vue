@@ -54,7 +54,7 @@ export default {
     submitSignup: function(){
       const email = this.email;
       const password = this.password;
-      const name = this.name;
+      const lastName = this.name;
       const firstName = this.firstName;
      
       const body = JSON.stringify({email, password, lastName, firstName})
