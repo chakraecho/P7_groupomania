@@ -1,19 +1,19 @@
 <template>
-    <nav id="nav" class='navbar p-0 bg-dark navbar-dark'>
+    <header id="header" class='navbar p-0 bg-dark navbar-dark'>
         <router-link to='/' class='navbar-brand'>
           <img src='./../assets/logo/icon-left-font-monochrome-white.png' width='150' alt='logo de groupomania' class="ml-2">
         </router-link>
-    </nav>
+    </header>
 </template>
 
 <script>
 export default {
-    name:'navbar'
+    name:'header'
 }
 </script>
 
 <style lang="scss">
-    nav{
+    #header{
         height:10vh;
     }
 </style>
