@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import {router} from './../../router/index'
+
 export default {
   name: "signup",
   data: function () {
@@ -67,7 +69,26 @@ export default {
         }
       }
       fetch('http://localhost:3000/api/users/auth/signup', headers)
-    
+      .then(() => {
+        const login = JSON.stringify({ email, password });
+        fetch("http://localhost:3000/api/users/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: login,
+          credentials: 'include',
+        })
+        .then(res=>{
+          if(res.status === 200){
+            console.log(this)
+            this.$store.dispatch('handleAuth', true)
+            router.push("/home")
+          }
+          else if(res.status >= 400){
+            this.$store.dispatch('handleAuth', false)
+          }
+        })
+      .catch(error => console.log(error))
+      })
     }
   }
 }
