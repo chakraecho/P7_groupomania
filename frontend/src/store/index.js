@@ -5,7 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isAuth: false
+    isAuth: false,
+    myProfilUrl: '',
+    myProfilAlt:''
   },
   mutations: {
     authYes(state){
