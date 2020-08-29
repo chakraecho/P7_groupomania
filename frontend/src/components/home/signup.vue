@@ -67,7 +67,7 @@ export default {
         }
       }
       fetch('http://localhost:3000/api/users/auth/signup', headers)
-  
+    
     }
   }
 }

@@ -55,11 +55,12 @@ export default {
       })
       .then(res=>{
         if(res.status === 200){
-          this.handleAuth(true)
+          console.log(this)
+          this.$store.dispatch('handleAuth', true)
           router.push("/home")
         }
         else if(res.status >= 400){
-          this.handleAuth(false)
+          this.$store.dispatch('handleAuth', false)
         }
       })
       .catch(error => console.log(error))
