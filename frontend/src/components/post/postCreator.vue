@@ -1,6 +1,6 @@
 <template>
-  <div class="container p-1 col-11 col-md-8 col-lg-6">
-    <div class="row justify-content-around">
+  <div class=" border-rounded border p-1 col-11 col-md-8 col-lg-6 offset-md-1 offset-lg-2">
+    <div class="row align-items-center justify-content-around">
       <div class="wrapper col-3 col-md-2 col-lg-1">
         <img :src="myProfilUrl" :alt="myProfilAlt" class="w-100" />
       </div>

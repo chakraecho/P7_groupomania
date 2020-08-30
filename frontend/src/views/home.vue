@@ -1,11 +1,11 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-6 col-md-4 col-lg-3">
-        <navbar />
-      </div>
-      <div class='col'>
+        <navbar class="col-6 col-md-3 col-lg-2 d-flex flex-column justify-content-around position-sticky border-right" />
+      <div class='col-12 col-md-8 col-lg-10 pl-0 '>
+          <div class='col border-bottom p-2'>
             <postCreator />
+          </div>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <nav class="container-fluid d-flex flex-column justify-content-around">
+  <nav>
     <div class="row">
       <router-link to="/mon-compte" class="navbar-boutton text-center">Mon compte</router-link>
     </div>
