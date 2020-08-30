@@ -2,7 +2,7 @@
   <div class=" border-rounded border p-1 col-11 col-md-8 col-lg-6 offset-md-1 offset-lg-2">
     <div class="row align-items-center justify-content-around">
       <div class="wrapper col-3 col-md-2 col-lg-1">
-        <img :src="myProfilUrl" :alt="myProfilAlt" class="w-100" />
+        <img :src="profilImgUrl" :alt="'photo de profil de' + getFullName" class="w-100" />
       </div>
       <input type="text" class="form-control col-6 col-md-8 col-lg-9" />
       <div class="col-2 col-md-1 wrapper-img-button">
@@ -13,8 +13,18 @@
 </template>
 
 <script>
+import {mapState, mapGetters} from 'vuex'
+
 export default {
   name: "postCreator",
+  data:function(){
+    return{
+    }
+  },
+  computed:{
+    ...mapState('profil',['profilImgUrl']),
+    ...mapGetters('profil',['getFullName'])
+  }
 };
 </script>
 

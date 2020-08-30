@@ -11,8 +11,8 @@ const profil = {
       getFullName:(state)=>{
         return state.firstName+' '+state.lastName
       },
-      profilAlt:()=>{
-        return 'Photo de profil de '+this.getFullName
+      profilAlt:(getters)=>{
+        return 'Photo de profil de '+ getters.getFullName
       }
     },
     mutations:{

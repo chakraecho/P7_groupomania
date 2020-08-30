@@ -10,7 +10,7 @@
             </div>
             <div class="col-6 form-group">
               <label for="first-name">Prénom</label>
-              <input type="text" class="form-control" name="first-name" v-model="firstName" />
+              <input type="text" class="form-control" name="first-name" v-model="first_Name" />
             </div>
           </div>
           <div class="col-12 form-group">
@@ -54,7 +54,7 @@ export default {
       email: "",
       password: "",
       name: "",
-      firstName: "",
+      first_Name: "",
       ...mapState(["lastName", "firstName", "profilUrl", "bannerUrl"]),
     };
   },

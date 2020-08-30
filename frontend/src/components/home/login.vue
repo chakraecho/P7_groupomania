@@ -63,9 +63,11 @@ export default {
                 lastName: response.lastName,
                 bannerUrl: response.bannerUrl,
                 profilImgUrl: response.profilImgUrl,
-              });
-              this.$store.dispatch("handleAuth", true);
-              router.push("/home");
+              }).then(()=>{
+                this.$store.dispatch("handleAuth", true);
+                router.push("/home");
+              })
+
             });
           } else if (res.status >= 400) {
             this.$store.dispatch("handleAuth", false);
