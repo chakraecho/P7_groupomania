@@ -6,11 +6,11 @@
           <div class="row">
             <div class="col-6 form-group">
               <label for="name">Nom</label>
-              <input type="text" class="form-control" name="name" v-model='name'/>
+              <input type="text" class="form-control" name="name" v-model="name" />
             </div>
             <div class="col-6 form-group">
               <label for="first-name">Prénom</label>
-              <input type="text" class="form-control" name="first-name" v-model='firstName'/>
+              <input type="text" class="form-control" name="first-name" v-model="firstName" />
             </div>
           </div>
           <div class="col-12 form-group">
@@ -21,16 +21,20 @@
               required
               name="email"
               class="form-control"
-              v-model='email'
+              v-model="email"
             />
           </div>
           <div class="col-12 form-group">
             <label for="password">Mot de passe :</label>
-            <input type="password" class="form-control" name="password" v-model='password' />
+            <input type="password" class="form-control" name="password" v-model="password" />
           </div>
           <div class="row">
             <div class="offset-md-3 mx-auto col-12 col-md-9">
-              <button type="submit" class="btn btn-primary" @click.prevent='submitSignup()'>Inscription</button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                @click.prevent="submitSignup()"
+              >Inscription</button>
             </div>
           </div>
         </form>
@@ -40,58 +44,64 @@
 </template>
 
 <script>
-import {router} from './../../router/index'
+import { router } from "./../../router/index";
+import { mapState } from "vuex";
 
 export default {
   name: "signup",
   data: function () {
     return {
-      email:'',
-      password:'',
-      name:'',
-      firstName:''
+      email: "",
+      password: "",
+      name: "",
+      firstName: "",
+      ...mapState(["lastName", "firstName", "profilUrl", "bannerUrl"]),
     };
   },
-  methods:{
-    submitSignup: function(){
+  methods: {
+    submitSignup: function () {
       const email = this.email;
       const password = this.password;
       const lastName = this.name;
       const firstName = this.firstName;
-     
-      const body = JSON.stringify({email, password, lastName, firstName})
-      console.log(body)
+
+      const body = JSON.stringify({ email, password, lastName, firstName });
+      console.log(body);
       const headers = {
-        method:'POST',
-        body:body,
-        headers:{
-        'Content-Type': 'application/json'
-        }
-      }
-      fetch('http://localhost:3000/api/users/auth/signup', headers)
-      .then(() => {
+        method: "POST",
+        body: body,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      fetch("http://localhost:3000/api/users/auth/signup", headers).then(() => {
         const login = JSON.stringify({ email, password });
         fetch("http://localhost:3000/api/users/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: login,
-          credentials: 'include',
+          credentials: "include",
         })
-        .then(res=>{
-          if(res.status === 200){
-            console.log(this)
-            this.$store.dispatch('handleAuth', true)
-            router.push("/home")
-          }
-          else if(res.status >= 400){
-            this.$store.dispatch('handleAuth', false)
-          }
-        })
-      .catch(error => console.log(error))
-      })
-    }
-  }
-}
+          .then((res) => {
+            if (res.status === 200) {
+              this.$store.dispatch("profil/atLogin", {
+                firstName: res.firstName,
+                lastName: res.lastName,
+                bannerUrl: res.bannerUrl,
+                profilImgUrl: res.profilImgUrl,
+              });
+
+              this.$store.dispatch("handleAuth", true);
+              router.push("/home");
+            } else if (res.status >= 400) {
+              this.$store.dispatch("handleAuth", false);
+            }
+          })
+          .catch((error) => console.log(error));
+      });
+    },
+  },
+};
 </script>
 
 <style>

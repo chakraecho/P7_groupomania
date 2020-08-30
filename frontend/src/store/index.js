@@ -1,13 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import profil from './profil.js'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isAuth: false,
-    myProfilUrl: '',
-    myProfilAlt:''
+    isAuth: false
   },
   mutations: {
     authYes(state){
@@ -15,7 +13,7 @@ export default new Vuex.Store({
     },
     authNo(state){
       state.isAuth = false
-    }
+    },
   },
   actions: {
     handleAuth({commit}, session){
@@ -28,6 +26,10 @@ export default new Vuex.Store({
       }
     }
   },
+
   modules: {
+    profil
   }
 })
+
+

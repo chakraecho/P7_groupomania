@@ -30,8 +30,9 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex'
-import {router} from './../../router/index.js'
+import { mapActions } from "vuex";
+import { router } from "./../../router/index.js";
+import { mapState } from "vuex";
 
 export default {
   name: "login",
@@ -39,10 +40,11 @@ export default {
     return {
       email: "",
       password: "",
+      ...mapState(["lastName", "firstName", "profilUrl", "bannerUrl"]),
     };
   },
   methods: {
-    ...mapActions['handleAuth'],
+    ...mapActions["handleAuth"],
     submitLogin: function () {
       const email = this.email;
       const password = this.password;
@@ -51,22 +53,26 @@ export default {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: body,
-        credentials: 'include',
+        credentials: "include",
       })
-      .then(res=>{
-        if(res.status === 200){
-          console.log(this)
-          this.$store.dispatch('handleAuth', true)
-          router.push("/home")
-        }
-        else if(res.status >= 400){
-          this.$store.dispatch('handleAuth', false)
-        }
-      })
-      .catch(error => console.log(error))
-      ;
+        .then((res) => {
+          if (res.status === 200) {
+            res.json().then((response) => {
+              this.$store.dispatch("profil/atLogin", {
+                firstName: response.firstName,
+                lastName: response.lastName,
+                bannerUrl: response.bannerUrl,
+                profilImgUrl: response.profilImgUrl,
+              });
+              this.$store.dispatch("handleAuth", true);
+              router.push("/home");
+            });
+          } else if (res.status >= 400) {
+            this.$store.dispatch("handleAuth", false);
+          }
+        })
+        .catch((error) => console.log(error));
     },
-    
   },
 };
 </script>
