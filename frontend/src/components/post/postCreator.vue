@@ -1,5 +1,5 @@
 <template>
-  <div class="col-11 col-md-8 col-lg-6">
+  <div class="container p-1 col-11 col-md-8 col-lg-6">
     <div class="row justify-content-around">
       <div class="wrapper col-3 col-md-2 col-lg-1">
         <img :src="myProfilUrl" :alt="myProfilAlt" class="w-100" />

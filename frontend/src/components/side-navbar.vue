@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid d-flex flex-column justify-content-around">
+  <nav class="container-fluid d-flex flex-column justify-content-around">
     <div class="row">
       <router-link to="/mon-compte" class="navbar-boutton text-center">Mon compte</router-link>
     </div>
@@ -15,7 +15,7 @@
     <div class="row">
       <router-link to="/" class="navbar-boutton text-center">A propos</router-link>
     </div>
-  </div>
+  </nav>
 </template>
 
 <script>
@@ -25,4 +25,8 @@ export default {
 </script>
 
 <style>
+nav{
+    position:fixed;
+    height: 90vh;
+}
 </style>
