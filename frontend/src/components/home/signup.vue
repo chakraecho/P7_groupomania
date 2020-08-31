@@ -92,7 +92,7 @@ export default {
               });
 
               this.$store.dispatch("handleAuth", true);
-              router.push("/home");
+              router.push("/");
             } else if (res.status >= 400) {
               this.$store.dispatch("handleAuth", false);
             }

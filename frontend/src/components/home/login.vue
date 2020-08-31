@@ -65,7 +65,7 @@ export default {
                 profilImgUrl: response.profilImgUrl,
               }).then(()=>{
                 this.$store.dispatch("handleAuth", true);
-                router.push("/home");
+                router.push("/");
               })
 
             });
