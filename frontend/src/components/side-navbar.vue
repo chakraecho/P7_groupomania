@@ -1,20 +1,10 @@
 <template>
   <nav>
-    <div class="row">
       <router-link to="/mon-compte" class="navbar-boutton text-center">Mon compte</router-link>
-    </div>
-    <div class="row">
       <router-link to="/notifications" class="navbar-boutton text-center">Notifications</router-link>
-    </div>
-    <div class="row">
       <router-link to="/groupes" class="navbar-boutton text-center">Groupes</router-link>
-    </div>
-    <div class="row">
       <button class="navbar-boutton text-center">Déconnexion</button>
-    </div>
-    <div class="row">
       <router-link to="/" class="navbar-boutton text-center">A propos</router-link>
-    </div>
   </nav>
 </template>
 
@@ -28,5 +18,9 @@ export default {
 nav{
     position:fixed;
     height: 90vh;
+}
+.navbar-boutton{
+    width:100%;
+    padding:1em;
 }
 </style>

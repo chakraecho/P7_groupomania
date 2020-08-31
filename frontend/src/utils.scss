@@ -1,2 +1,8 @@
 $red:#D7263D;
 $blue:#449DD1;
+
+@mixin navbutton-hover{
+    &:hover{
+        opacity: 0.7;
+    }
+}
