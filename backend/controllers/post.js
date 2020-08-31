@@ -26,7 +26,7 @@ exports.getAll = (req, res, next) => {
 exports.modifyOne = (req, res, next) => {
     const token = req.session.aBigSecret
     const decoded = jwt.verify(token, process.env.JWT_KEY);
-    const postId = req.body.postId
+    const postId = req.params.id
     const id = req.session.email
     const content = req.body.content
     Post.Post.findOne({ where: { postId: postId }, include: [{ model: User }] })
@@ -57,7 +57,8 @@ exports.modifyOne = (req, res, next) => {
 }
 
 exports.deleteOne = (req, res) => {
-    Post.Post.destroy({ where: { postId: req.body.postId } })
+    const postId = req.params.id
+    Post.Post.destroy({ where: { postId: postId } })
         .then(() => res.status(200).json({ message: 'post supprimé !' }))
         .catch((error) => res.status(500).json({ error }))
 }

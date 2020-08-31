@@ -2,7 +2,8 @@ const Users = require('./../models/users');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const {Op} = require('sequelize')
-const session = require('express-session')
+const session = require('express-session');
+const User = require('./../models/users');
 
 exports.signup = (req, res) => {
   console.log(req.body)
@@ -48,7 +49,7 @@ exports.login = (req, res, next)=>{
         }
         else if(result){
           const account = user.dataValues
-          req.session.email = req.body.email
+          req.session.email = email
           return res.status(200).cookie('aBigSecret', jwt.sign(
             {userId : account.email},
             process.env.JWT_KEY,
@@ -67,8 +68,37 @@ exports.login = (req, res, next)=>{
 }
 
 exports.verify = (req,res,next)=>{
+  console.log(req.session)
   if(req.session.email){
-    return res.status(200).json({message:'authentifié !'})
+    const email = req.session.email
+    Users.findOne({
+      where:{
+        email:{
+          [Op.eq]: email
+        }
+      }
+    })
+    .then(user =>{
+      if(!user){
+        return res.status(404).json({message:'utilisateur introuvable !'})
+      }
+      else if(user){
+            const account = user.dataValues
+            console.log(req.session)
+            console.log(user.dataValues)
+            return res.status(200).cookie('aBigSecret', jwt.sign(
+              {userId : account.email},
+              process.env.JWT_KEY,
+              {expiresIn:'24h'}
+            ),{httpOnly:true, secure:false}).json({
+              firstName: account.firstName,
+              lastName:account.lastName,
+              profilImgUrl:account.profilImgUrl,
+              bannerUrl:account.bannerUrl
+            })
+        .catch(error => res.status(500).json({ error }));
+      }
+    })
   }
   else if(!req.session.email){
     return res.status(401).json({message:'non authentifié !'})
