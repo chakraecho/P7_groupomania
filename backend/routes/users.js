@@ -5,6 +5,7 @@ const userCtrl = require('./../controllers/users')
 
 router.post('/auth/signup', userCtrl.signup)
 router.post('/auth/login', userCtrl.login)
+router.post('/auth/verify', userCtrl.verify)
 
 router.post('/change/profil', userCtrl.changeImg)
 router.post('/change/banner', userCtrl.changeBanner)

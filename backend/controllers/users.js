@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const {Op} = require('sequelize')
 const session = require('express-session')
 
-exports.signup = (req, res, next) => {
+exports.signup = (req, res) => {
   console.log(req.body)
   const email = req.body.email;
   const password = req.body.password;
@@ -47,17 +47,32 @@ exports.login = (req, res, next)=>{
           return res.status(401).json({message:'mot de passe incorrect !'})
         }
         else if(result){
+          const account = user.dataValues
           req.session.email = req.body.email
           return res.status(200).cookie('aBigSecret', jwt.sign(
-            {userId : user.email},
+            {userId : account.email},
             process.env.JWT_KEY,
             {expiresIn:'24h'}
-          ),{httpOnly:true, secure:false}).json({message:'connecté !'})
+          ),{httpOnly:true, secure:false}).json({
+            firstName: account.firstName,
+            lastName:account.lastName,
+            profilImgUrl:account.profilImgUrl,
+            bannerUrl:account.bannerUrl
+          })
         }
       })
       .catch(error => res.status(500).json({ error }));
     }
   })
+}
+
+exports.verify = (req,res,next)=>{
+  if(req.session.email){
+    return res.status(200).json({message:'authentifié !'})
+  }
+  else if(!req.session.email){
+    return res.status(401).json({message:'non authentifié !'})
+  }
 }
 
 exports.changeImg = (req,res,next)=>{

@@ -3,6 +3,7 @@ const bodyparser = require('body-parser')
 const helmet = require('helmet')
 const dotenv = require('dotenv')
 const cookieParser = require('cookie-parser')
+const path = require('path');
 
 dotenv.config()
 
@@ -51,6 +52,8 @@ app.use((req, res, next) => {
 app.use(bodyparser.json())
 app.use(cookieParser())
 
+//serve static files
+app.use('/assets', express.static(path.join(__dirname, '/assets')));
 //routes
 app.use('/api/users', userRoutes )
 app.use('/api/post', postRoutes)
