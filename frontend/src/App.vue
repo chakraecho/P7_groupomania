@@ -1,16 +1,20 @@
 <template>
   <div id="app">
     <headerComponent />
-    <router-view/>
+    <router-view id='view'/>
+    <div class='filter' id='filter' v-if='hasFocus'></div>
   </div>
 </template>
 <script>
 import headerComponent from '@/components/header.vue'
+import {mapState} from 'vuex'
+
 export default{
   components:{
     headerComponent,
   },
   computed:{
+    ...mapState(['hasFocus'])
   },
   methods:{
   },
@@ -20,7 +24,9 @@ export default{
 }
 </script>
 <style lang="scss">
-
+#view{
+  position:relative;
+}
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

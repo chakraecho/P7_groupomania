@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import home from '../views/home.vue'
+import {store} from './../store/index'
 
 Vue.use(VueRouter)
 
@@ -32,14 +33,25 @@ export const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(store)
   if(to.name==='login'){
     fetch('http://localhost:3000/api/users/auth/verify', {
       method: 'post',
       credentials: 'include'
     })
-      .then(response => {
-        if (response.status === 200) {
-            next({ path: '/' })
+      .then(res => {
+        if (res.status === 200) {
+          res.json().then((response) => {
+            store.dispatch("profil/atLogin", {
+              firstName: response.firstName,
+              lastName: response.lastName,
+              bannerUrl: response.bannerUrl,
+              profilImgUrl: response.profilImgUrl,
+            }).then(()=>{
+              store.dispatch("handleAuth", true);
+              next({path:"/"})
+            })
+          });
         }
         else {
           next()
@@ -55,9 +67,19 @@ router.beforeEach((to, from, next) => {
       method: 'post',
       credentials: 'include'
     })
-      .then(response => {
-        if (response.status === 200) {
-            next()
+      .then(res => {
+        if (res.status === 200) {
+          res.json().then((response) => {
+            store.dispatch("profil/atLogin", {
+              firstName: response.firstName,
+              lastName: response.lastName,
+              bannerUrl: response.bannerUrl,
+              profilImgUrl: response.profilImgUrl,
+            }).then(()=>{
+              store.dispatch("handleAuth", true);
+              next()
+            })
+          });
         }
         else {
           next({ path: '/login' })
