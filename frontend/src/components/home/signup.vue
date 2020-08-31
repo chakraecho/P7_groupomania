@@ -82,21 +82,24 @@ export default {
           body: login,
           credentials: "include",
         })
-          .then((res) => {
-            if (res.status === 200) {
+        .then((res) => {
+          if (res.status === 200) {
+            res.json().then((response) => {
               this.$store.dispatch("profil/atLogin", {
-                firstName: res.firstName,
-                lastName: res.lastName,
-                bannerUrl: res.bannerUrl,
-                profilImgUrl: res.profilImgUrl,
-              });
+                firstName: response.firstName,
+                lastName: response.lastName,
+                bannerUrl: response.bannerUrl,
+                profilImgUrl: response.profilImgUrl,
+              }).then(()=>{
+                this.$store.dispatch("handleAuth", true);
+                router.push("/");
+              })
 
-              this.$store.dispatch("handleAuth", true);
-              router.push("/");
-            } else if (res.status >= 400) {
-              this.$store.dispatch("handleAuth", false);
-            }
-          })
+            });
+          } else if (res.status >= 400) {
+            this.$store.dispatch("handleAuth", false);
+          }
+        })
           .catch((error) => console.log(error));
       });
     },

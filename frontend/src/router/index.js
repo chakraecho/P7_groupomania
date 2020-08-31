@@ -47,6 +47,9 @@ router.beforeEach((to, from, next) => {
   
       })
   }
+  else if( from.name === 'login'){
+    next()
+  }
   else{
     fetch('http://localhost:3000/api/users/auth/verify', {
       method: 'post',
@@ -59,7 +62,6 @@ router.beforeEach((to, from, next) => {
         else {
           next({ path: '/login' })
         }
-  
       })
   }
 

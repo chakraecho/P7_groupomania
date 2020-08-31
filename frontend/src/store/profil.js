@@ -31,7 +31,8 @@ const profil = {
       atLogin({commit},{firstName, lastName, bannerUrl, profilImgUrl}){
         commit('pushName', {firstName:firstName,lastName:lastName});
         commit('pushBanner', {bannerUrl:bannerUrl});
-        commit('pushProfilImgUrl',{profilImgUrl: profilImgUrl})
+        commit('pushProfilImgUrl',{profilImgUrl: profilImgUrl});
+        commit('handleAuth', true)
       }
     }
   }
