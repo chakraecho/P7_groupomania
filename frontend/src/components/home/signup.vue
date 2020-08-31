@@ -63,7 +63,7 @@ export default {
       const email = this.email;
       const password = this.password;
       const lastName = this.name;
-      const firstName = this.firstName;
+      const firstName = this.first_Name;
 
       const body = JSON.stringify({ email, password, lastName, firstName });
       console.log(body);

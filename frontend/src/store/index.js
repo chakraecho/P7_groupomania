@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import profil from './profil.js'
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     isAuth: false
   },
@@ -22,7 +22,6 @@ export default new Vuex.Store({
       }
       else if(session === false){
         commit('authNo')
-        this.router.push()
       }
     }
   },
@@ -33,3 +32,4 @@ export default new Vuex.Store({
 })
 
 
+export default store
