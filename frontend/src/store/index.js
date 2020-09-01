@@ -31,8 +31,8 @@ export const store = new Vuex.Store({
         commit('authNo')
       }
     },
-    handleFocus({commit}){
-      if(this.state.hasFocus === true){
+    handleFocus({commit},status){
+      if(status === true){
         commit('outFocus')
       }
       else{

@@ -12,8 +12,8 @@
         type="text"
         class="form-control col-6 col-md-8 col-lg-9"
         placeholder="Comment allez vous aujourd'hui ?"
-        @focusin='focusIn()'
-        @foxusOut='focusOut()'
+        @focusin.native="handleFocus(false)"
+        @focusout.native="handleFocus(true)"
       />
       <div class="col-2 col-md-1 wrapper-img-button">
         <img src="./../../assets/componentImg/add_img.svg" alt="ajouter une image" class="w-100" />
@@ -28,25 +28,15 @@ import { mapState, mapGetters, mapActions } from "vuex";
 export default {
   name: "postCreator",
   data: function () {
-    return {
-    };
+    return {};
   },
   computed: {
     ...mapState("profil", ["profilImgUrl"]),
     ...mapGetters("profil", ["getFullName"]),
   },
   methods: {
-    ...mapActions(['handleFocus']),
-    focusIn(){
-      this.handleFocus()
-    },
-    focusOut(){
-      this.handleFocus()
-    }
-      },
-  mounted: function () {
-
-  },
+    ...mapActions(["handleFocus"]),
+  }
 };
 </script>
 
