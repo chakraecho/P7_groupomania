@@ -1,30 +1,30 @@
 const {Post, Comments, userLiked} = require('./post')
 const User = require('./users')
 const noctification = require('./noctification.js')
-const {group, groupMembers} = require('./group')
+const {groups, groupMembers} = require('./group')
 const department = require('./department')
 
 //associations
 
-Comments.belongsTo(User, {foreignKey:'userId', allowNull: false})
-Comments.belongsTo(User, {foreignKey:'postId', allowNull: false})
+Comments.belongsTo(User, {as:'userId', allowNull: false})
+Comments.belongsTo(Post, {as:'postId', allowNull: false})
 
 
-Post.belongsTo(User, {foreignKey:'userId', allowNull: false})
+Post.belongsTo(User, {as:'userId', allowNull: false})
 
 
-userLiked.belongsTo(User,{foreignKey:'userId', allowNull: false})
-userLiked.belongsTo(Post, {foreignKey:'postId', allowNull: false})
+userLiked.belongsTo(User,{ allowNull: false,foreignKey:'userId'})
+userLiked.belongsTo(Post, {allowNull: false,foreignKey:'postId'})
 
-noctification.belongsTo(User, {foreignKey: 'from', allowNull: false})
-noctification.belongsTo(User, {foreignKey: 'to', allowNull: false})
+noctification.belongsTo(User, {as: 'from'})
+noctification.belongsTo(User, {as: 'to'})
 
 
-group.belongsTo(User, {foreignKey:'userId', allowNull: false, name:'admin'})
-groupMembers.belongsTo(User,{foreignKey:'userId', allowNull:false})
-groupMembers.belongsTo(group,{foreignKey:'groupId', allowNull:false})
+groups.belongsTo(User, {foreignKey:'userId', allowNull: false, as:'admin'})
+groupMembers.belongsTo(User,{as:'userId', allowNull:false})
+groupMembers.belongsTo(groups,{as:'groupId', allowNull:false})
 
-group.hasMany(groupMembers)
+groups.hasMany(groups)
 User.hasMany(Post)
 User.hasMany(groupMembers)
 User.hasMany(noctification)
