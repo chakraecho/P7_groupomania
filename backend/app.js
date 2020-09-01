@@ -14,6 +14,8 @@ const app = express()
 const Sequelize = require('sequelize')
 const dbConfig = require('./db-config')
 
+const association = require('./models/associations')
+
 //cookies session modules
 const session = require('express-session')
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
@@ -30,8 +32,12 @@ app.use(
   session({
     secret: "a key that is ultra secret and should not be given to others",
     store: myStore,
-    resave: false,
-    rolling:true
+    resave: true,
+    rolling:true,
+    maxAge: 1000* 60 * 60 *24 * 365,
+    cookie:{
+      expires: 1000*60*60*24*7
+    }
   })
 );
  

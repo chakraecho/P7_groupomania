@@ -28,18 +28,7 @@ const userLiked = sequelize.define('userLiked',{
     type:{type :Sequelize.BOOLEAN}
 })
 
-//associations
 
-Comments.belongsTo(User, {foreignKey:'userId', allowNull: false})
-Comments.belongsTo(Post, {foreignKey:'postId', allowNull: false})
-
-
-User.hasMany(Post, {foreignKey: 'userId'})
-Post.belongsTo(User, {foreignKey:'userId', allowNull: false})
-
-
-userLiked.belongsTo(User,{foreignKey:'userId', allowNull: false})
-userLiked.belongsTo(Post, {foreignKey:'postId', allowNull: false})
 
 exports.Comments = Comments
 exports.Post = Post;
