@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import profil from './profil.js'
-import post from './post'
+import post from './post.js'
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
