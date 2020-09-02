@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import profil from './profil.js'
+import post from './post'
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
@@ -42,7 +43,8 @@ export const store = new Vuex.Store({
   },
 
   modules: {
-    profil
+    profil,
+    post
   }
 })
 
