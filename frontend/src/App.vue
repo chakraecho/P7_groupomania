@@ -24,6 +24,7 @@ export default{
 }
 </script>
 <style lang="scss">
+
 #view{
   position:relative;
 }

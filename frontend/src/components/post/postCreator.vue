@@ -41,7 +41,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./../../utils.scss";
+$red:#D7263D;
+$blue:#449DD1;
 .wrapper {
   &-img-button {
     border: $red;

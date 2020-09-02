@@ -31,7 +31,7 @@
 
 <script>
 export default {
-    name:post,
+    
     props:{
         name:String,
         date:String,
@@ -56,7 +56,8 @@ export default {
 </script>
 
 <style lang='scss'>
-@import './../../../utils';
+$red:#D7263D;
+$blue:#449DD1;
     .unselected{
         background-color: $blue;
     }

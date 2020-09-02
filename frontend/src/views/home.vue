@@ -9,6 +9,11 @@
           <postCreator />
         </div>
       </div>
+      <div class="container">
+        <template v-for="post in posts">
+          <post name="this.getFullName" date="post.date" like="post.like" :key="post" />
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -16,15 +21,21 @@
 <script>
 import navbar from "@/components/side-navbar.vue";
 import postCreator from "@/components/post/postCreator";
+import post from "./../components/post/post";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     navbar,
     postCreator,
+    post,
   },
   mounted: function () {
     console.log(this);
-    this.getAllPost()
+    this.getAllPost();
+  },
+  computed: {
+    ...mapGetters("profil", ["getFullName"]),
   },
   methods: {
     getAllPost: function () {
@@ -34,22 +45,22 @@ export default {
       })
         .then((res) =>
           res.json().then((response) => {
-            return this.post = response
+            return (this.posts = response);
           })
         )
         .catch((error) => {
-          return console.log(error)
+          return console.log(error);
         });
     },
   },
 
   data() {
     return {
-      post: {},
+      posts: {},
     };
   },
 };
 </script>
 
-<style>
+<style lang='scss'>
 </style>
