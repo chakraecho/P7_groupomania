@@ -1,12 +1,11 @@
 const Users = require('./../models/users');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const {Op} = require('sequelize')
+const { Op } = require('sequelize')
 const session = require('express-session');
 const User = require('./../models/users');
 
 exports.signup = (req, res) => {
-  console.log(req.body)
   const email = req.body.email;
   const password = req.body.password;
   const lastName = req.body.lastName;
@@ -27,108 +26,107 @@ exports.signup = (req, res) => {
     })
 }
 
-exports.login = (req, res, next)=>{
+exports.login = (req, res, next) => {
   const email = req.body.email
   const password = req.body.password
   Users.findOne({
-    where:{
-      email:{
-        [Op.eq]:email
+    where: {
+      email: {
+        [Op.eq]: email
       }
     }
   })
-  .then(user =>{
-    if(!user){
-      return res.status(404).json({message:'utilisateur introuvable !'})
-    }
-    else if(user){
-      bcrypt.compare(password, user.password)
-      .then(result =>{
-        if(!result ){
-          return res.status(401).json({message:'mot de passe incorrect !'})
-        }
-        else if(result){
-          const account = user.dataValues
-          req.session.email = email
-          return res.status(200).cookie('aBigSecret', jwt.sign(
-            {userId : account.email},
-            process.env.JWT_KEY,
-            {expiresIn:'24h'}
-          ),{httpOnly:true, secure:false}).json({
-            firstName: account.firstName,
-            lastName:account.lastName,
-            profilImgUrl:account.profilImgUrl,
-            bannerUrl:account.bannerUrl
+    .then(user => {
+      if (!user) {
+        return res.status(404).json({ message: 'utilisateur introuvable !' })
+      }
+      else if (user) {
+        bcrypt.compare(password, user.password)
+          .then(result => {
+            if (!result) {
+              return res.status(401).json({ message: 'mot de passe incorrect !' })
+            }
+            else if (result) {
+              const account = user.dataValues
+              req.session.email = email
+              return res.status(200).cookie('aBigSecret', jwt.sign(
+                { userId: account.email },
+                process.env.JWT_KEY,
+                { expiresIn: '24h' }
+              ), { httpOnly: true, secure: false }).json({
+                firstName: account.firstName,
+                lastName: account.lastName,
+                profilImgUrl: account.profilImgUrl,
+                bannerUrl: account.bannerUrl
+              })
+            }
           })
-        }
-      })
-      .catch(error => res.status(500).json({ error }));
-    }
-  })
+          .catch(error => res.status(500).json({ error }));
+      }
+    })
 }
 
-exports.verify = (req,res,next)=>{
-  console.log(req.session)
-  if(req.session.email){
+exports.verify = (req, res, next) => {
+  if (req.session.email) {
     const email = req.session.email
     Users.findOne({
-      where:{
-        email:{
+      where: {
+        email: {
           [Op.eq]: email
         }
       }
     })
-    .then(user =>{
-      if(!user){
-        return res.status(404).json({message:'utilisateur introuvable !'})
-      }
-      else if(user){
-            const account = user.dataValues
-            console.log(req.session)
-            console.log(user.dataValues)
-            return res.status(200).cookie('aBigSecret', jwt.sign(
-              {userId : account.email},
-              process.env.JWT_KEY,
-              {expiresIn:'24h'}
-            ),{httpOnly:true, secure:false}).json({
-              firstName: account.firstName,
-              lastName:account.lastName,
-              profilImgUrl:account.profilImgUrl,
-              bannerUrl:account.bannerUrl
-            })
-        .catch(error => res.status(500).json({ error }));
-      }
-    })
+      .then(user => {
+        if (!user) {
+          return res.status(404).json({ message: 'utilisateur introuvable !' })
+        }
+        else if (user) {
+          const account = user.dataValues
+          console.log(req.session)
+          console.log(user.dataValues)
+          return res.status(200).cookie('aBigSecret', jwt.sign(
+            { userId: account.email },
+            process.env.JWT_KEY,
+            { expiresIn: '24h' }
+          ), { httpOnly: true, secure: false }).json({
+            firstName: account.firstName,
+            lastName: account.lastName,
+            profilImgUrl: account.profilImgUrl,
+            bannerUrl: account.bannerUrl
+          })
+
+        }
+      })
   }
-  else if(!req.session.email){
-    return res.status(401).json({message:'non authentifié !'})
+  else if (!req.session.email) {
+    return res.status(401).json({ message: 'non authentifié !' })
   }
 }
 
-exports.changeImg = (req,res,next)=>{
+exports.changeImg = (req, res, next) => {
   const token = req.cookies.aBigSecret
   const decoded = jwt.compare(token, process.env.JWT_KEY)
   req.file ? (
-    User.update({imgUrl:`${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`},{where: {email : decoded} })
-    .then(()=>{
-      res.status(200).json({message:'photo de profil modifié !'})
-    })
-    .catch(error => res.status(500).json({message:'erreur serveur, veuillez contacter un administrateur si le problème persiste.'}))
-  ):(
-    res.status(400).json({message:'image non upload !'})
-  )
+    User.update({ imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` }, { where: { email: decoded } })
+      .then(() => {
+        res.status(200).json({ message: 'photo de profil modifié !' })
+      })
+      .catch(error => res.status(500).json({ message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.' }))
+  ) : (
+      res.status(400).json({ message: 'image non upload !' })
+    )
 }
 
-exports.changeBanner = (req, res)=>{
+exports.changeBanner = (req, res) => {
   const token = req.cookies.aBigSecret
   const decoded = jwt.compare(token, process.env.JWT_KEY)
   req.file ? (
-    User.update({bannerUrl:`${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`},{where: {email : decoded} })
-    .then(()=>{
-      res.status(200).json({message:'image de bannière modifié !'})
-    })
-    .catch(error => res.status(500).json({message:'erreur serveur, veuillez contacter un administrateur si le problème persiste.'}))
-  ):(
-    res.status(400).json({message:'image non upload !'})
-  )
+    User.update({ bannerUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` }, { where: { email: decoded } })
+      .then(() => {
+        res.status(200).json({ message: 'image de bannière modifié !' })
+      })
+      .catch(error => res.status(500).json({ message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.' }))
+  ) : (
+      res.status(400).json({ message: 'image non upload !' })
+    )
 }

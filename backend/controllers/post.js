@@ -16,8 +16,10 @@ exports.getOne = (req, res, next) => {
 }
 
 exports.getAll = (req, res, next) => {
+    console.log('ROUTE ENTRE POUR LA GET ALL')
     Post.Post.findAll({ limit: 10, order: '"updatedAt" DESC' })
         .then(posts => {
+            console.log(posts)
             return res.status(200).json({ posts })
         })
         .catch(error => res.status(404).json({ error }))
