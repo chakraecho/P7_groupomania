@@ -24,7 +24,7 @@ groups.belongsTo(User, {foreignKey:'userId', allowNull: false, as:'admin'})
 groupMembers.belongsTo(User,{as:'userId', allowNull:false})
 groupMembers.belongsTo(groups,{as:'groupId', allowNull:false})
 
-groups.hasMany(groups)
+groups.hasMany(groupMembers)
 User.hasMany(Post)
 User.hasMany(groupMembers)
 User.hasMany(noctification)
