@@ -11,7 +11,7 @@
       </div>
       <div class="container">
         <template v-for="post in posts">
-          <post name="this.getFullName" date="post.date" like="post.like" :key="post" />
+          <post name="this.getFullName" date="post.date" like="post.like" :key="post" content='post.content'/>
         </template>
       </div>
     </div>

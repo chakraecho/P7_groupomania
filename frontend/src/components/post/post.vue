@@ -1,6 +1,6 @@
 <template>
   <section>
-      <div class='container col-10 col-md-10 col-lg-8 post-rounded'>
+      <div class='container rounded border border-secondary col-10 col-md-10 col-lg-8 post-rounded'>
           <div class='row justify-content-between' :class="this.state ? 'selected' : 'unselected'">
               <div class='col'>
                   <p>{{name}}</p>
@@ -10,19 +10,19 @@
               </div>
           </div>
           <div class='row'>
-              <p>{{content}}</p>
+              <p class='text-center'>{{content}}</p>
               <div class='container'>
                 <slot></slot>
               </div>
           </div>
           <div class='row ' :class="this.state ? 'selected' : 'unselected'">
-              <div class='likes col'>
-                  <p>-</p>
-                  <p>{{likes}}</p>
-                  <p>+</p>
+              <div class='likes pl-5 row col'>
+                  <p class='m-0'>-</p>
+                  <p class='m-0'>{{likes}}</p>
+                  <p class='m-0'>+</p>
               </div>
               <div class='col'>
-                  <p>Commentaires</p>
+                  <p class='m-0'>Commentaires</p>
               </div>
           </div>
       </div>
@@ -36,6 +36,7 @@ export default {
         name:String,
         date:String,
         likes:Number,
+        content: String
     },
     data: function(){
         return {
