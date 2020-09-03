@@ -8,12 +8,16 @@
         <div class="col border-bottom p-2">
           <postCreator />
         </div>
-      </div>
-      <div class="container">
+        <div class="container">
         <template v-if='postPresence' >
           <post v-for="post in posts" name="post.lastName +' '+ post.firstName" date="post.date" like="post.like" :key="post" content='post.content'/>
         </template>
+        <div v-else class='alert-danger'>
+          Aucun post n'a encore été posté
+        </div>
       </div>
+      </div>
+      
     </div>
   </div>
 </template>
