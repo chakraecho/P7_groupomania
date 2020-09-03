@@ -14,11 +14,12 @@
         placeholder="Comment allez vous aujourd'hui ?"
         @focusin.native="handleFocus(false)"
         @focusout.native="handleFocus(true)"
+        v-model="content"
       />
       <div class="col-2 col-md-1 wrapper-img-button">
         <img src="./../../assets/componentImg/add_img.svg" alt="ajouter une image" class="w-100" />
       </div>
-      <button class='col-2 col-md-1 wrapper send-button'>
+      <button class='col-2 col-md-1 wrapper send-button' @click='clickSend'>
         <img src='./../../assets/componentImg/send.svg' alt='envoyer' class='w-100'/>
       </button>
     </div>
@@ -32,16 +33,23 @@ export default {
   name: "postCreator",
   data: function () {
     return {
-      ...mapState({userId: ['profil/userId']})
+      content:''
     };
   },
   computed: {
-    ...mapState("profil", ["profilImgUrl"]),
+    ...mapState("profil", ["profilImgUrl","userId"]),
     ...mapGetters("profil", ["getFullName"]),
   },
   methods: {
     ...mapActions(["handleFocus"]),
-    ...mapActions({sendPost: 'post/sendPost'})
+    ...mapActions("post",["sendPost"]),
+    clickSend: function(){
+      const content = this.content
+      const userId = this.userId
+            console.log(content, userId)
+  console.log(this.sendPost)
+      this.sendPost({content: content, userId: userId})
+    }
   }
 };
 </script>
