@@ -92,7 +92,8 @@ exports.verify = (req, res, next) => {
             firstName: account.firstName,
             lastName: account.lastName,
             profilImgUrl: account.profilImgUrl,
-            bannerUrl: account.bannerUrl
+            bannerUrl: account.bannerUrl,
+            userId:account.userId
           })
 
         }
