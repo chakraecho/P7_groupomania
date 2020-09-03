@@ -18,6 +18,9 @@
       <div class="col-2 col-md-1 wrapper-img-button">
         <img src="./../../assets/componentImg/add_img.svg" alt="ajouter une image" class="w-100" />
       </div>
+      <button class='col-2 col-md-1 wrapper send-button'>
+        <img src='./../../assets/componentImg/send.svg' alt='envoyer' class='w-100'/>
+      </button>
     </div>
   </div>
 </template>
@@ -28,7 +31,9 @@ import { mapState, mapGetters, mapActions } from "vuex";
 export default {
   name: "postCreator",
   data: function () {
-    return {};
+    return {
+      ...mapState({userId: ['profil/userId']})
+    };
   },
   computed: {
     ...mapState("profil", ["profilImgUrl"]),
@@ -36,6 +41,7 @@ export default {
   },
   methods: {
     ...mapActions(["handleFocus"]),
+    ...mapActions({sendPost: 'post/sendPost'})
   }
 };
 </script>

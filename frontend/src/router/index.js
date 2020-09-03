@@ -47,6 +47,7 @@ router.beforeEach((to, from, next) => {
               lastName: response.lastName,
               bannerUrl: response.bannerUrl,
               profilImgUrl: response.profilImgUrl,
+              userId: response.userId
             }).then(()=>{
               store.dispatch("handleAuth", true);
               next({path:"/"})
@@ -75,6 +76,7 @@ router.beforeEach((to, from, next) => {
               lastName: response.lastName,
               bannerUrl: response.bannerUrl,
               profilImgUrl: response.profilImgUrl,
+              userId:response.userId
             }).then(()=>{
               store.dispatch("handleAuth", true);
               next()

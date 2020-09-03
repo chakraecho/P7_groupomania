@@ -7,6 +7,7 @@ const profil = {
       profilUrl: '',
       bannerUrl:'',
       profilImgUrl:'',
+      userId:''
     },
     getters:{
       getFullName:(state)=>{
@@ -17,9 +18,10 @@ const profil = {
       }
     },
     mutations:{
-      pushName(state, {firstName, lastName}){
+      pushName(state, {firstName, lastName, userId}){
         state.firstName = firstName
         state.lastName = lastName
+        state.userId = userId
       },
       pushBanner(state, {bannerUrl}){
         state.bannerUrl = bannerUrl
@@ -29,8 +31,8 @@ const profil = {
       }
     },
     actions:{
-      atLogin({commit},{firstName, lastName, bannerUrl, profilImgUrl}){
-        commit('pushName', {firstName:firstName,lastName:lastName});
+      atLogin({commit},{firstName, lastName, bannerUrl, profilImgUrl, userId}){
+        commit('pushName', {firstName:firstName,lastName:lastName, userId});
         commit('pushBanner', {bannerUrl:bannerUrl});
         commit('pushProfilImgUrl',{profilImgUrl: profilImgUrl});
         commit('handleAuth', true)
