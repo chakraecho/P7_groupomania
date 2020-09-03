@@ -10,8 +10,8 @@
         </div>
       </div>
       <div class="container">
-        <template v-for="post in posts">
-          <post name="this.getFullName" date="post.date" like="post.like" :key="post" content='post.content'/>
+        <template v-if='postPresence' >
+          <post v-for="post in posts" name="post.lastName +' '+ post.firstName" date="post.date" like="post.like" :key="post" content='post.content'/>
         </template>
       </div>
     </div>
@@ -45,7 +45,10 @@ export default {
       })
         .then((res) =>
           res.json().then((response) => {
-            return (this.posts = response);
+            console.log(response.length)
+            if(response.length >=1){
+              return this.post = response
+            }
           })
         )
         .catch((error) => {
@@ -57,6 +60,7 @@ export default {
   data() {
     return {
       posts: {},
+      postPresence:false
     };
   },
 };
