@@ -10,7 +10,7 @@ Comments.belongsTo(User, {as:'userId', allowNull: false})
 Comments.belongsTo(Post, {as:'postId', allowNull: false})
 
 
-Post.belongsTo(User, {as:'userId', allowNull: false})
+Post.belongsTo(User, {foreignKey:{name:'userId', allowNull:false}})
 
 
 userLiked.belongsTo(User,{ allowNull: false,foreignKey:'userId'})
