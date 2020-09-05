@@ -52,7 +52,7 @@ exports.modifyOne = (req, res, next) => {
                     })
                     .then(() => res.status(200).json({ message: 'post modifié !' }))
                     .catch(error => res.status(400).json({ error })) : (
-                        Post.Post.update({
+                        Post.update({
                             content
                         })
                             .then(() => res.status(200).json({ message: 'post modifié !' }))
@@ -69,6 +69,8 @@ exports.deleteOne = (req, res) => {
         .catch((error) => res.status(500).json({ error }))
 }
 
+// COMMENT
+
 exports.getComment = (req,res)=>{
     const postId = req.params.id
     Comments.findAll({where:{postId:postId}})
@@ -84,4 +86,20 @@ exports.createComment = (req,res)=>{
     })
     .then(comment=> res.status(201).json({comment}))
     .catch(error => res.status(500).json({error}))
+}
+
+exports.modifyComment = (req,res)=>{
+    const content = req.body.content
+        Comments.update({content}, {where: {id:req.body.id}})
+        .then(comment=>{
+            res.status(200).json({comment})
+        })
+        .catch(error=> res.status(500).json({error}))
+}
+
+exports.deleteComment = (req,res)=>{
+    const id = req.body.id
+        Comments.destroy({where:{id:id}})
+        .then(()=> res.status(200).json({message:'commentaire supprimé !'}))
+        .catch(error => res.status(500).json({error}))
 }

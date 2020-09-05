@@ -11,4 +11,6 @@ router.delete('/:id', postCtlr.deleteOne)
 
 router.get('/:id/comment', postCtlr.getComment)
 router.post('/:id/comment',postCtlr.createComment)
+router.put('/:id/comment', postCtlr.modifyComment)
+router.delete('/:id/comment', postCtlr.deleteComment)
 module.exports = router
