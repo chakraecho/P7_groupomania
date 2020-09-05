@@ -68,3 +68,15 @@ exports.deleteOne = (req, res) => {
         .then(() => res.status(200).json({ message: 'post supprimé !' }))
         .catch((error) => res.status(500).json({ error }))
 }
+
+
+exports.createComment = (req,res)=>{
+    const postId = req.params.id
+    Comments.create({
+        content:req.body.content,
+        postId:req.params.id,
+        userId:req.body.userId
+    })
+    .then(comment=> res.status(201).json({comment}))
+    .catch(error => res.status(500).json({error}))
+}
