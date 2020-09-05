@@ -69,6 +69,11 @@ exports.deleteOne = (req, res) => {
         .catch((error) => res.status(500).json({ error }))
 }
 
+exports.getComment = (req,res)=>{
+    const postId = req.params.id
+    Comments.findAll({where:{postId:postId}})
+    .then(comment=> res.status(200).json({comment}))
+}
 
 exports.createComment = (req,res)=>{
     const postId = req.params.id

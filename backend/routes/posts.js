@@ -9,5 +9,6 @@ router.post('/submit', postCtlr.createOne)
 router.put('/:id', postCtlr.modifyOne)
 router.delete('/:id', postCtlr.deleteOne)
 
+router.get('/:id/comment', postCtlr.getComment)
 router.post('/:id/comment',postCtlr.createComment)
 module.exports = router

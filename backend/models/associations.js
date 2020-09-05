@@ -6,8 +6,8 @@ const department = require('./department')
 
 //associations
 
-Comments.belongsTo(User, {as:'userId', allowNull: false})
-Comments.belongsTo(Post, {as:'postId', allowNull: false})
+Comments.belongsTo(User, {foreignKey:{name:'userId', allowNull: false}})
+Comments.belongsTo(Post, {foreignKey:{name:'postId', allowNull: false}})
 
 
 Post.belongsTo(User, {foreignKey:{name:'userId', allowNull:false}})
