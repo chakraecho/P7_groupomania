@@ -23,6 +23,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store)
 //routes files
 const userRoutes = require('./routes/users')
 const postRoutes = require('./routes/posts')
+const groupRoutes = require('./routes/group')
 
 //cookies
 var myStore = new SequelizeStore({
@@ -65,6 +66,6 @@ console.log('chemin du dossier:'+__dirname+ '\\assets')
 //routes
 app.use('/api/users', userRoutes )
 app.use('/api/post', postRoutes)
-
+app.use('/api/group', groupRoutes)
 
 module.exports = app

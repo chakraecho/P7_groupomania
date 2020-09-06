@@ -13,6 +13,8 @@ exports.createGroup = (req, res, next)=>{
     }).then(group => groupMembers.create({
         groupId: group.groupId,
         userId: user
+    }).then(groupMembers => {
+        res.status(201).json({message:'groupe créé !', groupMembers, group})
     })
         .catch(error=> res.status(500).json({message:'groupe non trouvé !', error}))
     )

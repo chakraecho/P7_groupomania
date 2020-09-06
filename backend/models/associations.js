@@ -21,8 +21,8 @@ noctification.belongsTo(User, {as: 'to'})
 
 
 groups.belongsTo(User, {foreignKey:'userId', allowNull: false, as:'admin'})
-groupMembers.belongsTo(User,{as:'userId', allowNull:false})
-groupMembers.belongsTo(groups,{as:'groupId', allowNull:false})
+groupMembers.belongsTo(User,{foreignKey:'userId', allowNull:false})
+groupMembers.belongsTo(groups,{foreignKey:'groupId', allowNull:false})
 
 groups.hasMany(groupMembers)
 User.hasMany(Post)
