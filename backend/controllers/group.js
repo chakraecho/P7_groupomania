@@ -60,3 +60,11 @@ exports.addMember = (req, res)=>{
         .then(()=> res.status(200).json({message:'vous avez rejoint le groupe !'}))
         .catch(error => res.status(500).json({error}))
 }
+
+exports.deleteMember = (req,res)=>{
+    groupMembers.destroy({where:{
+        [Op.and]: [{groupId: req.params.id}, { userId: req.body.userId }]
+    }})
+        .then(()=> res.status(200).json({message:'utilisateur supprimé !'}))
+        .catch(error => res.status(400).json({error}))
+}
