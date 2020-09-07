@@ -6,7 +6,18 @@ const sequelize = new Sequelize(process.env.DB, process.env.DB_USERNAME, process
     dialect: 'mysql',    /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' <- SQL SERVER */
     define:{
         freezeTableName: true
-      }
+      },
+      dialectOptions: {
+        useUTC: false, //for reading from database
+        dateStrings: true,
+        typeCast: function (field, next) { // for reading from database
+          if (field.type === 'DATETIME') {
+            return field.string()
+          }
+            return next()
+          },
+      },
+      timezone: '+02:00',
   });
   try {
      sequelize.authenticate();
