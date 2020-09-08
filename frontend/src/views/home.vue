@@ -5,19 +5,32 @@
         class="col-6 col-md-3 col-lg-2 px-0 d-flex flex-column justify-content-between align-items-center position-sticky border-right"
       />
       <div class="col-12 col-md-8 col-lg-10 pl-0">
-        <div class="col border-bottom p-2">
-          <postCreator />
+        <div class="row border-bottom mb-3">
+          <div class="col-10 col-md-8 col-lg-6 offset-1 offset-md-2 offset-lg-2 p-2">
+            <postCreator />
+          </div>
         </div>
-        <div class="container">
-        <template v-if='postPresence' >
-          <post v-for="post in posts" name="post.lastName +' '+ post.firstName" date="post.date" like="post.like" :key="post" content='post.content'/>
-        </template>
-        <div v-else class='alert-danger'>
-          Aucun post n'a encore été posté
+        <div class="row">
+          <div class="col-8">
+            <template v-if="postPresence">
+              <post
+                v-for="post in posts"
+                :name="post.User.lastName +' '+ post.User.firstName"
+                :date="post.createdAt"
+                :likes="post.like - post.dislike"
+                :key="post"
+                :content="post.content"
+                :dataId="post.postId"
+                 @selectPost="activeComment"
+              />
+            </template>
+            <div v-else class="alert-danger">Chargement des post</div>
+          </div>
+          <div class="col-4">
+            <comment v-if="selectedComment" :dataId="commentId"></comment>
+          </div>
         </div>
       </div>
-      </div>
-      
     </div>
   </div>
 </template>
@@ -26,6 +39,7 @@
 import navbar from "@/components/side-navbar.vue";
 import postCreator from "@/components/post/postCreator";
 import post from "./../components/post/post";
+import comment from "./../components/post/comment";
 import { mapGetters } from "vuex";
 
 export default {
@@ -33,6 +47,7 @@ export default {
     navbar,
     postCreator,
     post,
+    comment,
   },
   mounted: function () {
     console.log(this);
@@ -42,29 +57,39 @@ export default {
     ...mapGetters("profil", ["getFullName"]),
   },
   methods: {
-    getAllPost: function () {
+    getAllPost() {
       fetch("http://localhost:3000/api/post/", {
         method: "GET",
         credentials: "include",
       })
         .then((res) =>
           res.json().then((response) => {
-            console.log(response.length)
-            if(response.length >=1){
-              return this.post = response
-            }
+            console.log(response.posts);
+            this.postPresence = true;
+            return (this.posts = response.posts);
           })
         )
         .catch((error) => {
           return console.log(error);
         });
     },
+    activeComment(payload) {
+      console.log('ACTIVE COMMENT')
+      this.selectedComment = false;
+      this.commentId = payload.id;
+      this.selectedComment = true;
+    },
+  },
+  created: function () {
+    this.getAllPost;
   },
 
   data() {
     return {
       posts: {},
-      postPresence:false
+      postPresence: false,
+      selectedComment: false,
+      commentId: "",
     };
   },
 };

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="border-rounded border p-1 col-11 col-md-8 col-lg-6 offset-md-1 offset-lg-2 bg-light"
+    class="border-rounded border p-1  bg-light"
     id="postCreator"
   >
     <div class="row align-items-center justify-content-around">
