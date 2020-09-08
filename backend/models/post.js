@@ -28,8 +28,13 @@ const userLiked = sequelize.define('userLiked',{
     type:{type :Sequelize.BOOLEAN}
 })
 
+const commentLiked = sequelize.define('commentLiked',{
+  type:{type: Sequelize.BOOLEAN}
+})
+
 
 
 exports.Comments = Comments
 exports.Post = Post;
 exports.userLiked = userLiked
+exports.commentLiked = commentLiked

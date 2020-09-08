@@ -78,8 +78,9 @@ exports.deleteOne = (req, res) => {
 
 exports.getComment = (req,res)=>{
     const postId = req.params.id
-    Comments.findAll({where:{postId:postId}})
-    .then(comment=> res.status(200).json({comment}))
+    Comments.findAll({where:{postId:postId}, include:{ model:User, attributes:['lastName', 'firstName', 'profilImgUrl']} })
+    .then(comment => res.status(200).json({comment}))
+    .catch(error => res.status(500).json(error))
 }
 
 exports.createComment = (req,res)=>{
