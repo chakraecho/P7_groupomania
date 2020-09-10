@@ -29,6 +29,7 @@ groupMembers.belongsTo(groups,{foreignKey:'groupId', allowNull:false})
 
 Comments.hasMany(commentLiked)
 groups.hasMany(groupMembers)
+Post.hasMany(userLiked)
 User.hasMany(Post)
 User.hasMany(groupMembers)
 User.hasMany(noctification)

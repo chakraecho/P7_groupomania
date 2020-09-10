@@ -1,6 +1,7 @@
-const { Post, Comments, userLiked } = require('./../models/post')
+const { Post, Comments, userLiked, commentLiked } = require('./../models/post')
 const User = require('./../models/users')
 const jwt = require('jsonwebtoken')
+const { Op } = require('sequelize')
 
 exports.createOne = (req, res, next) => {
     console.log(req.body.userId)
@@ -8,10 +9,10 @@ exports.createOne = (req, res, next) => {
         .then(() => res.status(201).json({ message: 'post créé !' }))
         .catch(error => res.status(500).json({ error }))
 }
-exports.postGroup = (req,res)=>{    //create a post linked to a group
-    Post.create({content:req.body.content, like:0, dislike:0, userId: req.body.userId, groupId:req.params.id})
-        .then(()=>res.status(201).json({message:'Post créé'}))
-        .catch(error => res.status(500).json({error}))
+exports.postGroup = (req, res) => {    //create a post linked to a group
+    Post.create({ content: req.body.content, like: 0, dislike: 0, userId: req.body.userId, groupId: req.params.id })
+        .then(() => res.status(201).json({ message: 'Post créé' }))
+        .catch(error => res.status(500).json({ error }))
 }
 
 exports.getOne = (req, res, next) => {
@@ -76,36 +77,88 @@ exports.deleteOne = (req, res) => {
 
 // COMMENT
 
-exports.getComment = (req,res)=>{
+exports.getComment = (req, res) => {
     const postId = req.params.id
-    Comments.findAll({where:{postId:postId}, include:{ model:User, attributes:['lastName', 'firstName', 'profilImgUrl']} })
-    .then(comment => res.status(200).json({comment}))
-    .catch(error => res.status(500).json(error))
+    Comments.findAll({ where: { postId: postId }, include: { model: User, attributes: ['lastName', 'firstName', 'profilImgUrl'] } })
+        .then(comment => res.status(200).json({ comment }))
+        .catch(error => res.status(500).json(error))
 }
 
-exports.createComment = (req,res)=>{
+exports.createComment = (req, res) => {
     const postId = req.params.id
     Comments.create({
-        content:req.body.content,
-        postId:req.params.id,
-        userId:req.body.userId
+        content: req.body.content,
+        postId: req.params.id,
+        userId: req.body.userId
     })
-    .then(comment=> res.status(201).json({comment}))
-    .catch(error => res.status(500).json({error}))
+        .then(comment => res.status(201).json({ comment }))
+        .catch(error => res.status(500).json({ error }))
 }
 
-exports.modifyComment = (req,res)=>{
+exports.modifyComment = (req, res) => {
     const content = req.body.content
-        Comments.update({content}, {where: {id:req.body.id}})
-        .then(comment=>{
-            res.status(200).json({comment})
+    Comments.update({ content }, { where: { id: req.body.id } })
+        .then(comment => {
+            res.status(200).json({ comment })
         })
-        .catch(error=> res.status(500).json({error}))
+        .catch(error => res.status(500).json({ error }))
 }
 
-exports.deleteComment = (req,res)=>{
+exports.deleteComment = (req, res) => {
     const id = req.body.id
-        Comments.destroy({where:{id:id}})
-        .then(()=> res.status(200).json({message:'commentaire supprimé !'}))
-        .catch(error => res.status(500).json({error}))
+    Comments.destroy({ where: { id: id } })
+        .then(() => res.status(200).json({ message: 'commentaire supprimé !' }))
+        .catch(error => res.status(500).json({ error }))
 }
+
+
+exports.like = (req, res) => {
+    const id = req.params.id
+    const userId = req.body.userId
+    const like = req.body.like
+    let bool;
+    if(like === 1){
+        bool = true
+    }
+    else if(like === -1){
+        bool = false
+    }
+    userLiked.findAll({where:{[Op.and]: [{userId}, {postId: id}]}})
+    .then(liked => {
+        if(liked.length >= 1){
+            if(like === 0){
+                userLiked.destroy({where : {[Op.and]:[{postId:id},{userId:userId}]}})
+                .then(()=> res.status(200).json({message : {message: 'retiré !'}}))
+                .catch(error => res.status(409).json({error}))
+            }
+            else if(like !== 0){
+                res.status(409).json({message:'like déjà existant'})
+            }
+
+        }
+        else if (liked.length === 0){
+            switch (like) {
+                case 1:
+                    userLiked.create({postId:id, userId:userId,type: true})
+                    .then(()=> res.status(201).json({message:'post liké'}))
+                    .catch(error => res.status(409).json({message:'vous avez déjà liké', error}))
+                    break;
+    
+                case -1:
+                    userLiked.create({postId:id}, {userId:userId},{type: 'F'})
+                    .then((post)=> res.status(201).json({message:'post disliké', post, req}))
+                    .catch(error => res.status(409).json({message:'vous avez déjà liké', error}))  
+                  break;
+                case 0:
+                    res.status(404).json({message:'like inexistant'})
+                break;
+    
+                default:
+                    return res.status(403)
+                    break;
+            }
+        }
+    })
+
+}
+
