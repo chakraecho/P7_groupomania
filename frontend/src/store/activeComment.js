@@ -11,8 +11,8 @@ const activeComment = {
         return state.selectedPostId
     }},
     mutations:{
-        addComment(state, payload){
-            state.comment = payload
+        addComment(state, {comments}){
+            state.comments = comments
         },
         setPostId(state, payload){
             state.selectedPostId = payload
@@ -22,20 +22,29 @@ const activeComment = {
             state.postId = ''
         },
         activeComment(state){
-            state.activeComment = true
+            console.log('called activeComment')
+            state.active = true
+
         },
         desactiveComment(state){
-            state.activeComment = false
+            state.active = false
         }
     },
     actions:{
-        fetchComment({commit}, {comments}){
-            commit('addComment', comments);
-            commit('activeComment')
-        },
         setId({commit},{postId}){
-            console.log('set ID called')
             commit('setPostId', postId)
+            if (postId !== null){
+                fetch("http://localhost:3000/api/post/" + postId + "/comment", {
+                    method: "GET",
+                    credentials: "include",
+                  }).then((response) =>
+                    response.json().then((res) => {
+                        console.log(res.comment)
+                      commit('addComment', {comments:res.comment});
+                      commit('activeComment')
+                    })
+                  );
+            }
         },
         neutraliseComment({commit}){
             commit('voidComment')

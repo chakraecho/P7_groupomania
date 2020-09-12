@@ -31,26 +31,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   props: {
     dataId: Number,
   },
   data() {
     return {
-      comments: {},
       text: "",
     };
   },
-  beforeMount() {
-    fetch("http://localhost:3000/api/post/" + this.dataId + "/comment", {
-      method: "GET",
-      credentials: "include",
-    }).then((response) =>
-      response.json().then((res) => {
-        this.comments = res.comment;
-      })
-    );
-  },
+  computed:{
+    ...mapState('activeComment', ['comments'])
+  }
 };
 </script>
 

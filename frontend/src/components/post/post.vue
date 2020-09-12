@@ -4,8 +4,10 @@
       class="offset-lg-2 rounded border border-secondary col-10 mb-4 post-rounded postContainer"
       :data-id="dataId"
     >
-      <div class="row justify-content-between"       :class="this.dataId === this.selectedPostId ? 'select' : 'unselect'"
->
+      <div
+        class="row justify-content-between"
+        :class="this.dataId === this.selectedPostId ? 'select' : 'unselect'"
+      >
         <div class="col">
           <p>{{name}}</p>
         </div>
@@ -19,8 +21,7 @@
           <slot></slot>
         </div>
       </div>
-      <div class="row"       :class="this.dataId === this.selectedPostId ? 'select' : 'unselect'"
->
+      <div class="row" :class="this.dataId === this.selectedPostId ? 'select' : 'unselect'">
         <div class="likes pl-5 row col">
           <p class="m-0">-</p>
           <p class="m-0 px-2">{{likes}}</p>
@@ -35,7 +36,7 @@
 </template>
 
 <script>
-import { mapActions, mapState  } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   props: {
@@ -63,13 +64,12 @@ export default {
       }
     },
   },
-      computed: {
-      selectedPostId(){
-        return this.$store.activeComment.state.selectedPostId
-        
-      },
-            ...mapState('activeComment',['selectedPostId'])
-      }
+  computed: {
+    selectedPostId() {
+      return this.$store.activeComment.state.selectedPostId;
+    },
+    ...mapState("activeComment", ["selectedPostId"]),
+  },
 };
 </script>
 
