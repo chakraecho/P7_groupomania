@@ -21,13 +21,12 @@
                 :key="post"
                 :content="post.content"
                 :dataId="post.postId"
-                @selectPost="activeComment"
               />
             </template>
             <div v-else class="alert-danger">Chargement des post</div>
           </div>
           <div class="col-4">
-            <comment v-if="selectedComment" :dataId="commentId"></comment>
+            <comment v-if="active" :dataId="commentId"></comment>
           </div>
         </div>
       </div>
@@ -51,12 +50,13 @@ export default {
   },
   computed: {
     ...mapGetters("profil", ["getFullName"]),
-          ...mapState('post',['posts']),
-          ...mapState('activeComment',['comments'])
+    ...mapState("post", ["posts"]),
+    ...mapState("activeComment", ["comments", "active", "selectedPostId"]),
   },
   methods: {
-    ...mapActions('post',["addPost"]),
+    ...mapActions("post", ["addPost"]),
     getAllPost() {
+      console.log(this.active);
       fetch("http://localhost:3000/api/post/", {
         method: "GET",
         credentials: "include",
@@ -71,9 +71,6 @@ export default {
           return console.log(error);
         });
     },
-    activeComment() {
-      console.log(this);
-    },
   },
   created: function () {
     console.log(this);
@@ -85,12 +82,14 @@ export default {
       postPresence: false,
       selectedComment: false,
       commentId: "",
-
-
     };
   },
 };
 </script>
 
 <style lang='scss'>
+
+  .select{
+    background-color:#D7263D;
+  }
 </style>
