@@ -22,6 +22,9 @@
                   {{comment.content}}
               </div>
           </div>
+          <div v-if='comments.length === 0'>
+            Pas de commentaire pour le moment, n'hésitez pas à commenter
+          </div>
       </div>
       <div class="red row">
         <input class="form-control" type="text" v-model="text" />

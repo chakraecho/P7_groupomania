@@ -48,18 +48,15 @@ export default {
   },
   data: function () {
     return {
-      selected: false,
     };
   },
   methods: {
     ...mapActions("activeComment", ["neutraliseComment", "setId"]),
     select: function () {
-      if (this.selected === true) {
-        this.selected = false;
+      if (this.dataId === this.selectedPostId) {
         this.setId({ postId: null });
         this.neutraliseComment();
-      } else if (this.selected === false) {
-        this.selected = true;
+      } else if (this.dataId !== this.selectedPostId) {
         this.setId({ postId: this.dataId });
       }
     },
