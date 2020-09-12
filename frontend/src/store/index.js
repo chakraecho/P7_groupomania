@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import profil from './profil.js'
 import post from './post.js'
+import activeComment from './activeComment.js'
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
@@ -44,7 +45,8 @@ export const store = new Vuex.Store({
 
   modules: {
     profil,
-    post
+    post,
+    activeComment
   }
 })
 

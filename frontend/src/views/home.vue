@@ -21,7 +21,7 @@
                 :key="post"
                 :content="post.content"
                 :dataId="post.postId"
-                 @selectPost="activeComment"
+                @selectPost="activeComment"
               />
             </template>
             <div v-else class="alert-danger">Chargement des post</div>
@@ -40,7 +40,7 @@ import navbar from "@/components/side-navbar.vue";
 import postCreator from "@/components/post/postCreator";
 import post from "./../components/post/post";
 import comment from "./../components/post/comment";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 
 export default {
   components: {
@@ -49,14 +49,13 @@ export default {
     post,
     comment,
   },
-  mounted: function () {
-    console.log(this);
-    this.getAllPost();
-  },
   computed: {
     ...mapGetters("profil", ["getFullName"]),
+          ...mapState('post',['posts']),
+          ...mapState('activeComment',['comments'])
   },
   methods: {
+    ...mapActions('post',["addPost"]),
     getAllPost() {
       fetch("http://localhost:3000/api/post/", {
         method: "GET",
@@ -64,32 +63,30 @@ export default {
       })
         .then((res) =>
           res.json().then((response) => {
-            console.log(response.posts);
             this.postPresence = true;
-            return (this.posts = response.posts);
+            this.addPost(response.posts);
           })
         )
         .catch((error) => {
           return console.log(error);
         });
     },
-    activeComment(payload) {
-      console.log('ACTIVE COMMENT')
-      this.selectedComment = false;
-      this.commentId = payload.id;
-      this.selectedComment = true;
+    activeComment() {
+      console.log(this);
     },
   },
   created: function () {
-    this.getAllPost;
+    console.log(this);
+    this.getAllPost();
   },
 
   data() {
     return {
-      posts: {},
       postPresence: false,
       selectedComment: false,
       commentId: "",
+
+
     };
   },
 };

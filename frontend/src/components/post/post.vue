@@ -1,6 +1,6 @@
 <template>
   <section>
-      <div class='offset-lg-2 rounded border border-secondary col-10 mb-4 post-rounded' :data-id='dataId'>
+      <div class='offset-lg-2 rounded border border-secondary col-10 mb-4 post-rounded postContainer' :data-id='dataId'>
           <div class='row justify-content-between' :class="this.selected ? 'selected' : 'unselected'">
               <div class='col'>
                   <p>{{name}}</p>
