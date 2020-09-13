@@ -72,7 +72,7 @@ export default {
         });
     },
   },
-  created: function () {
+  created () {
     console.log(this);
     this.getAllPost();
   },

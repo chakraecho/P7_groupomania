@@ -1,6 +1,6 @@
 <template>
   <nav>
-      <router-link to="/mon-compte" class="navbar-boutton text-center">Mon compte</router-link>
+      <router-link to="/user" class="navbar-boutton text-center">Mon compte</router-link>
       <router-link to="/notifications" class="navbar-boutton text-center">Notifications</router-link>
       <router-link to="/groupes" class="navbar-boutton text-center">Groupes</router-link>
       <button class="navbar-boutton text-center">Déconnexion</button>
