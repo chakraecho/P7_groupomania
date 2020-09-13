@@ -21,6 +21,7 @@
                 :key="post"
                 :content="post.content"
                 :dataId="post.postId"
+                :imgProfilUrl='post.User.profilImgUrl'
               />
             </template>
             <div v-else class="alert-danger">Chargement des post</div>

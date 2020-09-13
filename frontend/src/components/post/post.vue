@@ -5,9 +5,10 @@
       :data-id="dataId"
     >
       <div
-        class="row justify-content-between"
+        class="row justify-content-between post-initial"
         :class="this.dataId === this.selectedPostId ? 'select' : 'unselect'"
       >
+        <img :src="imgProfilUrl" class="hover-img h-100 rounded-circle post-img" />
         <div class="col">
           <p>{{name}}</p>
         </div>
@@ -45,10 +46,10 @@ export default {
     likes: Number,
     content: String,
     dataId: Number,
+    imgProfilUrl: String,
   },
   data: function () {
-    return {
-    };
+    return {};
   },
   methods: {
     ...mapActions("activeComment", ["neutraliseComment", "setId"]),
@@ -78,5 +79,20 @@ $blue: #449dd1;
 }
 .selected {
   background-color: $red;
+}
+.post {
+  &-initial {
+    position: relative;
+  }
+  &-img {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    height: 100%;
+    padding:4px;
+    border:black 2px solid;
+    width:auto;
+    background-color:white;
+  }
 }
 </style>
