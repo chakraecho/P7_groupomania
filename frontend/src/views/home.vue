@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="row">
       <navbar
-        class="col-6 col-md-3 col-lg-2 px-0 d-flex flex-column justify-content-between align-items-center position-sticky border-right"
+        class="col-6 col-md-3 col-lg-2 px-0 d-flex flex-column justify-content-between align-items-center  border-right"
       />
       <div class="col-12 col-md-8 col-lg-10 pl-0">
         <div class="row border-bottom mb-3">

@@ -1,5 +1,5 @@
 <template>
-    <header  class='navbar p-0 bg-dark navbar-dark'>
+    <header  class='p-0 bg-dark navbar-dark'>
         <router-link to='/' class='navbar-brand'>
           <img src='./../assets/logo/icon-left-font-monochrome-white.png' width='150' alt='logo de groupomania' class="ml-2">
         </router-link>
@@ -15,5 +15,8 @@ export default {
 <style lang="scss">
     header{
         height:10vh;
+        position:sticky;
+        z-index:90;
+        top:0px;
     }
 </style>

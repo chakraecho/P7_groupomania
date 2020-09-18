@@ -16,8 +16,10 @@ export default {
 
 <style>
 nav{
-    position:fixed;
+    position:sticky !important;
     height: 90vh;
+    top:initial;
+    z-index:89;
 }
 .navbar-boutton{
     width:100%;
