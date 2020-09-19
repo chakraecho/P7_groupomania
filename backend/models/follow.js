@@ -2,8 +2,6 @@ const Sequelize = require('sequelize')
 const sequelize = require('./../db-config')
 
 
-const follow = sequelize.define('follow',{
-    accepted:{type:Sequelize.STRING(10), allowNull:false}
-})
+const follow = sequelize.define('follow')
 
-exports.follow = follow
+module.exports = follow

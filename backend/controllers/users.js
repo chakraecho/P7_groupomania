@@ -138,3 +138,13 @@ exports.changeBanner = (req, res) => {
       res.status(400).json({ message: 'image non upload !' })
     )
 }
+
+exports.disconnect = (req,res)=>{
+  req.session.destroy(
+    function(err){
+      res.status(500).json({err})
+    }
+  )
+  res.cookie('aBigSecret',  {expires: Date.now()}
+  , { httpOnly: true, secure: false })
+}

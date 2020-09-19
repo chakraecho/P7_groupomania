@@ -3,6 +3,7 @@ const Follow = require('./../models/follow')
 exports.followOne = (req,res)=>{
     const from = req.body.from
     const to = req.body.to
+    console.log(req.body)
     if(to === from){
         res.status(401).json({message:'non autorisé'})
     }
@@ -12,6 +13,7 @@ exports.followOne = (req,res)=>{
         .catch(error => res.status(500).json({error}))
     }
 }
+
 
 exports.deleteFollow = (req,res)=>{
     const from = req.body.from
