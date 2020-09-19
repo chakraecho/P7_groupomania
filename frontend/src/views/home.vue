@@ -53,6 +53,7 @@ export default {
     ...mapGetters("profil", ["getFullName"]),
     ...mapState("post", ["posts"]),
     ...mapState("activeComment", ["comments", "active", "selectedPostId"]),
+    ...mapState('account', ['followed'])
   },
   methods: {
     ...mapActions("post", ["addPost"]),

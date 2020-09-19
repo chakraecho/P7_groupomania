@@ -12,8 +12,7 @@
         type="text"
         class="form-control col-6 col-md-8 col-lg-9"
         placeholder="Comment allez vous aujourd'hui ?"
-        @focusin.native="handleFocus(false)"
-        @focusout.native="handleFocus(true)"
+
         v-model="content"
       />
       <div class="col-2 col-md-1 wrapper-img-button">
