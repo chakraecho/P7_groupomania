@@ -117,48 +117,61 @@ exports.like = (req, res) => {
     const userId = req.body.userId
     const like = req.body.like
     let bool;
-    if(like === 1){
+    if (like === 1) {
         bool = true
     }
-    else if(like === -1){
+    else if (like === -1) {
         bool = false
     }
-    userLiked.findAll({where:{[Op.and]: [{userId}, {postId: id}]}})
-    .then(liked => {
-        if(liked.length >= 1){
-            if(like === 0){
-                userLiked.destroy({where : {[Op.and]:[{postId:id},{userId:userId}]}})
-                .then(()=> res.status(200).json({message : {message: 'retiré !'}}))
-                .catch(error => res.status(409).json({error}))
-            }
-            else if(like !== 0){
-                res.status(409).json({message:'like déjà existant'})
-            }
+    userLiked.findAll({ where: { [Op.and]: [{ userId }, { postId: id }] } })
+        .then(liked => {
+            if (liked.length >= 1) {
+                if (like === 0) {
+                    userLiked.destroy({ where: { [Op.and]: [{ postId: id }, { userId: userId }] } })
+                        .then(() => res.status(200).json({ message: { message: 'retiré !' } }))
+                        .catch(error => res.status(409).json({ error }))
+                }
+                else if (like !== 0) {
+                    res.status(409).json({ message: 'like déjà existant' })
+                }
 
-        }
-        else if (liked.length === 0){
-            switch (like) {
-                case 1:
-                    userLiked.create({postId:id, userId:userId,type: true})
-                    .then(()=> res.status(201).json({message:'post liké'}))
-                    .catch(error => res.status(409).json({message:'vous avez déjà liké', error}))
-                    break;
-    
-                case -1:
-                    userLiked.create({postId:id}, {userId:userId},{type: 'F'})
-                    .then((post)=> res.status(201).json({message:'post disliké', post, req}))
-                    .catch(error => res.status(409).json({message:'vous avez déjà liké', error}))  
-                  break;
-                case 0:
-                    res.status(404).json({message:'like inexistant'})
-                break;
-    
-                default:
-                    return res.status(403)
-                    break;
             }
-        }
-    })
+            else if (liked.length === 0) {
+                switch (like) {
+                    case 1:
+                        userLiked.create({ postId: id, userId: userId, type: true })
+                            .then(() => res.status(201).json({ message: 'post liké' }))
+                            .catch(error => res.status(409).json({ message: 'vous avez déjà liké', error }))
+                        break;
+
+                    case -1:
+                        userLiked.create({ postId: id }, { userId: userId }, { type: 'F' })
+                            .then((post) => res.status(201).json({ message: 'post disliké', post, req }))
+                            .catch(error => res.status(409).json({ message: 'vous avez déjà liké', error }))
+                        break;
+                    case 0:
+                        res.status(404).json({ message: 'like inexistant' })
+                        break;
+
+                    default:
+                        return res.status(403)
+                        break;
+                }
+            }
+        })
 
 }
 
+//USER POST
+exports.userPost = (req, res) => {
+    const id = req.params.id
+    Post.findAll({
+        where: { userId: id }, limit: 10, order: [['updatedAt', 'DESC']], include: {
+            model: User,
+            attributes: ['lastName', 'firstName', 'profilImgUrl']
+        }
+    })
+        .then(posts => {
+            res.status(200).json({ posts })
+        })
+}

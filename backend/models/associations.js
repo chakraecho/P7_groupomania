@@ -3,6 +3,7 @@ const User = require('./users')
 const noctification = require('./noctification.js')
 const {groups, groupMembers} = require('./group')
 const department = require('./department')
+const {follow} = require('./follow')
 
 //associations
 
@@ -21,6 +22,8 @@ userLiked.belongsTo(Post, {allowNull: false,foreignKey:'postId'})
 noctification.belongsTo(User, {as: 'from'})
 noctification.belongsTo(User, {as: 'to'})
 
+follow.belongsTo(User,{as:'from'})
+follow.belongsTo(User, {as:'to'})
 
 groups.belongsTo(User, {foreignKey:'userId', allowNull: false, as:'admin'})
 groupMembers.belongsTo(User,{foreignKey:'userId', allowNull:false})

@@ -1,8 +1,9 @@
-import Sequelize from 'sequelize'
+const Sequelize = require('sequelize')
+const sequelize = require('./../db-config')
 
-const follow = Sequelize.define('follow',{
-    from:{type:Sequelize.STRING(255), allowNull:false},
-    to:{type:Sequelize.STRING(255), allowNull:false}
+
+const follow = sequelize.define('follow',{
+    accepted:{type:Sequelize.STRING(10), allowNull:false}
 })
 
 exports.follow = follow

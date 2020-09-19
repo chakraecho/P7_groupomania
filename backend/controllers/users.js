@@ -66,6 +66,15 @@ exports.login = (req, res, next) => {
     })
 }
 
+exports.getUser = (req, res) => {
+  const id = req.params.id
+  Users.findAll({
+    where: { userId: { [Op.eq]: id } }
+  })
+  .then(user => res.status(200).json({user}))
+  .catch(error => res.status(500).json({error}))
+}
+
 exports.verify = (req, res, next) => {
   if (req.session.email) {
     const email = req.session.email
@@ -91,7 +100,7 @@ exports.verify = (req, res, next) => {
             lastName: account.lastName,
             profilImgUrl: account.profilImgUrl,
             bannerUrl: account.bannerUrl,
-            userId:account.userId
+            userId: account.userId
           })
 
         }
