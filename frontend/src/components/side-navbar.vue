@@ -3,7 +3,7 @@
       <router-link to="/user" class="navbar-boutton text-center">Mon compte</router-link>
       <router-link to="/notifications" class="navbar-boutton text-center">Notifications</router-link>
       <router-link to="/groupes" class="navbar-boutton text-center">Groupes</router-link>
-      <button class="navbar-boutton text-center">Déconnexion</button>
+      <button class="navbar-boutton text-center" @click='disconnect'>Déconnexion</button>
       <router-link to="/" class="navbar-boutton text-center">A propos</router-link>
   </nav>
 </template>
@@ -11,7 +11,14 @@
 <script>
 export default {
   name: "side-navbar",
-};
+  methods:{
+    disconnect(){
+      fetch('http://localhost:3000/api/users/disconnect', {method:'delete', credentials:'include'})
+      .then()
+      .catch(error => console.log(error))
+    }
+  }
+}
 </script>
 
 <style>
