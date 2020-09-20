@@ -20,7 +20,10 @@
           <h1>{{firstName}} {{lastName}}</h1>
           <div class="row w-100">
             <div class="offset-9 col-3">
-              <button class="btn">{{followed ? 'Suivre' : 'Ne plus suivre'}}</button>
+              <button
+                class="btn"
+                @click="followRequest({from: $store.state.profil.userId, to:$route.params.id})"
+              >{{followed ? 'Ne plus suivre' : 'Suivre'}}</button>
             </div>
           </div>
         </div>
@@ -86,13 +89,19 @@ export default {
   },
   computed: {
     ...mapGetters("account", ["getFullName"]),
-    ...mapState("account", ["lastName", "firstName", "bannerUrl", "imgUrl", "followed"]),
+    ...mapState("account", ["lastName", "firstName", "bannerUrl", "imgUrl"]),
     ...mapState("post", ["posts"]),
     ...mapState("activeComment", ["comments", "active", "selectedPostId"]),
+    ...mapState('profil', ['userId']),
+    followed: {
+      get() {
+        return this.$store.state.account.followed;
+      },
+    },
   },
   methods: {
     ...mapActions("post", ["addPost"]),
-    ...mapActions("account", ["updateAccount"]),
+    ...mapActions("account", ["updateAccount", "followRequest", "checkFollow"]),
   },
   created: function () {
     fetch("http://localhost:3000/api/users/" + this.$route.params.id, {
@@ -126,6 +135,8 @@ export default {
       .catch((error) => {
         return console.log(error);
       });
+      console.log(this)
+      this.checkFollow({from:this.$store.state.profil.userId, to:this.$route.params.id})
   },
 };
 </script>
