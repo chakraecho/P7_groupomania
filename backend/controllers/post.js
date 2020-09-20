@@ -2,17 +2,37 @@ const { Post, Comments, userLiked, commentLiked } = require('./../models/post')
 const User = require('./../models/users')
 const jwt = require('jsonwebtoken')
 const { Op } = require('sequelize')
+const noctification = require('./../models/noctification')
+const follow = require('./../models/follow')
+
 
 exports.createOne = (req, res, next) => {
     console.log(req.body.userId)
+    console.log('Body ---------> ' + req.body.userId)
     Post.create({ content: req.body.content, like: 0, dislike: 0, userId: req.body.userId })
         .then(() => res.status(201).json({ message: 'post créé !' }))
+        .then(() => follow.findAll({
+            where: {
+                to : req.body.userId
+            }
+        }).then(result => {
+            if(result.length !== 0){
+                result.forEach(element => {
+                    const to = element.dataValues.to
+                    const from = element.dataValues.from
+                    noctification.create({type:'post', from:from, to:to, seen: 0})
+                    .catch(error => console.log({error}))
+                })
+            }
+        })
+        )
         .catch(error => res.status(500).json({ error }))
 }
 exports.postGroup = (req, res) => {    //create a post linked to a group
     Post.create({ content: req.body.content, like: 0, dislike: 0, userId: req.body.userId, groupId: req.params.id })
         .then(() => res.status(201).json({ message: 'Post créé' }))
         .catch(error => res.status(500).json({ error }))
+
 }
 
 exports.getOne = (req, res, next) => {

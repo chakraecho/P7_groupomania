@@ -49,6 +49,7 @@ exports.login = (req, res, next) => {
             else if (result) {
               const account = user.dataValues
               req.session.email = email
+              req.session.userId = account.userId
               return res.status(200).cookie('aBigSecret', jwt.sign(
                 { userId: account.email },
                 process.env.JWT_KEY,
@@ -71,8 +72,8 @@ exports.getUser = (req, res) => {
   Users.findAll({
     where: { userId: { [Op.eq]: id } }
   })
-  .then(user => res.status(200).json({user}))
-  .catch(error => res.status(500).json({error}))
+    .then(user => res.status(200).json({ user }))
+    .catch(error => res.status(500).json({ error }))
 }
 
 exports.verify = (req, res, next) => {
@@ -139,12 +140,12 @@ exports.changeBanner = (req, res) => {
     )
 }
 
-exports.disconnect = (req,res)=>{
+exports.disconnect = (req, res) => {
   req.session.destroy(
-    function(err){
-      res.status(500).json({err})
+    function (err) {
+      res.status(500).json({ err })
     }
   )
-  res.cookie('aBigSecret',  {expires: Date.now()}
-  , { httpOnly: true, secure: false })
+  res.cookie('aBigSecret', { expires: Date.now() }
+    , { httpOnly: true, secure: false })
 }

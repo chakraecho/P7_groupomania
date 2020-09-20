@@ -9,6 +9,7 @@ router.post('/auth/signup', userCtrl.signup)
 router.post('/auth/login', userCtrl.login)
 router.post('/auth/verify', userCtrl.verify)
 router.post('/follow', followCtrl.followOne)
+router.post('/follow/check', followCtrl.checkFollow)
 
 router.put('/change/profil', userCtrl.changeImg)
 router.put('/change/banner', userCtrl.changeBanner)
