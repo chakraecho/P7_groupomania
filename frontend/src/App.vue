@@ -1,32 +1,27 @@
 <template>
   <div id="app">
     <headerComponent />
-    <router-view id='view'/>
-    <div class='filter' id='filter' v-if='hasFocus'></div>
+    <router-view id="view" />
   </div>
 </template>
 <script>
-import headerComponent from '@/components/header.vue'
-import {mapState} from 'vuex'
+import headerComponent from "@/components/header.vue";
+import { mapState } from "vuex";
 
-export default{
-  components:{
+export default {
+  components: {
     headerComponent,
   },
-  computed:{
-    ...mapState(['hasFocus'])
+  computed: {
+    ...mapState(["hasFocus"]),
   },
-  methods:{
-  },
-  mounted:{
-    
-  }
-}
+  methods: {},
+  mounted: {},
+};
 </script>
 <style lang="scss">
-
-#view{
-  position:relative;
+#view {
+  position: relative;
 }
 
 #app {
@@ -49,10 +44,10 @@ export default{
     }
   }
 }
-body{
-  min-height:100vh;
+body {
+  min-height: 100vh;
 }
-main{
-  height:100%;
+main {
+  height: 100%;
 }
 </style>

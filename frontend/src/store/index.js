@@ -4,6 +4,7 @@ import profil from './profil.js'
 import post from './post.js'
 import activeComment from './activeComment.js'
 import account from './account'
+import notification from './notification'
 
 Vue.use(Vuex)
 
@@ -49,7 +50,8 @@ export const store = new Vuex.Store({
     profil,
     post,
     activeComment,
-    account
+    account,
+    notification
   }
 })
 

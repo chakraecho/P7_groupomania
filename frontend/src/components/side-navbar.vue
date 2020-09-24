@@ -1,7 +1,7 @@
 <template>
   <nav>
       <router-link :to="'/user/'+ userId" class="navbar-boutton text-center">Mon compte</router-link>
-      <router-link to="/notifications" class="navbar-boutton text-center">Notifications</router-link>
+      <router-link to="/notification" class="navbar-boutton text-center">Notifications</router-link>
       <router-link to="/groupes" class="navbar-boutton text-center">Groupes</router-link>
       <button class="navbar-boutton text-center" @click='disconnect'>Déconnexion</button>
       <router-link to="/" class="navbar-boutton text-center">A propos</router-link>
