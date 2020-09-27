@@ -1,5 +1,18 @@
 const User = require('./../models/users')
+const {Op} = require('sequelize')
 const {groups, groupMembers} = require('./../models/group')
+
+exports.getOwnGroups = (req,res)=>{
+    console.log(req.session)
+    const id = req.session.userId
+    groupMembers.findAll({
+        where:{
+            id:id
+        },
+        include :[{model:groups}]
+    })
+    .then(result => res.status(200).json({result}))
+}
 
 exports.createGroup = (req, res, next)=>{
     const groupName = req.body.groupName

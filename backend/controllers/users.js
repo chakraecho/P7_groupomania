@@ -92,6 +92,7 @@ exports.verify = (req, res, next) => {
         }
         else if (user) {
           const account = user.dataValues
+          req.session.userId = account.userId
           return res.status(200).cookie('aBigSecret', jwt.sign(
             { userId: account.email },
             process.env.JWT_KEY,

@@ -4,11 +4,10 @@ const jwt = require('jsonwebtoken')
 const { Op } = require('sequelize')
 const noctification = require('./../models/noctification')
 const follow = require('./../models/follow')
+const {groupMembers} = require('./../models/group')
 
 
 exports.createOne = (req, res, next) => {
-    console.log(req.body.userId)
-    console.log('Body ---------> ' + req.body.userId)
     Post.create({ content: req.body.content, like: 0, dislike: 0, userId: req.body.userId })
         .then(() => res.status(201).json({ message: 'post créé !' }))
         .then(() => follow.findAll({
@@ -20,7 +19,7 @@ exports.createOne = (req, res, next) => {
                 result.forEach(element => {
                     const to = element.dataValues.to
                     const from = element.dataValues.from
-                    noctification.create({type:'post', from:from, to:to, seen: 0})
+                    noctification.create({type:'post', creator:from, notified: to, seen: 0})
                     .catch(error => console.log({error}))
                 })
             }
@@ -31,6 +30,21 @@ exports.createOne = (req, res, next) => {
 exports.postGroup = (req, res) => {    //create a post linked to a group
     Post.create({ content: req.body.content, like: 0, dislike: 0, userId: req.body.userId, groupId: req.params.id })
         .then(() => res.status(201).json({ message: 'Post créé' }))
+        .then(()=> groupMembers.findAll({
+            where:{
+                groupId : req.params.id
+            }
+        })
+        .then(result => {
+            if(result.length !== 0){
+                result.forEach(element => {
+                    const user = element.dataValues
+                    noctification.create({from:req.body.userId ,to:user.userId, type:'groupPost', groupId : req.params.id})
+                    .catch(error => console.log(error))
+                })
+            }
+        })
+        )
         .catch(error => res.status(500).json({ error }))
 
 }

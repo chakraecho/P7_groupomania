@@ -11,6 +11,8 @@ router.put('/:id', groupCtrl.modifyGroup)
 router.put('/:id/img', groupCtrl.modifyImg)
 router.put('/:id/banner', groupCtrl.modifyBanner)
 
+router.get('/list', groupCtrl.getOwnGroups)
+
 router.delete('/:id', groupCtrl.deleteGroup)
 
 module.exports = router
