@@ -1,29 +1,14 @@
 <template>
   <div id="app">
-    <headerComponent />
-    <router-view id="view" />
+    <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </div>
+    <router-view />
   </div>
 </template>
-<script>
-import headerComponent from "@/components/header.vue";
-import { mapState } from "vuex";
 
-export default {
-  components: {
-    headerComponent,
-  },
-  computed: {
-    ...mapState(["hasFocus"]),
-  },
-  methods: {},
-  mounted: {},
-};
-</script>
 <style lang="scss">
-#view {
-  position: relative;
-}
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -43,11 +28,5 @@ export default {
       color: #42b983;
     }
   }
-}
-body {
-  min-height: 100vh;
-}
-main {
-  height: 100%;
 }
 </style>
