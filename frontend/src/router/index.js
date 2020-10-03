@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Home from "../views/home.vue";
 import store from './../store/index'
 
 Vue.use(VueRouter);
@@ -18,6 +18,13 @@ const routes = [
   }
 ];
 
+
+const router = new VueRouter({
+  mode: "history",
+  base: process.env.BASE_URL,
+  routes
+});
+
 // auth verification
 router.beforeEach((to, from, next) => {
   if (to.name === 'login') {
@@ -28,7 +35,7 @@ router.beforeEach((to, from, next) => {
       .then(res => {
         if (res.status === 200) {
           res.json().then((response) => {
-            store.dispatch("profil/atLogin", {
+            store.dispatch("user/login", {
               firstName: response.firstName,
               lastName: response.lastName,
               bannerUrl: response.bannerUrl,
@@ -57,7 +64,7 @@ router.beforeEach((to, from, next) => {
       .then(res => {
         if (res.status === 200) {
           res.json().then((response) => {
-            store.dispatch("profil/atLogin", {
+            store.dispatch("user/login", {
               firstName: response.firstName,
               lastName: response.lastName,
               bannerUrl: response.bannerUrl,
@@ -79,10 +86,5 @@ router.beforeEach((to, from, next) => {
 }
 )
 
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes
-});
 
 export default router;

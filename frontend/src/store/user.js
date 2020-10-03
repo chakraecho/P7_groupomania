@@ -1,4 +1,15 @@
+const getUserInit = ()=>{
+  return {
+    firstName:'',
+    lastName:'',
+    bannerUrl:'',
+    profilImgUrl:'',
+    userId:''
+  }
+}
+
 const user = {
+  namespaced:true,
     state:{
         firstName:'',
         lastName:'',
@@ -17,13 +28,18 @@ const user = {
           },
           pushProfilImgUrl(state, {profilImgUrl}){
             state.profilImgUrl = profilImgUrl
+          },
+          DISCONNECT(state){
+            Object.assign(state, getUserInit)
           }
     },
     actions:{
-        login({commit}, {firstName, lastName, userId, bannerUrl, profilImgUrl}){
+        login({commit}, {firstName, lastName, userId, bannerUrl}){
             commit('pushName', {firstName, lastName, userId})
             commit('pushBanner', {bannerUrl})
-            commit('pushProfilUrl', {profilImgUrl})           
+        },
+        disconnect({commit}){
+          commit('DISCONNECT')
         }
     }
 }

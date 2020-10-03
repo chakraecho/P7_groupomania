@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class='indigo'>
     <v-container fluid>
       <v-row>
         <v-col cols="4" md="12" class="mx-md-auto">
