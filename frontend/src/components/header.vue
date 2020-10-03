@@ -1,7 +1,13 @@
 <template>
-  <header class='indigo'>
+  <header class="indigo">
     <v-container fluid>
       <v-row>
+        <v-col cols="1">
+        <v-app-bar-nav-icon
+          @click.stop="$emit('handle-nav-bar')"
+          class="d-block d-md-none"
+        ></v-app-bar-nav-icon>
+        </v-col>
         <v-col cols="4" md="12" class="mx-md-auto">
           <router-link to="/" class="navbar-brand">
             <img

@@ -48,6 +48,7 @@ router.beforeEach((to, from, next) => {
           });
         }
         else {
+          store.dispatch("handleAuth", false);
           next()
         }
 
@@ -77,8 +78,14 @@ router.beforeEach((to, from, next) => {
           });
         }
         else {
+          store.dispatch("handleAuth", false);
           next({ path: '/login' })
         }
+      })
+      .catch((error)=>{
+        console.log(error)
+        store.dispatch("handleAuth", false);
+        next({ path: '/login' })
       })
   }
 

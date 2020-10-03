@@ -31,7 +31,7 @@
 export default {
   methods: {
     disconnect() {
-      fetch("http://localhost:8080/api/users/disconnect", {
+      fetch("http://localhost:3000/api/users/disconnect", {
         method: "delete",
         credentials: "include"
       })

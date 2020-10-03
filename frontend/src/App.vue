@@ -1,8 +1,11 @@
 <template>
   <v-app id="app">
-      <headerComp class="header-height"/>
+      <headerComp class="header-height"
+      />
     <v-main>
-      <v-navigation-drawer v-if="isAuth">
+      <v-navigation-drawer 
+ expand-on-hover
+       v-if="isAuth">
         <navbar  />
       </v-navigation-drawer>
       <router-view id="view"/>
