@@ -34,9 +34,10 @@ const user = {
           }
     },
     actions:{
-        login({commit}, {firstName, lastName, userId, bannerUrl}){
+        login({commit}, {firstName, lastName, userId, bannerUrl,profilImgUrl}){
             commit('pushName', {firstName, lastName, userId})
             commit('pushBanner', {bannerUrl})
+            commit('pushProfilImgUrl', {profilImgUrl})
         },
         disconnect({commit}){
           commit('DISCONNECT')

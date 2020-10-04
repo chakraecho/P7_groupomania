@@ -126,7 +126,10 @@ export default {
             credentials: "include"
           })
             .then(res => {
-              this.$store.dispatch("user/login", { res });
+              this.$store.dispatch("user/login", { firstName: res.firstName,
+              lastName: res.lastName,
+              profilImgUrl: res.profilImgUrl,
+               });
               this.$store.dispatch("handleAuth", true);
               this.$router.push("/");
             })

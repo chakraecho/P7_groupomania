@@ -1,31 +1,32 @@
 <template>
   <v-app id="app">
-      <headerComp class="header-height"
-      />
-    <v-main>
-      <v-navigation-drawer 
- expand-on-hover
-       v-if="isAuth">
-        <navbar  />
+    <headerComp app class="header" />
+    <v-container app class="pa-0 d-flex" fluid>
+      <v-navigation-drawer id="nav-drawer"  expand-on-hover v-if="isAuth">
+        <navbar />
       </v-navigation-drawer>
-      <router-view id="view"/>
-    </v-main>
+      <v-main>
+        <v-container fluid class="pa-0 ma-0">
+          <router-view id="view" />
+        </v-container>
+      </v-main>
+    </v-container>
   </v-app>
 </template>
 
 <script>
 import headerComp from "@/components/header.vue";
-import navbar from '@/components/navbar.vue';
+import navbar from "@/components/navbar.vue";
 
 export default {
   components: {
     headerComp,
     navbar
   },
-  computed:{
-    isAuth:{
-      get(){
-        return this.$store.state.isAuth
+  computed: {
+    isAuth: {
+      get() {
+        return this.$store.state.isAuth;
       }
     }
   }
@@ -42,7 +43,7 @@ export default {
 }
 #view {
   position: relative;
-  min-height:90vh;
+  min-height: 90vh;
 }
 
 #nav {
@@ -56,9 +57,16 @@ export default {
       color: #42b983;
     }
   }
+  &-drawer{
+    height:90vh;
+    position:sticky;
+  top:10vh;
+  }
 }
 
-.header-height{
-  height:10vh;
+.header {
+  height: 10vh;
+  position:sticky;
+  top:0px; z-index:6;
 }
 </style>

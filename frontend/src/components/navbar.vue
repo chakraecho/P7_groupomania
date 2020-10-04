@@ -47,7 +47,7 @@ export default {
 
 <style>
 .navbar {
-  height: 100vh;
+  height: 90vh;
   position: sticky;
 }
 </style>
