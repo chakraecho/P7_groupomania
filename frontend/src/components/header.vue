@@ -1,6 +1,6 @@
 <template>
   <header class="indigo">
-    <v-container fluid>
+    <v-container fluid class="d-flex flex-column justify-center pa-0 ma-0">
       <v-row>
         <v-col cols="1">
         <v-app-bar-nav-icon

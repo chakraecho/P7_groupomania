@@ -1,10 +1,8 @@
 <template>
   <v-app id="app">
-    <headerComp app class="header" />
+    <headerComp app class="header pa-0 ma-0" />
     <v-container app class="pa-0 d-flex" fluid>
-      <v-navigation-drawer id="nav-drawer"  expand-on-hover v-if="isAuth">
-        <navbar />
-      </v-navigation-drawer>
+        <navbar id="nav-drawer" v-if="isAuth" />
       <v-main>
         <v-container fluid class="pa-0 ma-0">
           <router-view id="view" />

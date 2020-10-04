@@ -1,8 +1,8 @@
 <template>
 
-    <nav class="d-flex navbar flex-column align-center justify-space-between">
+    <v-navigation-drawer   expand-on-hover class="d-flex navbar flex-column align-center justify-space-between">
       <v-row>
-        <v-btn text fluid>
+        <v-btn text fluid @click="$router.push('/account/' + this.$store.state.user.userId)">
           Mon compte
         </v-btn>
       </v-row>
@@ -24,7 +24,7 @@
           Deconnexion
         </v-btn>
       </v-row>
-    </nav>
+    </v-navigation-drawer >
 </template>
 
 <script>
