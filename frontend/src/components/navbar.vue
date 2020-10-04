@@ -1,29 +1,30 @@
 <template>
-<v-card>
+
   <v-navigation-drawer
     expand-on-hover
+    :permanent="$vuetify.breakpoint.mdAndUp"
     class="d-flex navbar flex-column align-center justify-space-between"
   >
     <v-list nav class="d-flex flex-column justify-content-between align-items-center nav-inside">
-      <v-list-item link>
+      <v-list-item link @click="$router.push('/account/' + $store.state.user.userId)">
         <v-list-item-icon>
           <v-icon>mdi-account</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Mon compte</v-list-item-title>
       </v-list-item>
-      <v-list-item link>
+      <v-list-item link @click="$router.push('/notification')">
         <v-list-item-icon>
           <v-icon>mdi-bell</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Notifications</v-list-item-title>
       </v-list-item>
-      <v-list-item link>
+      <v-list-item link @click="$router.push('/groupes')">
         <v-list-item-icon>
           <v-icon>mdi-account-group</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Groupes</v-list-item-title>
       </v-list-item>
-      <v-list-item link>
+      <v-list-item link @click="disconnect">
         <v-list-item-icon>
           <v-icon>mdi-logout</v-icon>
         </v-list-item-icon>
@@ -31,7 +32,7 @@
       </v-list-item>
     </v-list>
   </v-navigation-drawer>
-</v-card>
+
 </template>
 
 <script>
