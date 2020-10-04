@@ -56,9 +56,9 @@ export default {
     }
   }
   &-drawer{
-    height:90vh;
+    height:90vh !important;
     position:sticky;
-  top:10vh;
+    top:10vh !important;
   }
 }
 

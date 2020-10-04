@@ -1,30 +1,37 @@
 <template>
-
-    <v-navigation-drawer   expand-on-hover class="d-flex navbar flex-column align-center justify-space-between">
-      <v-row>
-        <v-btn text fluid @click="$router.push('/account/' + $store.state.user.userId)">
-          Mon compte
-        </v-btn>
-      </v-row>
-
-      <v-row>
-        <v-btn text fluid>
-          Notifications
-        </v-btn>
-      </v-row>
-
-      <v-row>
-        <v-btn text fluid>
-          Groupes
-        </v-btn>
-      </v-row>
-
-      <v-row>
-        <v-btn text fluid @click="disconnect">
-          Deconnexion
-        </v-btn>
-      </v-row>
-    </v-navigation-drawer >
+<v-card>
+  <v-navigation-drawer
+    expand-on-hover
+    class="d-flex navbar flex-column align-center justify-space-between"
+  >
+    <v-list nav class="d-flex flex-column justify-content-between align-items-center nav-inside">
+      <v-list-item link>
+        <v-list-item-icon>
+          <v-icon>mdi-account</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Mon compte</v-list-item-title>
+      </v-list-item>
+      <v-list-item link>
+        <v-list-item-icon>
+          <v-icon>mdi-bell</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Notifications</v-list-item-title>
+      </v-list-item>
+      <v-list-item link>
+        <v-list-item-icon>
+          <v-icon>mdi-account-group</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Groupes</v-list-item-title>
+      </v-list-item>
+      <v-list-item link>
+        <v-list-item-icon>
+          <v-icon>mdi-logout</v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>Se déconnecter</v-list-item-title>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
+</v-card>
 </template>
 
 <script>
@@ -50,4 +57,5 @@ export default {
   height: 90vh;
   position: sticky;
 }
+
 </style>
