@@ -22,10 +22,12 @@ exports.createGroup = (req, res, next)=>{
     groups.create({
         groupName,
         description,
-        userId: user
+        userId: user,
+        privacy: req.body.privacy
     }).then(group => groupMembers.create({
         groupId: group.groupId,
-        userId: user
+        userId: user,
+        isCreator : true
     }).then(groupMembers => {
         res.status(201).json({message:'groupe créé !', groupMembers, group})
     })

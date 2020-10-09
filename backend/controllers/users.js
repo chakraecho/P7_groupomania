@@ -10,7 +10,7 @@ exports.signup = (req, res) => {
   const password = req.body.password;
   const lastName = req.body.lastName;
   const firstName = req.body.firstName;
-
+  console.log(req.body)
   bcrypt.hash(password, 10)
     .then(hash => {
       Users.create({
@@ -24,6 +24,7 @@ exports.signup = (req, res) => {
         }))
         .catch(error => res.status(500).json({ error }))
     })
+    .catch(error => res.status(400).json({error}))
 }
 
 exports.login = (req, res, next) => {
@@ -58,7 +59,8 @@ exports.login = (req, res, next) => {
                 firstName: account.firstName,
                 lastName: account.lastName,
                 profilImgUrl: account.profilImgUrl,
-                bannerUrl: account.bannerUrl
+                bannerUrl: account.bannerUrl,
+                userId: account.userId
               })
             }
           })
@@ -148,5 +150,5 @@ exports.disconnect = (req, res) => {
     }
   )
   res.cookie('aBigSecret', { expires: Date.now() }
-    , { httpOnly: true, secure: false })
+    , { httpOnly: true, secure: false }).status(200)
 }
