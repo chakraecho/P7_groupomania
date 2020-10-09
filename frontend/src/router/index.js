@@ -21,6 +21,16 @@ const routes = [
     name:'account',
     component: () => import('../views/account.vue')
 
+  },
+  {
+    path:'/groups',
+    name:'groups',
+    component: ()=> import('../views/groupManager.vue')
+  },
+  {
+    path:'/group/:id',
+    name:"group",
+    component : ()=> import('../views/group.vue')
   }
 ];
 

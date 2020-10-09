@@ -18,7 +18,7 @@
         </v-list-item-icon>
         <v-list-item-title>Notifications</v-list-item-title>
       </v-list-item>
-      <v-list-item link @click="$router.push('/groupes')">
+      <v-list-item link @click="$router.push('/groups')">
         <v-list-item-icon>
           <v-icon>mdi-account-group</v-icon>
         </v-list-item-icon>
