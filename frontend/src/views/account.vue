@@ -24,6 +24,11 @@
               <h1>{{ firstName }} {{ lastName }}</h1>
             </v-card>
           </div>
+          <div class="ml-auto mt-2 mr-2" v-if="$store.state.user.userId != userId ">
+            <v-btn color="primary" @click="follow">
+              {{followed ? 'Ne plus suivre' : 'Suivre'}}
+            </v-btn>
+          </div>
         </v-row>
       </v-container>
     </v-row>
@@ -73,7 +78,8 @@ export default {
       lastName: "",
       bannerUrl: "",
       profilImgUrl: "",
-      posts: []
+      posts: [],
+      followed : false
     };
   },
   computed:{
@@ -82,6 +88,22 @@ export default {
               return this.$store.state.comment.active
           }
       }
+  },
+  methods:{
+    follow(){
+      if(this.followed){
+        fetch('http://locahost:3000/api/users/follow/'+ this.$route.params.id, {credentials:'include', method:'delete'})
+        .then(() => {
+          this.followed = false
+        })
+        .catch(error => console.log(error))
+      }
+      else if (!this.followed){
+        fetch("http://localhost:3000/api/users/follow/" + this.$route.params.id, {credentials: 'include'})
+        .then(()=> this.followed = true)
+        .catch(error => console.log(error))
+      }
+    }
   },
   beforeCreate() {
     fetch("http://localhost:3000/api/users/" + this.$route.params.id)
@@ -95,6 +117,7 @@ export default {
         })
       )
       .catch(error => console.log(error));
+
     fetch(
       "http://localhost:3000/api/users/" + this.$route.params.id + "/post",
       { credentials: "include" }
@@ -105,6 +128,19 @@ export default {
         })
       )
       .catch(error => console.log(error));
+
+    if(this.$route.params.id !== this.$store.state.user.userId){
+          fetch('http://localhost:3000/api/users/follow/check/' + this.$route.params.id, {credentials: "include"})
+          .then(res => {
+            if(res.status === 200){
+              this.followed = true
+            }
+            else if (res.status === 204){
+              this.followed = false
+            }
+          })
+          .catch(error => console.log(error))
+    }
   }
 };
 </script>
