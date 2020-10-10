@@ -92,7 +92,7 @@ export default {
   methods:{
     follow(){
       if(this.followed){
-        fetch('http://locahost:3000/api/users/follow/'+ this.$route.params.id, {credentials:'include', method:'delete'})
+        fetch('http://localhost:3000/api/users/follow/'+ this.$route.params.id, {credentials:'include', method:'delete'})
         .then(() => {
           this.followed = false
         })
