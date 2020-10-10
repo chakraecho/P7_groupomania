@@ -2,16 +2,14 @@ const Follow = require('./../models/follow')
 const { Op } = require('sequelize')
 
 exports.checkFollow = (req, res)=>{
-    const from = req.body.from
-    const to = req.body.to
-    console.log(from, to)
-    if(req.session.userId !== from){
+    const follower = req.session.userId
+    const followed = req.params.id
+    if(req.session.userId !== follower){
         res.status(401).json({message:"vérification non autorisé !"})
     }
     else{
-        Follow.findOne({where:{[Op.and]:[{from: from},{to: to}]}})
+        Follow.findOne({where:{[Op.and]:[{follower: follower},{followed: followed}]}})
         .then(result => {
-            console.log(result)
             if (result === null){
                 res.status(204).json({result: "non suivi"})
             }
@@ -24,13 +22,13 @@ exports.checkFollow = (req, res)=>{
 }
 
 exports.followOne = (req,res)=>{
-    const from = req.body.from
-    const to = req.body.to
-    if(to === from){
+    const follower = req.session.userId
+    const followed = req.params.id
+    if(follower === followed){
         res.status(401).json({message:'non autorisé'})
     }
     else{
-        Follow.create({from, to})
+        Follow.create({follower, followed})
         .then(()=> res.status(200).json({message:'utilisateur suivi !'}))
         .catch(error => res.status(500).json({error}))
     }
@@ -38,14 +36,14 @@ exports.followOne = (req,res)=>{
 
 
 exports.deleteFollow = (req,res)=>{
-    const from = req.body.from
-    const to = req.body.to
-    if(from == undefined || to == undefined){
+    const follower = req.session.userId
+    const followed = req.params.id
+    if(follower == undefined || followed == undefined){
         return res.status(400).json({message:'mauvais corps de requete'})
     }
     Follow.destroy({
         where:{
-            [Op.and]:[{from},{to}]
+            [Op.and]:[{follower},{followed}]
         }
     })
     .then(()=> res.status(200).json({message:'vous ne le suivez plus !'}))

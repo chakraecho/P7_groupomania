@@ -12,6 +12,18 @@ exports.getOwnGroups = (req,res)=>{
         include :[{model:groups}]
     })
     .then(result => res.status(200).json({result}))
+    .catch(error => console.log(error))
+}
+
+exports.getOneGroup = (req, res)=>{
+    const userID = req.session.userId
+    groups.findAll({
+        where : {groupId : req.params.id}
+    })
+    .then( group => {
+        res.status(200).json({group})
+    })
+    .catch(error => console.log(error))
 }
 
 exports.createGroup = (req, res, next)=>{
@@ -27,7 +39,8 @@ exports.createGroup = (req, res, next)=>{
     }).then(group => groupMembers.create({
         groupId: group.groupId,
         userId: user,
-        isCreator : true
+        isCreator : true,
+        isAdmin : true
     }).then(groupMembers => {
         res.status(201).json({message:'groupe créé !', groupMembers, group})
     })

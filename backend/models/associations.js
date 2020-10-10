@@ -22,10 +22,9 @@ userLiked.belongsTo(Post, {allowNull: false,foreignKey:'postId'})
 noctification.belongsTo(User, {as:'notified', foreignKey:'notified_id'})
 noctification.belongsTo(User, {as:'creator', foreignKey:'creator_id'})
 
-follow.belongsTo(User,{foreignKey:'from'})
-follow.belongsTo(User, {foreignKey:'to'})
+follow.belongsTo(User,{foreignKey:'follower'})
+follow.belongsTo(User, {foreignKey:'followed'})
 
-groups.belongsTo(User, { allowNull: false, foreignKey:'admin'})
 groupMembers.belongsTo(User,{foreignKey:'userId', allowNull:false})
 groupMembers.belongsTo(groups,{foreignKey:'groupId', allowNull:false})
 

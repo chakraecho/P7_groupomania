@@ -12,14 +12,14 @@ exports.createOne = (req, res, next) => {
         .then(() => res.status(201).json({ message: 'post créé !' }))
         .then(() => follow.findAll({
             where: {
-                to : req.body.userId
+                followed : req.body.userId
             }
         }).then(result => {
             if(result.length !== 0){
                 result.forEach(element => {
-                    const to = element.dataValues.to
-                    const from = element.dataValues.from
-                    noctification.create({type:'post', creator_id:from, notified_id: to, seen: 0})
+                    const followed = element.dataValues.followed
+                    const follower = element.dataValues.follower
+                    noctification.create({type:'post', creator_id:follower, notified_id: followed, seen: 0})
                     .catch(error => console.log({error}))
                 })
             }
@@ -27,7 +27,7 @@ exports.createOne = (req, res, next) => {
         )
         .catch(error => res.status(500).json({ error }))
 }
-exports.postGroup = (req, res) => {    //create a post linked to a group
+exports.postGroup = (req, res) => {    //create a post linked followed a group
     Post.create({ content: req.body.content, like: 0, dislike: 0, userId: req.body.userId, groupId: req.params.id })
         .then(() => res.status(201).json({ message: 'Post créé' }))
         .then(()=> groupMembers.findAll({
@@ -39,7 +39,7 @@ exports.postGroup = (req, res) => {    //create a post linked to a group
             if(result.length !== 0){
                 result.forEach(element => {
                     const user = element.dataValues
-                    noctification.create({from:req.body.userId ,to:user.userId, type:'groupPost', groupId : req.params.id})
+                    noctification.create({follower:req.body.userId ,followed:user.userId, type:'groupPost', groupId : req.params.id})
                     .catch(error => console.log(error))
                 })
             }
@@ -63,7 +63,6 @@ exports.getAll = (req, res, next) => {
         }
     })
         .then(posts => {
-            console.log(posts)
             return res.status(200).json({ posts })
         })
         .catch(error => res.status(404).json({ error }))

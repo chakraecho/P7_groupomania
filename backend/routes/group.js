@@ -12,6 +12,7 @@ router.put('/:id/img', groupCtrl.modifyImg)
 router.put('/:id/banner', groupCtrl.modifyBanner)
 
 router.get('/list', groupCtrl.getOwnGroups)
+router.get('/:id', groupCtrl.getOneGroup)
 
 router.delete('/:id', groupCtrl.deleteGroup)
 
