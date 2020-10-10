@@ -19,7 +19,7 @@ exports.createOne = (req, res, next) => {
                 result.forEach(element => {
                     const followed = element.dataValues.followed
                     const follower = element.dataValues.follower
-                    noctification.create({type:'post', creator_id:follower, notified_id: followed, seen: 0})
+                    noctification.create({type:'post', notified_id:follower, creator_id: followed, seen: 0})
                     .catch(error => console.log({error}))
                 })
             }

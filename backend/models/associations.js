@@ -19,8 +19,18 @@ Post.belongsTo(User, {foreignKey:{name:'userId', allowNull:false}})
 userLiked.belongsTo(User,{ allowNull: false,foreignKey:'userId'})
 userLiked.belongsTo(Post, {allowNull: false,foreignKey:'postId'})
 
-noctification.belongsTo(User, {as:'notified', foreignKey:'notified_id'})
-noctification.belongsTo(User, {as:'creator', foreignKey:'creator_id'})
+noctification.belongsTo(User, {  
+      as:'creator',
+foreignKey:{
+    name:'creator_id'
+}
+})
+noctification.belongsTo(User, {  
+      as:'notified',
+foreignKey:{
+    name:'notified_id'
+}
+})
 
 follow.belongsTo(User,{foreignKey:'follower'})
 follow.belongsTo(User, {foreignKey:'followed'})
@@ -36,4 +46,15 @@ User.hasMany(Post)
 User.hasMany(groupMembers)
 User.hasMany(userLiked)
 User.hasMany(Comments)
-
+User.hasMany(noctification , {
+    as:'creator',
+    foreignKey:{
+        name:'creator_id'
+    }
+})
+User.hasMany(noctification , {
+    as:'notified',
+    foreignKey:{
+        name:'notified_id'
+    }
+})
