@@ -18,19 +18,24 @@ const routes = [
   },
   {
     path: '/account/:id',
-    name:'account',
+    name: 'account',
     component: () => import('../views/account.vue')
 
   },
   {
-    path:'/groups',
-    name:'groups',
-    component: ()=> import('../views/groupManager.vue')
+    path: '/groups',
+    name: 'groups',
+    component: () => import('../views/groupManager.vue')
   },
   {
-    path:'/group/:id',
-    name:"group",
-    component : ()=> import('../views/group.vue')
+    path: '/group/:id',
+    name: "group",
+    component: () => import('../views/group.vue')
+  }, 
+  {
+    path: '/notification',
+    name: "notifications",
+    component: () => import('../views/notification.vue')
   }
 ];
 
@@ -98,7 +103,7 @@ router.beforeEach((to, from, next) => {
           next({ path: '/login' })
         }
       })
-      .catch((error)=>{
+      .catch((error) => {
         console.log(error)
         store.dispatch("handleAuth", false);
         next({ path: '/login' })
