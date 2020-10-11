@@ -91,11 +91,15 @@ export default {
         },
         credentials: "include"
       })
-        .then(res => {
-          this.$store.dispatch("user/login", { res });
+      .then(response => response.json()        
+      .then(res => {
+          console.log(res)
+          this.$store.dispatch("user/login", { ...res });
           this.$store.dispatch("handleAuth", true);
           this.$router.push("/");
         })
+      )
+
         .catch(error => console.log(error));
     },
     submitSignUp() {
@@ -112,8 +116,8 @@ export default {
           "Content-Type": "application/json"
         }
       })
-        .then(res => {
-          this.$store.dispatch("user/login", { res });
+      .then(response => response.json()
+      .then(() => {
           fetch("http://localhost:3000/api/users/auth/login", {
             body: JSON.stringify({
               email: this.email,
@@ -124,17 +128,22 @@ export default {
               "Content-Type": "application/json"
             },
             credentials: "include"
-          })
-            .then(res => {
+          }).then(response => response.json()
+                      .then(res => {
               this.$store.dispatch("user/login", { firstName: res.firstName,
               lastName: res.lastName,
               profilImgUrl: res.profilImgUrl,
+              userId : res.userId
                });
               this.$store.dispatch("handleAuth", true);
               this.$router.push("/");
             })
-            .catch(error => console.log(error));
+            .catch(error => console.log(error))
+          )
+
         })
+      )
+        
         .catch(error => console.log(error));
     }
   }
