@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const { Op } = require('sequelize')
 const noctification = require('./../models/noctification')
 const follow = require('./../models/follow')
-const {groupMembers} = require('./../models/group')
+const { groupMembers } = require('./../models/group')
 
 
 exports.createOne = (req, res, next) => {
@@ -12,15 +12,15 @@ exports.createOne = (req, res, next) => {
         .then(() => res.status(201).json({ message: 'post créé !' }))
         .then(() => follow.findAll({
             where: {
-                followed : req.body.userId
+                followed: req.body.userId
             }
         }).then(result => {
-            if(result.length !== 0){
+            if (result.length !== 0) {
                 result.forEach(element => {
                     const followed = element.dataValues.followed
                     const follower = element.dataValues.follower
-                    noctification.create({type:'post', notified_id:follower, creator_id: followed, seen: 0})
-                    .catch(error => console.log({error}))
+                    noctification.create({ type: 'post', notified_id: follower, creator_id: followed, seen: 0 })
+                        .catch(error => console.log({ error }))
                 })
             }
         })
@@ -30,37 +30,47 @@ exports.createOne = (req, res, next) => {
 exports.postGroup = (req, res) => {    //create a post linked followed a group
     Post.create({ content: req.body.content, like: 0, dislike: 0, userId: req.body.userId, groupId: req.params.id })
         .then(() => res.status(201).json({ message: 'Post créé' }))
-        .then(()=> groupMembers.findAll({
-            where:{
-                groupId : req.params.id
+        .then(() => groupMembers.findAll({
+            where: {
+                groupId: req.params.id
             }
         })
-        .then(result => {
-            if(result.length !== 0){
-                result.forEach(element => {
-                    const user = element.dataValues
-                    noctification.create({follower:req.body.userId ,followed:user.userId, type:'groupPost', groupId : req.params.id})
-                    .catch(error => console.log(error))
-                })
-            }
-        })
+            .then(result => {
+                if (result.length !== 0) {
+                    result.forEach(element => {
+                        const user = element.dataValues
+                        noctification.create({ follower: req.body.userId, followed: user.userId, type: 'groupPost', groupId: req.params.id })
+                            .catch(error => console.log(error))
+                    })
+                }
+            })
         )
         .catch(error => res.status(500).json({ error }))
 
 }
 
 exports.getOne = (req, res, next) => {
-    Post.findOne({ where: { postId: req.body.postId } })
+    Post.findOne({ where: { postId: req.params.id } })
         .then(post => res.status(200).json({ post }))
         .catch(error => res.status(404).json({ error }))
 }
 
 exports.getAll = (req, res, next) => {
     Post.findAll({
-        limit: 10, order: [['updatedAt', 'DESC']], include: {
+        limit: 10, order: [['updatedAt', 'DESC']], include: [{
             model: User,
             attributes: ['lastName', 'firstName', 'profilImgUrl']
+        }, {
+            model: userLiked,
+            where: {
+                userId: {
+                    [Op.eq]: req.session.userId
+                }
+            },
+            attributes: ['type'],
+            required: false
         }
+        ]
     })
         .then(posts => {
             return res.status(200).json({ posts })
@@ -147,7 +157,7 @@ exports.deleteComment = (req, res) => {
 
 exports.like = (req, res) => {
     const id = req.params.id
-    const userId = req.body.userId
+    const userId = req.session.userId
     const like = req.body.like
     let bool;
     if (like === 1) {
@@ -160,9 +170,71 @@ exports.like = (req, res) => {
         .then(liked => {
             if (liked.length >= 1) {
                 if (like === 0) {
-                    userLiked.destroy({ where: { [Op.and]: [{ postId: id }, { userId: userId }] } })
-                        .then(() => res.status(200).json({ message: { message: 'retiré !' } }))
-                        .catch(error => res.status(409).json({ error }))
+                    userLiked.findOne({ where: { [Op.and]: [{ postId: id }, { userId: userId }] }, attributes: ['type'] })
+                        .then(like => {
+                            switch (like.dataValues.type) {
+                                case true:
+                                    Post.findAll({ where: { postId: id } })
+                                        .then(option => option[0].decrement('like')
+                                            .then(() => {
+                                                userLiked.destroy({ where: { [Op.and]: [{ postId: id }, { userId: userId }] } })
+                                                    .then(() => {
+                                                        Post.findOne({
+                                                            where: { postId: id }, include: [{
+                                                                model: User,
+                                                                attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                                            }, {
+                                                                model: userLiked,
+                                                                where: {
+                                                                    userId: {
+                                                                        [Op.eq]: req.session.userId
+                                                                    }
+                                                                },
+                                                                attributes: ['type'],
+                                                                required: false
+                                                            }
+                                                            ]
+                                                        })
+                                                            .then(post => { res.status(200).json({ post }) })
+                                                            .catch(error => res.status(404).json({ error }))
+                                                    })
+                                                    .catch(error => res.status(409).json({ error }))
+                                            }))
+                                        .catch(error => console.log(error))
+                                    break;
+                                case false:
+                                    Post.findAll({ where: { postId: id } })
+                                        .then(option => option[0].decrement('dislike')
+                                            .then(() => {
+                                                userLiked.destroy({ where: { [Op.and]: [{ postId: id }, { userId: userId }] } })
+                                                    .then(() => {
+                                                        Post.findOne({
+                                                            where: { postId: id }, include: [{
+                                                                model: User,
+                                                                attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                                            }, {
+                                                                model: userLiked,
+                                                                where: {
+                                                                    userId: {
+                                                                        [Op.eq]: req.session.userId
+                                                                    }
+                                                                },
+                                                                attributes: ['type'],
+                                                                required: false
+                                                            }
+                                                            ]
+                                                        })
+                                                            .then(post => res.status(200).json({ post }))
+                                                            .catch(error => res.status(404).json({ error }))
+                                                    })
+                                                    .catch(error => res.status(409).json({ error }))
+                                            }))
+                                        .catch(error => console.log(error))
+                                    break;
+                            }
+                        })
+                        .catch(error => console.log(error))
+
                 }
                 else if (like !== 0) {
                     res.status(409).json({ message: 'like déjà existant' })
@@ -173,13 +245,93 @@ exports.like = (req, res) => {
                 switch (like) {
                     case 1:
                         userLiked.create({ postId: id, userId: userId, type: true })
-                            .then(() => res.status(201).json({ message: 'post liké' }))
+                            .then(() => {
+                                Post.findAll({
+                                    where: { postId: id }, include: [{
+                                        model: User,
+                                        attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                    }, {
+                                        model: userLiked,
+                                        where: {
+                                            userId: {
+                                                [Op.eq]: req.session.userId
+                                            }
+                                        },
+                                        attributes: ['type'],
+                                        required: false
+                                    }
+                                    ]
+                                })
+                                    .then(option => {
+                                        console.log(option)
+                                        option[0].increment('like')
+                                            .then(() => Post.findOne({
+                                                where: { postId: id }, include: [{
+                                                    model: User,
+                                                    attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                                }, {
+                                                    model: userLiked,
+                                                    where: {
+                                                        userId: {
+                                                            [Op.eq]: req.session.userId
+                                                        }
+                                                    },
+                                                    attributes: ['type'],
+                                                    required: false
+                                                }
+                                                ]
+                                            })
+                                                .then(post => res.status(200).json({ post }))
+                                                .catch(error => res.status(404).json({ error })))
+                                            .catch(error => console.log(error))
+
+                                    })
+                                    .catch(error => res.status(404).json({ error }))
+                            })
                             .catch(error => res.status(409).json({ message: 'vous avez déjà liké', error }))
                         break;
 
                     case -1:
-                        userLiked.create({ postId: id }, { userId: userId }, { type: 'F' })
-                            .then((post) => res.status(201).json({ message: 'post disliké', post, req }))
+                        userLiked.create({ postId: id, userId: userId, type: false })
+                            .then(() => Post.findAll({
+                                where: { postId: id }, include: [{
+                                    model: User,
+                                    attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                }, {
+                                    model: userLiked,
+                                    where: {
+                                        userId: {
+                                            [Op.eq]: req.session.userId
+                                        }
+                                    },
+                                    attributes: ['type'],
+                                    required: false
+                                }
+                                ]
+                            })
+                                .then(option => {
+                                    option[0].increment('dislike')
+                                    .then(() => Post.findOne({
+                                        where: { postId: id }, include: [{
+                                            model: User,
+                                            attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                        }, {
+                                            model: userLiked,
+                                            where: {
+                                                userId: {
+                                                    [Op.eq]: req.session.userId
+                                                }
+                                            },
+                                            attributes: ['type'],
+                                            required: false
+                                        }
+                                        ]
+                                    })
+                                        .then(post => res.status(200).json({ post }))
+                                            .catch(error => res.status(404).json({ error })))
+                                        .catch(error => console.log(error))
+                                })
+                                .catch(error => res.status(404).json({ error })))
                             .catch(error => res.status(409).json({ message: 'vous avez déjà liké', error }))
                         break;
                     case 0:

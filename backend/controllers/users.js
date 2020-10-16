@@ -10,7 +10,6 @@ exports.signup = (req, res) => {
   const password = req.body.password;
   const lastName = req.body.lastName;
   const firstName = req.body.firstName;
-  console.log(req.body)
   bcrypt.hash(password, 10)
     .then(hash => {
       Users.create({

@@ -20,11 +20,6 @@ const association = require('./models/associations')
 const session = require('express-session')
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 
-//routes files
-const userRoutes = require('./routes/users')
-const postRoutes = require('./routes/posts')
-const groupRoutes = require('./routes/group')
-
 //cookies
 var myStore = new SequelizeStore({
   db: dbConfig,
@@ -33,8 +28,9 @@ app.use(
   session({
     secret: "a key that is ultra secret and should not be given to others",
     store: myStore,
-    resave: true,
+    resave: false,
     rolling:true,
+    saveUninitialized: false,
     maxAge: 1000* 60 * 60 *24 * 365,
     cookie:{
       expires: 1000*60*60*24*7
@@ -45,6 +41,10 @@ app.use(
 myStore.sync();
 
 
+//routes files
+const userRoutes = require('./routes/users')
+const postRoutes = require('./routes/posts')
+const groupRoutes = require('./routes/group')
 
 //middlewares
 app.use(helmet())
@@ -55,6 +55,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Credentials', 'true')
     next();
   });
+
 
 app.use(bodyparser.json())
 app.use(cookieParser())

@@ -17,18 +17,7 @@ const groupRole = sequelize.define('groupRole', {
     roleName: { type: Sequelize.STRING(20) }
 }, { timestamps: false })
 
-groupRole.create({
-    groupRoleId: 1,
-    roleName: 'creator'
-},
-{
-    groupRoleId: 2,
-    roleName: 'admin'
-},
-{
-    groupRoleId: 3,
-    roleName: 'user'
-})
+
 groupRole.create(
 {
     groupRoleId: 2,
