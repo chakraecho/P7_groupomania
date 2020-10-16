@@ -22,6 +22,7 @@
                   :content="post.content"
                   :likes="post.like - post.dislike"
                   :dataId="post.postId"
+                  :liked="post.userLikeds"
                 />
               </v-col>
             </v-row>
@@ -69,7 +70,8 @@ export default {
           userId: this.$store.state.user.userId,
           content: this.$refs.postcreator.content
         }),
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        credentials:'include'
       }).then(() => {
         this.$refs.postcreator.loading = false;
         this.$refs.postcreator.success = true;
@@ -80,7 +82,7 @@ export default {
     }
   },
   beforeCreate() {
-    fetch("http://localhost:3000/api/post/")
+    fetch("http://localhost:3000/api/post/", {credentials: 'include'})
       .then(response =>
         response
           .json()
