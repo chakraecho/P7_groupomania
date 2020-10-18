@@ -18,6 +18,7 @@
         <v-col>
           <v-btn
             text
+            :disabled="(likefocus == true) ? true : false "
             :class="(likefocus == false) ? 'active-btn' : 'inactive'"
             @click="likefocus === false ? like(0) : like(-1)"
           >
@@ -26,6 +27,7 @@
           {{ likes }}
           <v-btn
             text
+           :disabled="(likefocus == false) ? true : false "
             :class="(likefocus == true) ? 'active-btn' : 'inactive'"
             @click="likefocus === true ? like(0) : like(1)"
           >

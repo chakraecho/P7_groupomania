@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const comment = {
     namespaced:true,
     state: {
@@ -28,6 +30,10 @@ const comment = {
         },
         desactiveComment(state) {
             state.active = false
+        },
+        UPDATE_COMMENT(state, payload){
+            const id = state.comments.findIndex(x => x.commentId == payload.commentId)
+            Vue.set(state.comments, id , payload)
         }
     },
     actions: {
