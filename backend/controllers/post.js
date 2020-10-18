@@ -122,7 +122,10 @@ exports.deleteOne = (req, res) => {
 
 exports.getComment = (req, res) => {
     const postId = req.params.id
-    Comments.findAll({ where: { postId: postId }, include: { model: User, attributes: ['lastName', 'firstName', 'profilImgUrl'] } })
+    Comments.findAll({ where: { postId: postId },
+         include: [{ model: User, attributes: ['lastName', 'firstName', 'profilImgUrl'] } ,
+        {model :commentLiked, attributes: ['type'], where : {userId : req.session.userId}, required : false}]
+        })
         .then(comment => res.status(200).json({ comment }))
         .catch(error => res.status(500).json(error))
 }
@@ -328,6 +331,197 @@ exports.like = (req, res) => {
                                         ]
                                     })
                                         .then(post => res.status(200).json({ post }))
+                                            .catch(error => res.status(404).json({ error })))
+                                        .catch(error => console.log(error))
+                                })
+                                .catch(error => res.status(404).json({ error })))
+                            .catch(error => res.status(409).json({ message: 'vous avez déjà liké', error }))
+                        break;
+                    case 0:
+                        res.status(404).json({ message: 'like inexistant' })
+                        break;
+
+                    default:
+                        return res.status(403)
+                        break;
+                }
+            }
+        })
+
+}
+
+exports.commentLike = (req, res) => {
+    const id = req.params.id
+    const userId = req.session.userId
+    const like = req.body.like
+    let bool;
+    if (like === 1) {
+        bool = true
+    }
+    else if (like === -1) {
+        bool = false
+    }
+    commentLiked.findAll({ where: { [Op.and]: [{ userId }, { commentId: id }] } })
+        .then(liked => {
+            if (liked.length >= 1) {
+                if (like === 0) {
+                    commentLiked.findOne({ where: { [Op.and]: [{ commentId: id }, { userId: userId }] }, attributes: ['type'] })
+                        .then(like => {
+                            switch (like.dataValues.type) {
+                                case true:
+                                    Comments.findAll({ where: { [Op.and] : [{commentId : id}, {userId : userId}] } })
+                                        .then(option => option[0].decrement('like')
+                                            .then(() => {
+                                                commentLiked.destroy({ where: { [Op.and]: [{ commentId: id }, { userId: userId }] }, })
+                                                    .then(() => {
+                                                        Comments.findOne({
+                                                            where:  { commentId : id}, include: [{
+                                                                model: User,
+                                                                attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                                            }, {
+                                                                model: commentLiked,
+                                                                where: {
+                                                                    userId: {
+                                                                        [Op.eq]: req.session.userId
+                                                                    }
+                                                                },
+                                                                attributes: ['type'],
+                                                                required: false
+                                                            }]
+                                                        })
+                                                            .then(comment => { res.status(200).json({ comment }) })
+                                                            .catch(error => res.status(404).json({ error }))
+                                                    })
+                                                    .catch(error => res.status(409).json({ error }))
+                                            }))
+                                        .catch(error => console.log(error))
+                                    break;
+                                case false:
+                                    Comments.findAll({ where: { [Op.and] : [{commentId : id}, {userId : userId}] } })
+                                        .then(option => option[0].decrement('dislike')
+                                            .then(() => {
+                                                commentLiked.destroy({ where: { [Op.and]: [{ commentId: id }, { userId: userId }] } })
+                                                    .then(() => {
+                                                        Comments.findOne({
+                                                            where: { commentId: id }, include: [{
+                                                                model: User,
+                                                                attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                                            }, {
+                                                                model: commentLiked,
+                                                                where: {
+                                                                    userId: {
+                                                                        [Op.eq]: req.session.userId
+                                                                    }
+                                                                },
+                                                                attributes: ['type'],
+                                                                required: false
+                                                            }
+                                                            ]
+                                                        })
+                                                            .then(comment => res.status(200).json({ comment }))
+                                                            .catch(error => res.status(404).json({ error }))
+                                                    })
+                                                    .catch(error => res.status(409).json({ error }))
+                                            }))
+                                        .catch(error => console.log(error))
+                                    break;
+                            }
+                        })
+                        .catch(error => console.log(error))
+
+                }
+                else if (like !== 0) {
+                    res.status(409).json({ message: 'like déjà existant' })
+                }
+
+            }
+            else if (liked.length === 0) {
+                switch (like) {
+                    case 1:
+                        commentLiked.create({ commentId: id, userId: userId, type: true })
+                            .then(() => {
+                                Comments.findAll({
+                                    where: { commentId : id}, include: [{
+                                        model: User,
+                                        attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                    }, {
+                                        model: commentLiked,
+                                        where: {
+                                            userId: {
+                                                [Op.eq]: req.session.userId
+                                            }
+                                        },
+                                        attributes: ['type'],
+                                        required: false
+                                    }
+                                    ]
+                                })
+                                    .then(option => {
+                                        console.log(option)
+                                        option[0].increment('like')
+                                            .then(() => Comments.findOne({
+                                                where: { commentId : id }, include: [{
+                                                    model: User,
+                                                    attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                                }, {
+                                                    model: commentLiked,
+                                                    where: {
+                                                        userId: {
+                                                            [Op.eq]: req.session.userId
+                                                        }
+                                                    },
+                                                    attributes: ['type'],
+                                                    required: false
+                                                }
+                                                ]
+                                            })
+                                                .then(comment => res.status(200).json({ comment }))
+                                                .catch(error => res.status(404).json({ error })))
+                                            .catch(error => console.log(error))
+
+                                    })
+                                    .catch(error => res.status(404).json({ error }))
+                            })
+                            .catch(error => res.status(409).json({ message: 'vous avez déjà liké', error }))
+                        break;
+
+                    case -1:
+                        commentLiked.create({ commentId: id, userId: userId, type: false })
+                            .then(() => Comments.findAll({
+                                where: { commentId: id }, include: [{
+                                    model: User,
+                                    attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                }, {
+                                    model: commentLiked,
+                                    where: {
+                                        userId: {
+                                            [Op.eq]: req.session.userId
+                                        }
+                                    },
+                                    attributes: ['type'],
+                                    required: false
+                                }
+                                ]
+                            })
+                                .then(option => {
+                                    option[0].increment('dislike')
+                                    .then(() => Comments.findOne({
+                                        where: { commentId: id }, include: [{
+                                            model: User,
+                                            attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                        }, {
+                                            model: commentLiked,
+                                            where: {
+                                                userId: {
+                                                    [Op.eq]: req.session.userId
+                                                }
+                                            },
+                                            attributes: ['type'],
+                                            required: false
+                                        }
+                                        ]
+                                    })
+                                        .then(comment => res.status(200).json({ comment }))
                                             .catch(error => res.status(404).json({ error })))
                                         .catch(error => console.log(error))
                                 })

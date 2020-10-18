@@ -11,7 +11,8 @@ Comments.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false } })
 Comments.belongsTo(Post, { foreignKey: { name: 'postId', allowNull: false } })
 
 
-commentLiked.belongsTo(Comments, { foreignKey: { name: 'id', allowNull: false } })
+commentLiked.belongsTo(Comments, { foreignKey: { name: 'commentId', allowNull: false } })
+commentLiked.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false } })
 
 Post.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false } })
 
@@ -32,9 +33,10 @@ groupMembers.belongsTo(User, { foreignKey: { name: 'userId' }, allowNull: false 
 groupMembers.belongsTo(groups, { foreignKey: { name: 'groupId' }, allowNull: false })
 
 
-Comments.hasMany(commentLiked,{ foreignKey: { name: 'id', allowNull: false }})
+Comments.hasMany(commentLiked,{ foreignKey: { name: 'commentId', allowNull: false }})
 groups.hasMany(groupMembers, { foreignKey: { name: 'groupId' }, allowNull: false })
 Post.hasMany(userLiked, { allowNull: false, foreignKey: { name: 'postId' } })
+User.hasMany(commentLiked, {foreignKey : {name : "userId"}, allowNull : false})
 User.hasMany(Post, { foreignKey: { name: 'userId', allowNull: false } })
 User.hasMany(groupMembers, {foreignKey: { name: 'userId' }, allowNull: false})
 User.hasMany(userLiked, { allowNull: false, foreignKey: { name: 'userId' } })
