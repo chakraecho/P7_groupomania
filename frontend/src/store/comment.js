@@ -29,7 +29,7 @@ const comment = {
 
         },
         desactiveComment(state) {
-            state.active = false
+            state.active = false;
         },
         UPDATE_COMMENT(state, payload){
             const id = state.comments.findIndex(x => x.commentId == payload.commentId)
