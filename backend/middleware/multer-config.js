@@ -1,11 +1,11 @@
-import express from 'express'
-import multer from 'multer'
+const multer = require('multer')
 
 const MIME_TYPES = {
   'image/jpg': 'jpg',
   'image/jpeg': 'jpg',
   'image/png': 'png',
-  'image/png': 'PNG'
+  'image/png': 'PNG',
+  'image/svg+xml' : "svg"
 
 }
 
@@ -21,4 +21,4 @@ const storage = multer.diskStorage({
   }
 });
 
-module.exports = multer({ storage: storage }).single('image');
+module.exports = multer({ storage: storage }).any();
