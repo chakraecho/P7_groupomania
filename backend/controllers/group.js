@@ -7,7 +7,7 @@ exports.getOwnGroups = (req, res) => {
     const id = req.session.userId
     groupMembers.findAll({
         where: {
-            id: id
+            userId: id
         },
         include: [{ model: groups }]
     })
