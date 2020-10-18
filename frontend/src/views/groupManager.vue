@@ -110,27 +110,33 @@ export default {
     return {
       selectedBlock: "loadGroup",
       c_group_name: "",
-      bannerImg: "",
-      profilImg: "",
+      bannerImg: undefined,
+      profilImg: undefined,
       description:"",
-      privacyInput :[{value:0, label:"privé"}, {value:1, label:"publique"}],
       success : false,
       create_group_success : false,
-      create_groupId : ''
+      create_groupId : '',
     };
   },
   methods:{
       createGroup(){
-          const body = JSON.stringify({
-              groupName : this.c_group_name,
-              description : this.description,
-              userId : this.$store.state.user.userId,
-          })
+        let body = new FormData()
+        body.append("body" , JSON.stringify({
+          groupName : this.c_group_name,
+          description : this.description,
+          userId : this.$store.state.user.userId
+        }))
+
+        if(this.bannerImg !== undefined){
+          body.append("bannerImg", this.bannerImg)
+        }
+        if(this.profilImg !== undefined){
+          body.append("profileImg", this.profilImg)
+        }
           fetch('http://localhost:3000/api/group/', {
-              headers:{"Content-Type" : "application/json"},
               body,
               method:"POST",
-              credentials:'include'
+              credentials:'include',
           })
           .then(response => {
             response.json().then(

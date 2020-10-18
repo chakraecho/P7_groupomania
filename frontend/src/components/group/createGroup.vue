@@ -16,7 +16,9 @@
                 name="bannerImage"
                 outline
                 label="Photo de bannière pour le groupe (non requis)"
+                accept="image/png,image/jpeg,image/svg+xml"
                 v-model="bannerImg"
+                clearable
               >
               </v-file-input>
           </v-col>
@@ -28,6 +30,8 @@
                 outline
                 v-model="profilImg"
                 label="Photo de profil pour le groupe (non requis)"
+                accept="image/png,image/jpeg"
+                clearable
               >
               </v-file-input>
           </v-col>
