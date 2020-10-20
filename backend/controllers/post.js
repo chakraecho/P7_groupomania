@@ -369,7 +369,7 @@ exports.commentLike = (req, res) => {
                         .then(like => {
                             switch (like.dataValues.type) {
                                 case true:
-                                    Comments.findAll({ where: { [Op.and] : [{commentId : id}, {userId : userId}] } })
+                                    Comments.findAll({ where: { [Op.and] : [{commentId : id}] } })
                                         .then(option => option[0].decrement('like')
                                             .then(() => {
                                                 commentLiked.destroy({ where: { [Op.and]: [{ commentId: id }, { userId: userId }] }, })
@@ -397,7 +397,7 @@ exports.commentLike = (req, res) => {
                                         .catch(error => console.log(error))
                                     break;
                                 case false:
-                                    Comments.findAll({ where: { [Op.and] : [{commentId : id}, {userId : userId}] } })
+                                    Comments.findAll({ where: { [Op.and] : [{commentId : id}] } })
                                         .then(option => option[0].decrement('dislike')
                                             .then(() => {
                                                 commentLiked.destroy({ where: { [Op.and]: [{ commentId: id }, { userId: userId }] } })
@@ -545,10 +545,20 @@ exports.commentLike = (req, res) => {
 exports.userPost = (req, res) => {
     const id = req.params.id
     Post.findAll({
-        where: { userId: id }, limit: 10, order: [['updatedAt', 'DESC']], include: {
+        where: { userId: id }, limit: 10, order: [['updatedAt', 'DESC']], include: [{
             model: User,
             attributes: ['lastName', 'firstName', 'profilImgUrl']
+        }, {
+            model: userLiked,
+            where: {
+                userId: {
+                    [Op.eq]: req.session.userId
+                }
+            },
+            attributes: ['type'],
+            required: false
         }
+        ]
     })
         .then(posts => {
             res.status(200).json({ posts })
