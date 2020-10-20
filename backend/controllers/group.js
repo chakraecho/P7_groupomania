@@ -1,4 +1,5 @@
 const User = require('./../models/users')
+const fs = require('fs')
 const { Op } = require('sequelize')
 const { groups, groupMembers } = require('./../models/group')
 
@@ -76,16 +77,34 @@ exports.modifyGroup = (req, res) => {
 
 exports.modifyImg = (req, res) => {
     const groupId = req.params.id
-    groups.update({ imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` }, { where: { groupId } })
+    .then(group => {
+        if(group.imgUrl !== "http://localhost:3000/assets/group.svg"){
+                    fs.unlink('/uploads/' + group.imgUrl.split('/uploads/')[1])
+        }
+    })
+    .then(()=>{
+            groups.update({ imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` }, { where: { groupId } })
         .then(() => res.status(200).json({ message: 'image de groupe modifié !' }))
         .catch((error) => res.status(500).json({ error }))
+    })
+    .catch(error => res.status(500).json({error}))
 }
 
 exports.modifyBanner = (req, res) => {
     const groupId = req.params.id
-    groups.update({ bannerUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` }, { where: { groupId } })
+    groups.findOne({where : {[Op.eq] : groupId}})
+    .then(group => {
+        if(group.imgUrl !== "http://localhost:3000/assets/default_banner.jpg"){
+                    fs.unlink('/uploads/' + group.imgUrl.split('/uploads/')[1])
+        }
+    })
+    .then(()=>{
+        groups.update({ bannerUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` }, { where: { groupId } })
         .then(() => res.status(200).json({ message: 'image de groupe modifié !' }))
         .catch((error) => res.status(500).json({ error }))
+    })
+    .catch(error => res.status(500).json({error}))
+
 }
 
 exports.deleteGroup = (req, res) => {
