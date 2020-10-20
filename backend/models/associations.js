@@ -14,6 +14,7 @@ Comments.belongsTo(Post, { foreignKey: { name: 'postId', allowNull: false } })
 commentLiked.belongsTo(Comments, { foreignKey: { name: 'commentId', allowNull: false } })
 commentLiked.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false } })
 
+Post.belongsTo(groups ,{foreignKey: {name: 'groupId'}} )
 Post.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false } })
 
 
@@ -44,4 +45,5 @@ User.hasMany(Comments, { allowNull: false, foreignKey: { name: 'userId' } })
 User.hasMany(noctification, {as: 'creator',foreignKey: {name: 'creator_id'}})
 User.hasMany(noctification, {as: 'notified', foreignKey: {name: 'notified_id'}})
 groups.hasMany(noctification, {foreignKey: {name: 'groupId'}})
+groups.hasMany(Post, {foreignKey: {name: 'groupId'}})
 groupRole.hasMany(groupMembers, {foreignKey: {name: 'role'}})

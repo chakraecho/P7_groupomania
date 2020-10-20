@@ -29,21 +29,22 @@ exports.createOne = (req, res, next) => {
 }
 exports.postGroup = (req, res) => {    //create a post linked followed a group
     Post.create({ content: req.body.content, like: 0, dislike: 0, userId: req.body.userId, groupId: req.params.id })
-        .then(() => res.status(201).json({ message: 'Post créé' }))
+        .then(() => res.status(201).json({ message: 'post créé !' }))
         .then(() => groupMembers.findAll({
             where: {
                 groupId: req.params.id
+            },
+            attributes : ['userId']
+        }).then(result => {
+            if (result.length !== 0) {
+                result.forEach(element => {
+                    const followed = req.session.id
+                    const follower = element.dataValues.userId
+                    noctification.create({ type: 'group_post', notified_id: follower, creator_id: followed, seen: 0 , groupId : req.params.id})
+                        .catch(error => console.log({ error }))
+                })
             }
         })
-            .then(result => {
-                if (result.length !== 0) {
-                    result.forEach(element => {
-                        const user = element.dataValues
-                        noctification.create({ follower: req.body.userId, followed: user.userId, type: 'groupPost', groupId: req.params.id })
-                            .catch(error => console.log(error))
-                    })
-                }
-            })
         )
         .catch(error => res.status(500).json({ error }))
 
