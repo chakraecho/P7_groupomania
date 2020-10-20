@@ -49,6 +49,7 @@
                   :content="post.content"
                   :likes="post.like - post.dislike"
                   :dataId="post.postId"
+                  :liked="post.userLikeds"
                 />
               </v-col>
             </v-row>
@@ -78,7 +79,6 @@ export default {
       lastName: "",
       bannerUrl: "",
       profilImgUrl: "",
-      posts: [],
       followed : false
     };
   },
@@ -87,6 +87,11 @@ export default {
           get(){
               return this.$store.state.comment.active
           }
+      },
+      posts:{
+        get(){
+          return this.$store.state.post.posts
+        }
       }
   },
   methods:{
@@ -124,7 +129,7 @@ export default {
     )
       .then(response =>
         response.json().then(res => {
-          this.posts = res.posts;
+          this.$store.dispatch("post/loadPost", res.posts)
         })
       )
       .catch(error => console.log(error));
