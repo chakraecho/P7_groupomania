@@ -36,12 +36,15 @@ exports.postGroup = (req, res) => {    //create a post linked followed a group
             },
             attributes : ['userId']
         }).then(result => {
+            console.log(result)
             if (result.length !== 0) {
                 result.forEach(element => {
-                    const followed = req.session.id
+                    const followed = req.session.userId
                     const follower = element.dataValues.userId
-                    noctification.create({ type: 'group_post', notified_id: follower, creator_id: followed, seen: 0 , groupId : req.params.id})
+                    if(followed !== follower){
+                                            noctification.create({ type: 'group_post', notified_id: follower, creator_id: followed, seen: 0 , groupId : req.params.id})
                         .catch(error => console.log({ error }))
+                    }
                 })
             }
         })
@@ -58,6 +61,30 @@ exports.getOne = (req, res, next) => {
 
 exports.getAll = (req, res, next) => {
     Post.findAll({
+        limit: 10, order: [['updatedAt', 'DESC']], include: [{
+            model: User,
+            attributes: ['lastName', 'firstName', 'profilImgUrl']
+        }, {
+            model: userLiked,
+            where: {
+                userId: {
+                    [Op.eq]: req.session.userId
+                }
+            },
+            attributes: ['type'],
+            required: false
+        }
+        ]
+    })
+        .then(posts => {
+            return res.status(200).json({ posts })
+        })
+        .catch(error => res.status(404).json({ error }))
+}
+
+exports.getAllfromGroups = (req, res, next) => {
+    Post.findAll({
+        where:{groupId : {[Op.eq]: req.params.id}},
         limit: 10, order: [['updatedAt', 'DESC']], include: [{
             model: User,
             attributes: ['lastName', 'firstName', 'profilImgUrl']

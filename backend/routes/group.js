@@ -15,6 +15,7 @@ router.put('/:id/banner', groupCtrl.modifyBanner)
 
 router.get('/list', groupCtrl.getOwnGroups)
 router.get('/:id', groupCtrl.getOneGroup)
+router.get('/:id/post', postCtrl.getAllfromGroups)
 
 router.delete('/:id', groupCtrl.deleteGroup)
 
