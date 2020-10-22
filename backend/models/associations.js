@@ -4,8 +4,10 @@ const noctification = require('./noctification.js')
 const { groups, groupMembers, groupRole } = require('./group')
 const department = require('./department')
 const follow = require('./follow')
+const userRole = require('./role.js')
 
 //associations
+userRole.belongsTo(User, {foreignKey : {name :"roleId", allowNull : false}})
 
 Comments.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false } })
 Comments.belongsTo(Post, { foreignKey: { name: 'postId', allowNull: false } })
@@ -34,6 +36,7 @@ groupMembers.belongsTo(User, { foreignKey: { name: 'userId' }, allowNull: false 
 groupMembers.belongsTo(groups, { foreignKey: { name: 'groupId' }, allowNull: false })
 
 
+User.hasOne(userRole, {foreignKey : {name : "roleId", allowNull : false}})
 Comments.hasMany(commentLiked,{ foreignKey: { name: 'commentId', allowNull: false }})
 groups.hasMany(groupMembers, { foreignKey: { name: 'groupId' }, allowNull: false })
 Post.hasMany(userLiked, { allowNull: false, foreignKey: { name: 'postId' } })
