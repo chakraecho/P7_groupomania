@@ -27,7 +27,14 @@
         </v-row>
       </v-container>
     </v-row>
+    <v-row class="mt-5">
+      <v-container>
     <v-row>
+      <v-col cols="12" md="6" class="mx-auto">
+        <postCreator @send="sendPost" ref="postcreator" />
+      </v-col>
+    </v-row>
+      </v-container>
       <v-container class="mt-5 pt-5">
         <v-row justify="center">
           <v-col cols="11" md="6" lg="5">
@@ -60,11 +67,13 @@
 <script>
 import postCard from "@/components/post/post.vue";
 import commentCard from '@/components/post/comment.vue'
+import postCreator from "@/components/post/createPost.vue"
 
 export default {
   components: {
     postCard,
-    commentCard
+    commentCard,
+    postCreator
   },
   data() {
     return {
@@ -74,6 +83,23 @@ export default {
       imgUrl: "",
       posts: []
     };
+  },
+  methods:{
+        sendPost() {
+      this.$refs.postcreator.loading = true;
+      fetch("http://localhost:3000/api/group/" + this.$route.params.id + "/submit", {
+        method: "POST",
+        body: JSON.stringify({
+          userId: this.$store.state.user.userId,
+          content: this.$refs.postcreator.content
+        }),
+        headers: { "Content-Type": "application/json" },
+        credentials:'include'
+      }).then(() => {
+        this.$refs.postcreator.loading = false;
+        this.$refs.postcreator.success = true;
+      });
+    }
   },
   computed:{
       activeComment:{

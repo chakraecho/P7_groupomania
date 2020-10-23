@@ -6,7 +6,7 @@
     class="d-flex navbar flex-column align-center justify-space-between"
   >
     <v-list nav class="d-flex flex-column justify-content-between align-items-center nav-inside">
-      <v-list-item link @click="$router.push('/account/' + $store.state.user.userId)">
+      <v-list-item link @click="handleAccount()">
         <v-list-item-icon>
           <v-icon>mdi-account</v-icon>
         </v-list-item-icon>
@@ -49,6 +49,15 @@ export default {
         })
         .catch(error => console.log(error));
     }
+  },
+  handleAccount(){
+    if(this.$route.name != "account"){
+      this.$router.push('/account/' + this.$store.state.user.userId)
+    }
+    else {
+      this.$route.params.id = this.$store.state.user.userId
+    }
+    
   }
 };
 </script>
