@@ -45,12 +45,7 @@
             >
               <v-col>
                 <postCard
-                  :firstName="post.User.firstName"
-                  :lastName="post.User.lastName"
-                  :date="post.updatedAt.split(' ')[0]"
-                  :content="post.content"
-                  :likes="post.like - post.dislike"
-                  :dataId="post.postId"
+                  :post="post"
                 />
               </v-col>
             </v-row>
