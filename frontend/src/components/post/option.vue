@@ -9,14 +9,14 @@
       >
         <v-icon>mdi-pencil</v-icon> Editer
       </v-btn>
-      <v-btn text v-if="option_post.userId === $store.state.user.userId">
+      <v-btn text v-if="option_post.userId === $store.state.user.userId" @click="deletePost()">
         <v-icon>mdi-delete</v-icon> Supprimer
       </v-btn>
     </v-card>
     <v-dialog v-model="edit_dialog">
       <v-card>
         <v-card-title>
-          Editer le commentaire
+          Editer le post
         </v-card-title>
         <v-card-content>
           <v-container>
@@ -47,6 +47,9 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="snackbar" timeout="4000" :color="snackbarColor">
+        {{snackbarMsg}}
+    </v-snackbar>
   </v-bottom-sheet>
 </template>
 
@@ -56,7 +59,9 @@ export default {
   data() {
     return {
       edit_dialog: false,
-      editComment: ""
+      editComment: "",
+      snackbar: false,
+      snackbarcolor: ""
     };
   },
   computed: {
@@ -74,6 +79,30 @@ export default {
     open_edit_dialog() {
       this.edit_dialog = true;
       this.editComment = this.option_post.content;
+    },
+    closeAll(){
+        this.edit_dialog = false;
+        this.editComment = "";
+        this.$store.commit("post/CLOSE_OPTION");
+    },
+    activateSnack(color, msg){
+        this.snackbar = true;
+        this.snackbarcolor = color
+        this.snackbarMsg = msg
+    },
+    deletePost(){
+        fetch('http://localhost:3000/api/post/' + this.option_post.postId, {
+            method:'delete',
+            credentials: 'include'
+        })
+        .then(()=> {
+            this.closeAll()
+            this.activateSnack("success", "Commentaire supprimé !")
+        })
+        .catch((error)=>{
+            console.log(error)
+            this.activateSnack("error", "Erreur, veuillez rééssayer !")
+        })
     }
   }
 };
