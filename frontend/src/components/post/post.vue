@@ -62,7 +62,7 @@ export default {
   },
   computed: {
     date() {
-      return this._props.post.createdAt.split("T")[0];
+      return this._props.post.createdAt.split(" ")[0];
     },
     fullName() {
       return (
