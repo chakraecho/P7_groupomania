@@ -9,7 +9,7 @@ const post = {
     },
     getters:{
         option_post(state){
-            return state.posts.filter(x => x.postId === state.optionId)[0].userId
+            return state.posts.filter(x => x.postId === state.optionId)[0]
         }
     },
     mutations:{
