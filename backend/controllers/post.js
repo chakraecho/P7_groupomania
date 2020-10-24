@@ -141,7 +141,7 @@ exports.modifyOne = (req, res, next) => {
 
 exports.deleteOne = (req, res) => {
     const postId = req.params.id
-    Post.destroy({ where: { postId: postId } })
+    Post.destroy({ where: { postId: postId }, include:[Comments, userLiked] })
         .then(() => res.status(200).json({ message: 'post supprimé !' }))
         .catch((error) => res.status(500).json({ error }))
 }

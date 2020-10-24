@@ -26,7 +26,7 @@ try {
 }
 
 
-sequelize.sync({alter:true}).then(() => {
+sequelize.sync({force:true}).then(() => {
   console.log("All models were synchronized successfully.")
 
 }).catch('error synchronizing')
