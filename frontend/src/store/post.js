@@ -7,6 +7,11 @@ const post = {
         optionId : '',
         option : false
     },
+    getter:{
+        option_post(state){
+            return state.posts.filter(x => x.postId === state.post.optionId)
+        }
+    },
     mutations:{
         changePost(state, payload){
             state.posts = payload
