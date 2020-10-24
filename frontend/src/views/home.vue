@@ -8,16 +8,14 @@
     <v-row>
       <v-container>
         <v-row justify="center">
-          <v-col  cols="11" md="6" lg="5">
+          <v-col cols="11" md="6" lg="5">
             <v-row
               justify="center"
               v-for="post in posts"
               :key="'post_' + post.postId"
             >
               <v-col>
-                <postCard
-                  :post="post"
-                />
+                <postCard :post="post" :dataId="post.postId" />
               </v-col>
             </v-row>
           </v-col>
@@ -27,6 +25,12 @@
         </v-row>
       </v-container>
     </v-row>
+    <v-bottom-sheet v-if="post_option" v-model="post_option">
+      <v-card>
+        <v-btn text> <v-icon>mdi-alert</v-icon> Signaler </v-btn>
+        <v-btn text> <v-icon>mdi-pencil</v-icon> Editer </v-btn>
+      </v-card>
+    </v-bottom-sheet>
   </v-container>
 </template>
 
@@ -44,6 +48,14 @@ export default {
     commentCard
   },
   computed: {
+    post_option: {
+      get() {
+        return this.$store.state.post.option;
+      },
+      set() {
+        return this.$store.commit("post/CLOSE_OPTION");
+      }
+    },
     posts: {
       get() {
         return this.$store.state.post.posts;
@@ -65,7 +77,7 @@ export default {
           content: this.$refs.postcreator.content
         }),
         headers: { "Content-Type": "application/json" },
-        credentials:'include'
+        credentials: "include"
       }).then(() => {
         this.$refs.postcreator.loading = false;
         this.$refs.postcreator.success = true;
@@ -76,7 +88,7 @@ export default {
     }
   },
   beforeCreate() {
-    fetch("http://localhost:3000/api/post/", {credentials: 'include'})
+    fetch("http://localhost:3000/api/post/", { credentials: "include" })
       .then(response =>
         response
           .json()
