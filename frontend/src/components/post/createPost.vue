@@ -89,14 +89,21 @@ export default {
     },
     sendPost() {
       this.loading = true;
+      let body= new FormData()
+      body.append("body",JSON.stringify({
+            userId: this.$store.state.user.userId,
+            content: this.content
+          }) )
+
+      if(this.image !== undefined){
+        body.append("file", this.image)
+      }
+
+
       if (this.$route.name !== "group") {
         fetch("http://localhost:3000/api/post/submit", {
           method: "POST",
-          body: JSON.stringify({
-            userId: this.$store.state.user.userId,
-            content: this.content
-          }),
-          headers: { "Content-Type": "application/json" },
+          body,
           credentials: "include"
         }).then(() => {
           this.loading = false;
@@ -112,11 +119,7 @@ export default {
             "/submit",
           {
             method: "POST",
-            body: JSON.stringify({
-              userId: this.$store.state.user.userId,
-              content: this.content
-            }),
-            headers: { "Content-Type": "application/json" },
+            body,
             credentials: "include"
           }
         ).then(() => {
