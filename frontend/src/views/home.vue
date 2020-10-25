@@ -25,7 +25,11 @@
         </v-row>
       </v-container>
     </v-row>
-    <options />
+    <options
+    @snackbar="activateSnack($event.color, $event.msg)" />
+        <v-snackbar v-model="snackbar" timeout="4000" :color="snackbarColor" top right>
+      {{ snackbarMsg }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -44,6 +48,13 @@ export default {
     commentCard,
     options
   },
+  data(){
+    return{
+            snackbar: false,
+      snackbarColor: "",
+      snackbarMsg :"",
+    }
+  },
   computed: {
     posts: {
       get() {
@@ -57,6 +68,11 @@ export default {
     }
   },
   methods: {
+        activateSnack(color, msg) {
+      this.snackbar = true;
+      this.snackbarColor = color;
+      this.snackbarMsg = msg;
+    },
     sendPost() {
       this.$refs.postcreator.loading = true;
       fetch("http://localhost:3000/api/post/submit", {

@@ -9,11 +9,15 @@
       >
         <v-icon>mdi-pencil</v-icon> Editer
       </v-btn>
-      <v-btn text v-if="option_post.userId === $store.state.user.userId" @click="deletePost()">
+      <v-btn
+        text
+        v-if="option_post.userId === $store.state.user.userId"
+        @click="deletePost()"
+      >
         <v-icon>mdi-delete</v-icon> Supprimer
       </v-btn>
     </v-card>
-    <v-dialog v-model="edit_dialog">
+    <v-dialog v-model="edit_dialog" class="container">
       <v-card>
         <v-card-title>
           Editer le post
@@ -32,24 +36,26 @@
                 </v-col>
                 <v-col cols="4" class="mx-auto"> </v-col>
               </v-col>
-              <v-col cols="1">
-                <v-file-input accept="image/png, image/jpg" hide-input>
-                </v-file-input>
+              <v-col
+                cols="3"
+                class="d-flex flex-column justify-center align-center"
+              >
+                <v-row>
+                  <v-file-input accept="image/png, image/jpg" hide-input>
+                  </v-file-input>
+                </v-row>
+                <v-row>
+                  <v-btn @click="sendEdit()">
+                    Mettre à jour
+                  </v-btn>
+                </v-row>
               </v-col>
             </v-row>
           </v-container>
         </v-card-content>
-        <v-spacer></v-spacer>
-        <v-card-actions>
-          <v-btn>
-            Mettre à jour
-          </v-btn>
-        </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="snackbar" timeout="4000" :color="snackbarColor">
-        {{snackbarMsg}}
-    </v-snackbar>
+
   </v-bottom-sheet>
 </template>
 
@@ -60,8 +66,6 @@ export default {
     return {
       edit_dialog: false,
       editComment: "",
-      snackbar: false,
-      snackbarcolor: ""
     };
   },
   computed: {
@@ -80,29 +84,43 @@ export default {
       this.edit_dialog = true;
       this.editComment = this.option_post.content;
     },
-    closeAll(){
-        this.edit_dialog = false;
-        this.editComment = "";
-        this.$store.commit("post/CLOSE_OPTION");
+    closeAll() {
+      this.edit_dialog = false;
+      this.editComment = "";
+      this.$store.commit("post/CLOSE_OPTION");
     },
-    activateSnack(color, msg){
-        this.snackbar = true;
-        this.snackbarcolor = color
-        this.snackbarMsg = msg
+    deletePost() {
+      fetch("http://localhost:3000/api/post/" + this.option_post.postId, {
+        method: "delete",
+        credentials: "include"
+      })
+        .then(() => {
+          this.closeAll();
+          this.$emit('snackbar', {color: "success", msg: "Commentaire supprimé !"})
+        })
+        .catch(error => {
+          console.log(error);
+          this.$emit("snackbar", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
+        });
     },
-    deletePost(){
+    sendEdit(){
+        const body = JSON.stringify({content: this.editComment})
+
         fetch('http://localhost:3000/api/post/' + this.option_post.postId, {
-            method:'delete',
-            credentials: 'include'
+            method:"put",
+            credentials : "include",
+            headers:{"Content-type": "application/json"},
+            body
         })
-        .then(()=> {
-            this.closeAll()
-            this.activateSnack("success", "Commentaire supprimé !")
+                .then(() => {
+          this.closeAll();
+          this.$emit('snackbar', {color: "success", msg: "Commentaire modifié !"})
         })
-        .catch((error)=>{
-            console.log(error)
-            this.activateSnack("error", "Erreur, veuillez rééssayer !")
-        })
+        .catch(error => {
+          console.log(error);
+          this.$emit("snackbar", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
+        });
+        
     }
   }
 };
