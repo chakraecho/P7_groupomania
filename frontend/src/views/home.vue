@@ -2,7 +2,7 @@
   <v-container fluid class="pa-0 ma-0" id="post__create">
     <v-row>
       <v-col cols="12" md="6" class="mx-auto">
-        <postCreator @send="sendPost" ref="postcreator" />
+        <postCreator ref="postcreator" />
       </v-col>
     </v-row>
     <v-row>
@@ -73,24 +73,7 @@ export default {
       this.snackbarColor = color;
       this.snackbarMsg = msg;
     },
-    sendPost() {
-      this.$refs.postcreator.loading = true;
-      fetch("http://localhost:3000/api/post/submit", {
-        method: "POST",
-        body: JSON.stringify({
-          userId: this.$store.state.user.userId,
-          content: this.$refs.postcreator.content
-        }),
-        headers: { "Content-Type": "application/json" },
-        credentials: "include"
-      }).then(() => {
-        this.$refs.postcreator.loading = false;
-        this.$refs.postcreator.success = true;
-        setTimeout(() => {
-          this.$refs.postcreator.success = false;
-        }, 1000);
-      });
-    }
+
   },
   beforeCreate() {
     fetch("http://localhost:3000/api/post/", { credentials: "include" })

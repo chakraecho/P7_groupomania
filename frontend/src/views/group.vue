@@ -96,21 +96,6 @@ export default {
       this.snackbarColor = color;
       this.snackbarMsg = msg;
     },
-        sendPost() {
-      this.$refs.postcreator.loading = true;
-      fetch("http://localhost:3000/api/group/" + this.$route.params.id + "/submit", {
-        method: "POST",
-        body: JSON.stringify({
-          userId: this.$store.state.user.userId,
-          content: this.$refs.postcreator.content
-        }),
-        headers: { "Content-Type": "application/json" },
-        credentials:'include'
-      }).then(() => {
-        this.$refs.postcreator.loading = false;
-        this.$refs.postcreator.success = true;
-      });
-    }
   },
   computed:{
       activeComment:{
