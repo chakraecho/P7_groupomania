@@ -5,11 +5,16 @@ const comment = {
     state: {
         active: false,
         comments: [],
-        postId: ''
+        postId: '',
+        optionId : '',
+        option : false
     },
     getters: {
         activePostId: state => {
             return state.selectedPostId
+        },
+        option_comment(state){
+            return state.comments.filter(x => x.commentId === state.optionId)[0]
         }
     },
     mutations: {
@@ -34,6 +39,15 @@ const comment = {
         UPDATE_COMMENT(state, payload){
             const id = state.comments.findIndex(x => x.commentId == payload.commentId)
             Vue.set(state.comments, id , payload)
+        },
+        OPEN_OPTION(state, payload){
+            Vue.set(state, 'optionId', payload)
+            Vue.set(state, 'option', true)
+
+        },
+        CLOSE_OPTION(state){
+            Vue.set(state, 'optionId', null)
+            Vue.set(state, 'option', false)
         }
     },
     actions: {
@@ -55,6 +69,9 @@ const comment = {
         neutraliseComment({ commit }) {
             commit('voidComment')
             commit('desactiveComment')
+        },
+        open_sideoption({commit}, payload){
+            commit("OPEN_OPTION", payload)
         }
     }
 }

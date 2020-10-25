@@ -9,63 +9,75 @@
         v-for="comment in comments"
         :key="comment"
       >
-        <v-col
-          cols="3"
-          md="2"
-          class=" d-flex flex-column justify-content-between "
-        >
-          <img
-            :src="comment.User.profilImgUrl"
-            :alt="
-              'photo de ' + comment.User.firstName + ' ' + comment.User.lastName
-            "
-            class="rounded-circle w-100"
-          />
-        </v-col>
-        <v-col cols="7">
-          <p>{{ comment.content }}</p>
-        </v-col>
-        <v-col cols="1">
-          <v-btn
-            :disabled="
-              comment.commentLikeds[0]
-                ? comment.commentLikeds[0].type
-                  ? true
+        <v-container>
+          <v-row>
+            <v-col
+              cols="3"
+              md="2"
+              class=" d-flex flex-column justify-content-between "
+            >
+              <img
+                :src="comment.User.profilImgUrl"
+                :alt="
+                  'photo de ' +
+                    comment.User.firstName +
+                    ' ' +
+                    comment.User.lastName
+                "
+                class="rounded-circle w-100"
+              />
+            </v-col>
+            <v-col cols="7">
+              <p>{{ comment.content }}</p>
+            </v-col>
+            <v-btn icon class="ml-auto" @click="$store.dispatch('comment/open_sideoption', comment.commentId)">
+              <v-icon>
+                mdi-dots-vertical
+              </v-icon>
+            </v-btn>
+          </v-row>
+          <v-row align="center" justify="end">
+            <v-btn
+              :disabled="
+                comment.commentLikeds[0]
+                  ? comment.commentLikeds[0].type
+                    ? true
+                    : false
                   : false
-                : false
-            "
-            icon
-            @click="
-              comment.commentLikeds[0]
-                ? comment.commentLikeds[0].type
-                  ? commentLike({ id: comment.commentId, value: -1 })
-                  : commentLike({ id: comment.commentId, value: 0 })
-                : commentLike({ id: comment.commentId, value: -1 })
-            "
-          >
-            -
-          </v-btn>
-          <p>{{ comment.like - comment.dislike }}</p>
-          <v-btn
-            :disabled="
-              comment.commentLikeds[0]
-                ? comment.commentLikeds[0].type
-                  ? false
-                  : true
-                : false
-            "
-            icon
-            @click="
-              comment.commentLikeds[0]
-                ? comment.commentLikeds[0].type
-                  ? commentLike({ id: comment.commentId, value: 0 })
+              "
+              icon
+              @click="
+                comment.commentLikeds[0]
+                  ? comment.commentLikeds[0].type
+                    ? commentLike({ id: comment.commentId, value: -1 })
+                    : commentLike({ id: comment.commentId, value: 0 })
+                  : commentLike({ id: comment.commentId, value: -1 })
+              "
+            >
+              -
+            </v-btn>
+            <p class="ma-0 pa-0">{{ comment.like - comment.dislike }}</p>
+            <v-btn
+              :disabled="
+                comment.commentLikeds[0]
+                  ? comment.commentLikeds[0].type
+                    ? false
+                    : true
+                  : false
+              "
+              icon
+              @click="
+                comment.commentLikeds[0]
+                  ? comment.commentLikeds[0].type
+                    ? commentLike({ id: comment.commentId, value: 0 })
+                    : commentLike({ id: comment.commentId, value: 1 })
                   : commentLike({ id: comment.commentId, value: 1 })
-                : commentLike({ id: comment.commentId, value: 1 })
-            "
-          >
-            +
-          </v-btn>
-        </v-col>
+              "
+            >
+              +
+            </v-btn>
+          </v-row>
+        </v-container>
       </v-row>
       <v-row v-if="comments.length === 0">
         Pas de commentaire pour le moment, n'hésitez pas à commenter

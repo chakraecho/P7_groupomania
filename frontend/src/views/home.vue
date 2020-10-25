@@ -25,9 +25,15 @@
         </v-row>
       </v-container>
     </v-row>
-    <options
-    @snackbar="activateSnack($event.color, $event.msg)" />
-        <v-snackbar v-model="snackbar" timeout="4000" :color="snackbarColor" top right>
+    <options @snackbar="activateSnack($event.color, $event.msg)" />
+    <optionComment @snackbar="activateSnack($event.color, $event.msg)" />
+    <v-snackbar
+      v-model="snackbar"
+      timeout="4000"
+      :color="snackbarColor"
+      top
+      right
+    >
       {{ snackbarMsg }}
     </v-snackbar>
   </v-container>
@@ -38,7 +44,8 @@
 import postCreator from "@/components/post/createPost.vue";
 import postCard from "@/components/post/post.vue";
 import commentCard from "@/components/post/comment.vue";
-import options from "@/components/post/option.vue"
+import options from "@/components/post/option.vue";
+import optionComment from "@/components/post/option_comment.vue"
 
 export default {
   name: "Home",
@@ -46,14 +53,15 @@ export default {
     postCreator,
     postCard,
     commentCard,
-    options
+    options,
+    optionComment
   },
-  data(){
-    return{
-            snackbar: false,
+  data() {
+    return {
+      snackbar: false,
       snackbarColor: "",
-      snackbarMsg :"",
-    }
+      snackbarMsg: ""
+    };
   },
   computed: {
     posts: {
@@ -68,12 +76,11 @@ export default {
     }
   },
   methods: {
-        activateSnack(color, msg) {
+    activateSnack(color, msg) {
       this.snackbar = true;
       this.snackbarColor = color;
       this.snackbarMsg = msg;
-    },
-
+    }
   },
   beforeCreate() {
     fetch("http://localhost:3000/api/post/", { credentials: "include" })
