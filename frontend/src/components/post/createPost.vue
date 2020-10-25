@@ -35,6 +35,8 @@
           accept="image/png,image/jpg"
           hide-input
           prepend-icon="mdi-image-plus"
+          v-model="image"
+          @change="parseImg($event)"
         >
         </v-file-input>
         <v-btn icon @click="sendPost()">
@@ -43,6 +45,19 @@
           </v-icon>
         </v-btn>
       </v-col>
+    </v-row>
+    <v-row v-if="srcImg.length > 2" class="pa-2">
+      <div
+
+        class="img-block mx-auto"
+      >
+      <img :src="srcImg" alt="photo à envoyer" class="img--inside"/>
+        <v-btn icon class="ml-auto mr-3 mt-3 btn--close" @click="srcImg=''; image = undefined">
+          <v-icon>
+            mdi-close
+          </v-icon>
+        </v-btn>
+      </div>
     </v-row>
   </v-card>
 </template>
@@ -54,16 +69,24 @@ export default {
   data() {
     return {
       content: "",
-      image: [],
+      image: undefined,
       dialog: false,
       loading: false,
-      success: false
+      success: false,
+      srcImg: ""
     };
   },
   computed: {
     ...mapState("user", ["profilImgUrl"])
   },
   methods: {
+    parseImg(evt) {
+      var reader = new FileReader();
+      reader.onload = e => {
+        this.srcImg = e.target.result;
+      };
+      reader.readAsDataURL(evt);
+    },
     sendPost() {
       this.loading = true;
       if (this.$route.name !== "group") {
@@ -105,6 +128,27 @@ export default {
   }
 };
 </script>
+
+<style scoped lang="scss">
+.img{
+&--inside{
+  width:100%;
+  height:100%;
+
+}
+&-block {
+  background-size:cover;
+  border: 2px grey solid;
+  max-width: 200px !important;
+  max-height: 200px !important;
+}
+}
+
+.btn--close{
+  position: absolute;
+}
+</style>
+
 
 <style lang="scss">
 .w-100 {

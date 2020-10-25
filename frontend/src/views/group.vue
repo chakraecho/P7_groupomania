@@ -46,7 +46,7 @@
               <v-col>
                 <postCard
                   :post="post"
-                   :dataId="post.postId" 
+                  :dataId="post.postId"  
                 />
               </v-col>
             </v-row>
