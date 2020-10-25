@@ -22,7 +22,7 @@
         <v-card-title>
           Editer le commentaire
         </v-card-title>
-        <v-card-content>
+        <v-card-text>
           <v-container>
             <v-row> </v-row>
             <v-row>
@@ -52,10 +52,9 @@
               </v-col>
             </v-row>
           </v-container>
-        </v-card-content>
+        </v-card-text>
       </v-card>
     </v-dialog>
-
   </v-bottom-sheet>
 </template>
 
@@ -65,7 +64,7 @@ export default {
   data() {
     return {
       edit_dialog: false,
-      editComment: "",
+      editComment: ""
     };
   },
   computed: {
@@ -82,7 +81,7 @@ export default {
   methods: {
     open_edit_dialog() {
       this.edit_dialog = true;
-      this.editComment = this.option_post.content;
+      this.editComment = this.option_comment.content;
     },
     closeAll() {
       this.edit_dialog = false;
@@ -90,37 +89,62 @@ export default {
       this.$store.commit("comment/CLOSE_OPTION");
     },
     deleteComment() {
-      fetch("http://localhost:3000/api/post/" + this.option_comment.commentId + "/comment", {
-        method: "delete",
-        credentials: "include"
-      })
+      fetch(
+        "http://localhost:3000/api/post/" +
+          this.option_comment.commentId +
+          "/comment",
+        {
+          method: "delete",
+          credentials: "include"
+        }
+      )
         .then(() => {
           this.closeAll();
-          this.$emit('snackbar', {color: "success", msg: "Commentaire supprimé !"})
+          this.$emit("snackbar", {
+            color: "success",
+            msg: "Commentaire supprimé !"
+          });
         })
         .catch(error => {
           console.log(error);
-          this.$emit("snackbar", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
+          this.$emit("snackbar", {
+            color: "error",
+            msg: "Erreur, veuillez rééssayer ou contacter un administrateur"
+          });
         });
     },
-    sendEdit(){
-        const body = JSON.stringify({content: this.editComment})
+    sendEdit() {
+      const body = JSON.stringify({ content: this.editComment });
 
-        fetch('http://localhost:3000/api/post/' + this.option_comment.commentId + "/comment", {
-            method:"put",
-            credentials : "include",
-            headers:{"Content-type": "application/json"},
-            body
-        })
-                .then(() => {
-          this.closeAll();
-          this.$emit('snackbar', {color: "success", msg: "Commentaire modifié !"})
-        })
+      fetch(
+        "http://localhost:3000/api/post/" +
+          this.option_comment.commentId +
+          "/comment",
+        {
+          method: "put",
+          credentials: "include",
+          headers: { "Content-type": "application/json" },
+          body
+        }
+      )
+        .then(response =>
+          response.json().then(res => {
+            this.$store.commit("comment/UPDATE_COMMENT", res.comment);
+
+            this.closeAll();
+            this.$emit("snackbar", {
+              color: "success",
+              msg: "Commentaire modifié !"
+            });
+          })
+        )
         .catch(error => {
           console.log(error);
-          this.$emit("snackbar", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
+          this.$emit("snackbar", {
+            color: "error",
+            msg: "Erreur, veuillez rééssayer ou contacter un administrateur"
+          });
         });
-        
     }
   }
 };

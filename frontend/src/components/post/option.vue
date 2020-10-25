@@ -22,7 +22,7 @@
         <v-card-title>
           Editer le post
         </v-card-title>
-        <v-card-content>
+        <v-card-text>
           <v-container>
             <v-row> </v-row>
             <v-row>
@@ -52,7 +52,7 @@
               </v-col>
             </v-row>
           </v-container>
-        </v-card-content>
+        </v-card-text>
       </v-card>
     </v-dialog>
 
@@ -112,10 +112,14 @@ export default {
             headers:{"Content-type": "application/json"},
             body
         })
-                .then(() => {
+        .then(response => response.json()
+        .then(res => {
+          this.$store.commit('post/UPDATE_POST', res.post)
           this.closeAll();
           this.$emit('snackbar', {color: "success", msg: "Commentaire modifié !"})
         })
+        )
+                
         .catch(error => {
           console.log(error);
           this.$emit("snackbar", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});

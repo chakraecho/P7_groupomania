@@ -18,7 +18,7 @@
         </v-row>
       </v-card-title>
       <v-card-text>
-        {{ content }}
+        {{ post.content }}
         <div v-if="post.imgUrl !== null" class="post--wrapper--img">
           <img :src="post.imgUrl" alt="image de post" class="post--img"/>
         </div>

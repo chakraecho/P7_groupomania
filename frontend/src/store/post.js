@@ -18,6 +18,7 @@ const post = {
         },
         UPDATE_POST(state, payload) {
             const id = state.posts.findIndex(x => x.postId == payload.postId)
+            console.log(id)
             Vue.set(state.posts, id , payload)
         },
         OPEN_OPTION(state, payload){
