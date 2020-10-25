@@ -3,12 +3,19 @@
     <v-row>
       <v-container fluid class="pt-0">
         <v-row>
+          <v-file-input
+          prepend-icon="mdi-pencil"
+          hide-input
+          class="modify--background pa-3"
+          >
+          </v-file-input>
           <v-container
             fluid
             class="banner-block pa-0 d-flex align-center justify-center"
             :style="{ 'background-image': 'url(' + bannerUrl + ')' }"
             style="background-size : cover"
           >
+          <div class=" modify--profile">
             <div
               class="img-profil-wrapper rounded-circle d-flex align-items-center justify-center"
             >
@@ -18,6 +25,13 @@
                 class="img-profil"
               />
             </div>
+              <v-file-input
+          prepend-icon="mdi-pencil"
+          hide-input
+          class="modify--profile--img pa-0 ma-0 rounded-circle"
+          >
+          </v-file-input>
+          </div>
           </v-container>
           <div class="name-card-wrapper">
             <v-card class="name-card">
@@ -33,7 +47,8 @@
       </v-container>
     </v-row>
     <v-row>
-      <v-container class="mt-5 pt-5">
+      <v-col>
+<v-container class="mt-5 pt-5">
         <v-row justify="center">
           <v-col cols="11" md="6" lg="5">
             <v-row
@@ -54,6 +69,15 @@
           </v-col>
         </v-row>
       </v-container>
+      </v-col>
+      <v-col cols="3">
+        <div id="description">
+        <h2>Description<v-btn class="position-absolute" icon><v-icon>mdi-pencil</v-icon></v-btn> </h2>
+        <p>{{description}}</p>
+        </div>
+
+      </v-col>
+      
     </v-row>
         <options
     @snackbar="activateSnack($event.color, $event.msg)" />
@@ -81,8 +105,9 @@ export default {
       lastName: "",
       bannerUrl: "",
       profilImgUrl: "",
+      description : "",
       followed : false,
-                  snackbar: false,
+      snackbar: false,
       snackbarColor: "",
       snackbarMsg :"",
     };
@@ -130,6 +155,7 @@ export default {
           this.lastName = res.lastName;
           this.bannerUrl = res.bannerUrl;
           this.profilImgUrl = res.profilImgUrl;
+          this.description = res.description
         })
       )
       .catch(error => console.log(error));
@@ -162,6 +188,28 @@ export default {
 </script>
 
 <style lang="scss">
+
+
+.v-input__prepend-outer{
+  margin:auto !important;
+}
+
+.modify{
+  &--background{
+    position: absolute;
+    right:0px;
+  }
+  &--profile{
+    position:relative;
+    &--img{
+      position:absolute;
+      bottom:1em; right:0;
+      background: white;
+      border: 1px solid grey;
+    }
+  }
+}
+
 .banner {
   &-block {
     height: 30vh;
@@ -197,5 +245,10 @@ export default {
     margin: auto;
     width: 100%;
   }
+}
+
+#description{
+  position:sticky;
+  top:10vh;
 }
 </style>
