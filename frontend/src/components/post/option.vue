@@ -5,7 +5,7 @@
       <v-btn
         text
         v-if="option_post.userId === $store.state.user.userId"
-        @click="open_edit_dialog"
+        @click="open_edit_dialog()"
       >
         <v-icon>mdi-pencil</v-icon> Editer
       </v-btn>

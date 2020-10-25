@@ -6,7 +6,7 @@
     class="d-flex navbar flex-column align-center justify-space-between"
   >
     <v-list nav class="d-flex flex-column justify-content-between align-items-center nav-inside">
-      <v-list-item link @click="handleAccount()">
+      <v-list-item link @click="$router.push({name:'account', params:{id: $store.state.user.userId}} )">
         <v-list-item-icon>
           <v-icon>mdi-account</v-icon>
         </v-list-item-icon>

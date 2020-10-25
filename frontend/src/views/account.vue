@@ -44,6 +44,7 @@
               <v-col>
                 <postCard
                   :post="post"
+                   :dataId="post.postId" 
                 />
               </v-col>
             </v-row>
@@ -54,17 +55,24 @@
         </v-row>
       </v-container>
     </v-row>
+        <options
+    @snackbar="activateSnack($event.color, $event.msg)" />
+        <v-snackbar v-model="snackbar" timeout="4000" :color="snackbarColor" top right>
+      {{ snackbarMsg }}
+    </v-snackbar>
   </v-container>
 </template>
 
 <script>
 import postCard from "@/components/post/post.vue";
-import commentCard from '@/components/post/comment.vue'
+import commentCard from '@/components/post/comment.vue';
+import options from "@/components/post/option.vue"
 
 export default {
   components: {
     postCard,
-    commentCard
+    commentCard,
+    options
   },
   data() {
     return {
@@ -73,10 +81,14 @@ export default {
       lastName: "",
       bannerUrl: "",
       profilImgUrl: "",
-      followed : false
+      followed : false,
+                  snackbar: false,
+      snackbarColor: "",
+      snackbarMsg :"",
     };
   },
   computed:{
+
       activeComment:{
           get(){
               return this.$store.state.comment.active
@@ -89,6 +101,11 @@ export default {
       }
   },
   methods:{
+                activateSnack(color, msg) {
+      this.snackbar = true;
+      this.snackbarColor = color;
+      this.snackbarMsg = msg;
+    },
     follow(){
       if(this.followed){
         fetch('http://localhost:3000/api/users/follow/'+ this.$route.params.id, {credentials:'include', method:'delete'})

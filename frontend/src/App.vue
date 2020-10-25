@@ -5,7 +5,7 @@
         <navbar id="nav-drawer" v-if="isAuth" />
       <v-main>
         <v-container fluid class="pa-0 ma-0">
-          <router-view id="view" />
+          <router-view id="view" :key="$route.fullPath" />
         </v-container>
       </v-main>
     </v-container>

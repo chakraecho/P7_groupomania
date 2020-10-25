@@ -46,6 +46,7 @@
               <v-col>
                 <postCard
                   :post="post"
+                   :dataId="post.postId" 
                 />
               </v-col>
             </v-row>
@@ -56,6 +57,11 @@
         </v-row>
       </v-container>
     </v-row>
+        <options
+    @snackbar="activateSnack($event.color, $event.msg)" />
+        <v-snackbar v-model="snackbar" timeout="4000" :color="snackbarColor" top right>
+      {{ snackbarMsg }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -63,12 +69,14 @@
 import postCard from "@/components/post/post.vue";
 import commentCard from '@/components/post/comment.vue'
 import postCreator from "@/components/post/createPost.vue"
+import options from "@/components/post/option.vue"
 
 export default {
   components: {
     postCard,
     commentCard,
-    postCreator
+    postCreator,
+    options
   },
   data() {
     return {
@@ -76,10 +84,18 @@ export default {
       groupName : '',
       bannerUrl: "",
       imgUrl: "",
-      posts: []
+      posts: [],
+                  snackbar: false,
+      snackbarColor: "",
+      snackbarMsg :"",
     };
   },
   methods:{
+            activateSnack(color, msg) {
+      this.snackbar = true;
+      this.snackbarColor = color;
+      this.snackbarMsg = msg;
+    },
         sendPost() {
       this.$refs.postcreator.loading = true;
       fetch("http://localhost:3000/api/group/" + this.$route.params.id + "/submit", {
