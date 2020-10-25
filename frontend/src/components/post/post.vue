@@ -19,6 +19,9 @@
       </v-card-title>
       <v-card-text>
         {{ content }}
+        <div v-if="post.imgUrl !== null" class="post--wrapper--img">
+          <img :src="post.imgUrl" alt="image de post" class="post--img"/>
+        </div>
       </v-card-text>
       <v-card-actions class="pa-0 h5">
         <v-row justify-space-between>
@@ -118,14 +121,27 @@ export default {
 };
 </script>
 
-<style scoped>
+
+
+<style lang="scss">
 .active-btn {
   background-color: grey;
 }
-
-.post-header {
+.post{
+  &-header {
   font-size: 16px;
 }
+&--wrapper--img{
+  max-width:200px !important;
+  max-height: 200px !important;
+  border: 1px grey solid;
+  margin: auto
+}
+&--img{
+  width:100%
+}
+}
+
 
 
 </style>
