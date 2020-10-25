@@ -8,24 +8,51 @@ const { groupMembers } = require('./../models/group')
 
 
 exports.createOne = (req, res, next) => {
-    Post.create({ content: req.body.content, like: 0, dislike: 0, userId: req.body.userId })
-        .then(() => res.status(201).json({ message: 'post créé !' }))
-        .then(() => follow.findAll({
-            where: {
-                followed: req.body.userId
-            }
-        }).then(result => {
-            if (result.length !== 0) {
-                result.forEach(element => {
-                    const followed = element.dataValues.followed
-                    const follower = element.dataValues.follower
-                    noctification.create({ type: 'post', notified_id: follower, creator_id: followed, seen: 0 })
-                        .catch(error => console.log({ error }))
-                })
-            }
+    const body = JSON.parse(req.body.body)
+    if (req.files) {
+        Post.create({
+            content: body.content, like: 0, dislike: 0, userId: req.session.userId,
+            imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`
         })
-        )
-        .catch(error => res.status(500).json({ error }))
+            .then(() => res.status(201).json({ message: 'post créé !' }))
+            .then(() => follow.findAll({
+                where: {
+                    followed: req.session.userId
+                }
+            }).then(result => {
+                if (result.length !== 0) {
+                    result.forEach(element => {
+                        const followed = element.dataValues.followed
+                        const follower = element.dataValues.follower
+                        noctification.create({ type: 'post', notified_id: follower, creator_id: followed, seen: 0 })
+                            .catch(error => console.log({ error }))
+                    })
+                }
+            })
+            )
+            .catch(error => res.status(500).json({ error }))
+    }
+    else {
+        Post.create({ content: body.content, like: 0, dislike: 0, userId: req.session.userId })
+            .then(() => res.status(201).json({ message: 'post créé !' }))
+            .then(() => follow.findAll({
+                where: {
+                    followed: req.session.userId
+                }
+            }).then(result => {
+                if (result.length !== 0) {
+                    result.forEach(element => {
+                        const followed = element.dataValues.followed
+                        const follower = element.dataValues.follower
+                        noctification.create({ type: 'post', notified_id: follower, creator_id: followed, seen: 0 })
+                            .catch(error => console.log({ error }))
+                    })
+                }
+            })
+            )
+            .catch(error => res.status(500).json({ error }))
+    }
+
 }
 exports.postGroup = (req, res) => {    //create a post linked followed a group
     Post.create({ content: req.body.content, like: 0, dislike: 0, userId: req.body.userId, groupId: req.params.id })
@@ -34,16 +61,16 @@ exports.postGroup = (req, res) => {    //create a post linked followed a group
             where: {
                 groupId: req.params.id
             },
-            attributes : ['userId']
+            attributes: ['userId']
         }).then(result => {
             console.log(result)
             if (result.length !== 0) {
                 result.forEach(element => {
                     const followed = req.session.userId
                     const follower = element.dataValues.userId
-                    if(followed !== follower){
-                                            noctification.create({ type: 'group_post', notified_id: follower, creator_id: followed, seen: 0 , groupId : req.params.id})
-                        .catch(error => console.log({ error }))
+                    if (followed !== follower) {
+                        noctification.create({ type: 'group_post', notified_id: follower, creator_id: followed, seen: 0, groupId: req.params.id })
+                            .catch(error => console.log({ error }))
                     }
                 })
             }
@@ -84,7 +111,7 @@ exports.getAll = (req, res, next) => {
 
 exports.getAllfromGroups = (req, res, next) => {
     Post.findAll({
-        where:{groupId : {[Op.eq]: req.params.id}},
+        where: { groupId: { [Op.eq]: req.params.id } },
         limit: 10, order: [['updatedAt', 'DESC']], include: [{
             model: User,
             attributes: ['lastName', 'firstName', 'profilImgUrl']
@@ -107,41 +134,23 @@ exports.getAllfromGroups = (req, res, next) => {
 }
 
 exports.modifyOne = (req, res, next) => {
-    const token = req.session.aBigSecret
-    const decoded = jwt.verify(token, process.env.JWT_KEY);
+
     const postId = req.params.id
     const id = req.session.email
     const content = req.body.content
-    Post.findOne({ where: { postId: postId }, include: [{ model: User }] })
-        .then(post => {
-            if (id && decoded !== post.email) {
-                return res.status(401).json({ message: 'action non autorisé !' })
-            }
-            else if (id && decoded !== post.email) {
-                req.file ? (
-                    Post.update({
-                        content,
-                        imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
-                    }, { where: { email: email } }))
-                    .then(() => {
-                        const filename = post.imgUrl.split('/uploads/')[1];
-                        fs.unlink(`/uploads/${filename}`)
-                    })
-                    .then(() => res.status(200).json({ message: 'post modifié !' }))
-                    .catch(error => res.status(400).json({ error })) : (
-                        Post.update({
-                            content
-                        })
-                            .then(() => res.status(200).json({ message: 'post modifié !' }))
-                            .catch(error => res.status(400).json({ error }))
-                    )
-            }
+
+    Post.update({ content }, {
+        where: { postId }, returning: true,
+        plain: true
+    })
+        .then((post) => {
+            res.status(200).json({ post })
         })
 }
 
 exports.deleteOne = (req, res) => {
     const postId = req.params.id
-    Post.destroy({ where: { postId: postId }, include:[Comments, userLiked] })
+    Post.destroy({ where: { postId: postId }, include: [Comments, userLiked] })
         .then(() => res.status(200).json({ message: 'post supprimé !' }))
         .catch((error) => res.status(500).json({ error }))
 }
@@ -150,10 +159,11 @@ exports.deleteOne = (req, res) => {
 
 exports.getComment = (req, res) => {
     const postId = req.params.id
-    Comments.findAll({ where: { postId: postId },
-         include: [{ model: User, attributes: ['lastName', 'firstName', 'profilImgUrl'] } ,
-        {model :commentLiked, attributes: ['type'], where : {userId : req.session.userId}, required : false}]
-        })
+    Comments.findAll({
+        where: { postId: postId },
+        include: [{ model: User, attributes: ['lastName', 'firstName', 'profilImgUrl'] },
+        { model: commentLiked, attributes: ['type'], where: { userId: req.session.userId }, required: false }]
+    })
         .then(comment => res.status(200).json({ comment }))
         .catch(error => res.status(500).json(error))
 }
@@ -171,7 +181,11 @@ exports.createComment = (req, res) => {
 
 exports.modifyComment = (req, res) => {
     const content = req.body.content
-    Comments.update({ content }, { where: { id: req.body.id } })
+    Comments.update({ content }, {
+        where: { commentId: req.params.id },
+        returning: true,
+        plain: true
+    })
         .then(comment => {
             res.status(200).json({ comment })
         })
@@ -179,8 +193,8 @@ exports.modifyComment = (req, res) => {
 }
 
 exports.deleteComment = (req, res) => {
-    const id = req.body.id
-    Comments.destroy({ where: { id: id } })
+    const id = req.params.id
+    Comments.destroy({ where: { commentId: id } })
         .then(() => res.status(200).json({ message: 'commentaire supprimé !' }))
         .catch(error => res.status(500).json({ error }))
 }
@@ -342,23 +356,23 @@ exports.like = (req, res) => {
                             })
                                 .then(option => {
                                     option[0].increment('dislike')
-                                    .then(() => Post.findOne({
-                                        where: { postId: id }, include: [{
-                                            model: User,
-                                            attributes: ['lastName', 'firstName', 'profilImgUrl']
-                                        }, {
-                                            model: userLiked,
-                                            where: {
-                                                userId: {
-                                                    [Op.eq]: req.session.userId
-                                                }
-                                            },
-                                            attributes: ['type'],
-                                            required: false
-                                        }
-                                        ]
-                                    })
-                                        .then(post => res.status(200).json({ post }))
+                                        .then(() => Post.findOne({
+                                            where: { postId: id }, include: [{
+                                                model: User,
+                                                attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                            }, {
+                                                model: userLiked,
+                                                where: {
+                                                    userId: {
+                                                        [Op.eq]: req.session.userId
+                                                    }
+                                                },
+                                                attributes: ['type'],
+                                                required: false
+                                            }
+                                            ]
+                                        })
+                                            .then(post => res.status(200).json({ post }))
                                             .catch(error => res.status(404).json({ error })))
                                         .catch(error => console.log(error))
                                 })
@@ -397,13 +411,13 @@ exports.commentLike = (req, res) => {
                         .then(like => {
                             switch (like.dataValues.type) {
                                 case true:
-                                    Comments.findAll({ where: { [Op.and] : [{commentId : id}] } })
+                                    Comments.findAll({ where: { [Op.and]: [{ commentId: id }] } })
                                         .then(option => option[0].decrement('like')
                                             .then(() => {
                                                 commentLiked.destroy({ where: { [Op.and]: [{ commentId: id }, { userId: userId }] }, })
                                                     .then(() => {
                                                         Comments.findOne({
-                                                            where:  { commentId : id}, include: [{
+                                                            where: { commentId: id }, include: [{
                                                                 model: User,
                                                                 attributes: ['lastName', 'firstName', 'profilImgUrl']
                                                             }, {
@@ -425,7 +439,7 @@ exports.commentLike = (req, res) => {
                                         .catch(error => console.log(error))
                                     break;
                                 case false:
-                                    Comments.findAll({ where: { [Op.and] : [{commentId : id}] } })
+                                    Comments.findAll({ where: { [Op.and]: [{ commentId: id }] } })
                                         .then(option => option[0].decrement('dislike')
                                             .then(() => {
                                                 commentLiked.destroy({ where: { [Op.and]: [{ commentId: id }, { userId: userId }] } })
@@ -469,7 +483,7 @@ exports.commentLike = (req, res) => {
                         commentLiked.create({ commentId: id, userId: userId, type: true })
                             .then(() => {
                                 Comments.findAll({
-                                    where: { commentId : id}, include: [{
+                                    where: { commentId: id }, include: [{
                                         model: User,
                                         attributes: ['lastName', 'firstName', 'profilImgUrl']
                                     }, {
@@ -488,7 +502,7 @@ exports.commentLike = (req, res) => {
                                         console.log(option)
                                         option[0].increment('like')
                                             .then(() => Comments.findOne({
-                                                where: { commentId : id }, include: [{
+                                                where: { commentId: id }, include: [{
                                                     model: User,
                                                     attributes: ['lastName', 'firstName', 'profilImgUrl']
                                                 }, {
@@ -533,23 +547,23 @@ exports.commentLike = (req, res) => {
                             })
                                 .then(option => {
                                     option[0].increment('dislike')
-                                    .then(() => Comments.findOne({
-                                        where: { commentId: id }, include: [{
-                                            model: User,
-                                            attributes: ['lastName', 'firstName', 'profilImgUrl']
-                                        }, {
-                                            model: commentLiked,
-                                            where: {
-                                                userId: {
-                                                    [Op.eq]: req.session.userId
-                                                }
-                                            },
-                                            attributes: ['type'],
-                                            required: false
-                                        }
-                                        ]
-                                    })
-                                        .then(comment => res.status(200).json({ comment }))
+                                        .then(() => Comments.findOne({
+                                            where: { commentId: id }, include: [{
+                                                model: User,
+                                                attributes: ['lastName', 'firstName', 'profilImgUrl']
+                                            }, {
+                                                model: commentLiked,
+                                                where: {
+                                                    userId: {
+                                                        [Op.eq]: req.session.userId
+                                                    }
+                                                },
+                                                attributes: ['type'],
+                                                required: false
+                                            }
+                                            ]
+                                        })
+                                            .then(comment => res.status(200).json({ comment }))
                                             .catch(error => res.status(404).json({ error })))
                                         .catch(error => console.log(error))
                                 })

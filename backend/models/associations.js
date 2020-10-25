@@ -38,7 +38,7 @@ groupMembers.belongsTo(groups, { foreignKey: { name: 'groupId' }, allowNull: fal
 
 User.hasOne(userRole, { foreignKey: { name: "roleId", allowNull: false } })
 Comments.hasMany(commentLiked, { foreignKey: { name: 'commentId', allowNull: false },foreignKeyConstraint: true, onDelete: 'CASCADE', hooks: true  })
-groups.hasMany(groupMembers, { foreignKey: { name: 'groupId' }, allowNull: false })
+groups.hasMany(groupMembers, { foreignKey: { name: 'groupId' },foreignKeyConstraint: true, onDelete: 'CASCADE', hooks: true  })
 Post.hasMany(userLiked, { foreignKey: { allowNull: false, name: 'postId' }, onDelete: 'CASCADE', hooks: true })
 Post.hasMany(Comments, { foreignKey: { allowNull: false, name: 'postId' }, onDelete: 'CASCADE', hooks: true })
 User.hasMany(commentLiked, { foreignKey: { name: "userId" }, allowNull: false })

@@ -1,12 +1,13 @@
 const express= require('express')
 const router = express.Router()
+const multer = require('./../middleware/multer-config')
 
 const postCtlr = require('./../controllers/post')
 
 
 router.get('/', postCtlr.getAll)
-router.post('/submit', postCtlr.createOne)
-router.put('/:id', postCtlr.modifyOne)
+router.post('/submit',multer,  postCtlr.createOne)
+router.put('/:id',multer, postCtlr.modifyOne)
 router.delete('/:id', postCtlr.deleteOne)
 
 router.get('/:id/comment', postCtlr.getComment)
