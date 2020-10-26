@@ -143,6 +143,17 @@ exports.changeBanner = (req, res) => {
     )
 }
 
+exports.modify = (req, res)=>{
+  const body = req.body
+  User.update({...body}, {where : {userId : req.session.userId}})
+  .then(()=>{
+    User.findOne({where : {userId : req.session.userId}})
+    .then(user => res.status(200).json({user}))
+    .catch(error => res.status(500).json({error}))
+  })
+  .catch(error => res.status(500).json({error}))
+}
+
 exports.disconnect = (req, res) => {
   req.session.destroy(
     function (err) {

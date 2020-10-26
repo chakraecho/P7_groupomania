@@ -140,12 +140,27 @@ exports.modifyOne = (req, res, next) => {
     const content = req.body.content
 
     Post.update({ content }, {
-        where: { postId }, returning: true,
-        plain: true
+        where: { postId }
     })
-        .then((post) => {
-            res.status(200).json({ post })
+        .then(()=>{
+            Post.findOne({where :{postId : req.params.id}, include: [{
+                model: User,
+                attributes: ['lastName', 'firstName', 'profilImgUrl']
+            }, {
+                model: userLiked,
+                where: {
+                    userId: {
+                        [Op.eq]: req.session.userId
+                    }
+                },
+                attributes: ['type'],
+                required: false
+            }
+            ]})
+            .then(post => res.status(200).json({post}))
+            .catch(error => res.status(500).json({error}))
         })
+        .catch(error => res.status(500).json({error}))
 }
 
 exports.deleteOne = (req, res) => {
@@ -182,12 +197,19 @@ exports.createComment = (req, res) => {
 exports.modifyComment = (req, res) => {
     const content = req.body.content
     Comments.update({ content }, {
-        where: { commentId: req.params.id },
-        returning: true,
-        plain: true
+        where: { commentId: req.params.id }
     })
         .then(comment => {
-            res.status(200).json({ comment })
+            Comments.findOne({where : {commentId :req.params.id}, include:[{
+                model:User
+            }, {
+                model : commentLiked,
+                attributes : ['type']
+            }]})
+            .then(comment => {
+                res.status(200).json({comment})
+            })
+            .catch(error => res.status(500).json({error}))
         })
         .catch(error => res.status(500).json({ error }))
 }
