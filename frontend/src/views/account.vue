@@ -4,9 +4,9 @@
       <v-container fluid class="pt-0">
         <v-row>
           <v-file-input
-          prepend-icon="mdi-pencil"
-          hide-input
-          class="modify--background pa-3"
+            prepend-icon="mdi-pencil"
+            hide-input
+            class="modify--background pa-3"
           >
           </v-file-input>
           <v-container
@@ -15,32 +15,35 @@
             :style="{ 'background-image': 'url(' + bannerUrl + ')' }"
             style="background-size : cover"
           >
-          <div class=" modify--profile">
-            <div
-              class="img-profil-wrapper rounded-circle d-flex align-items-center justify-center"
-            >
-              <img
-                :src="profilImgUrl"
-                :alt="'photo de profil de ' + firstName + ' ' + lastName"
-                class="img-profil"
-              />
-            </div>
+            <div class=" modify--profile">
+              <div
+                class="img-profil-wrapper rounded-circle d-flex align-items-center justify-center"
+              >
+                <img
+                  :src="profilImgUrl"
+                  :alt="'photo de profil de ' + firstName + ' ' + lastName"
+                  class="img-profil"
+                />
+              </div>
               <v-file-input
-          prepend-icon="mdi-pencil"
-          hide-input
-          class="modify--profile--img pa-0 ma-0 rounded-circle"
-          >
-          </v-file-input>
-          </div>
+                prepend-icon="mdi-pencil"
+                hide-input
+                class="modify--profile--img pa-0 ma-0 rounded-circle"
+              >
+              </v-file-input>
+            </div>
           </v-container>
           <div class="name-card-wrapper">
             <v-card class="name-card">
               <h1>{{ firstName }} {{ lastName }}</h1>
             </v-card>
           </div>
-          <div class="ml-auto mt-2 mr-2" v-if="$store.state.user.userId != userId ">
+          <div
+            class="ml-auto mt-2 mr-2"
+            v-if="$store.state.user.userId != userId"
+          >
             <v-btn color="primary" @click="follow">
-              {{followed ? 'Ne plus suivre' : 'Suivre'}}
+              {{ followed ? "Ne plus suivre" : "Suivre" }}
             </v-btn>
           </div>
         </v-row>
@@ -48,40 +51,65 @@
     </v-row>
     <v-row>
       <v-col>
-<v-container class="mt-5 pt-5">
-        <v-row justify="center">
-          <v-col cols="11" md="6" lg="5">
-            <v-row
-              justify="center"
-              v-for="post in posts"
-              :key="'post_' + post.postId"
-            >
-              <v-col>
-                <postCard
-                  :post="post"
-                   :dataId="post.postId" 
-                />
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col cols="11" md="5" lg="4" class="pl-3" v-if="activeComment">
-            <commentCard />
-          </v-col>
-        </v-row>
-      </v-container>
+        <v-container class="mt-5 pt-5">
+          <v-row justify="center">
+            <v-col cols="11" md="6" lg="5">
+              <v-row
+                justify="center"
+                v-for="post in posts"
+                :key="'post_' + post.postId"
+              >
+                <v-col>
+                  <postCard :post="post" :dataId="post.postId" />
+                </v-col>
+              </v-row>
+            </v-col>
+            <v-col cols="11" md="5" lg="4" class="pl-3" v-if="activeComment">
+              <commentCard />
+            </v-col>
+          </v-row>
+        </v-container>
       </v-col>
       <v-col cols="3">
         <div id="description">
-        <h2>Description<v-btn class="position-absolute" icon><v-icon>mdi-pencil</v-icon></v-btn> </h2>
-        <p>{{description}}</p>
-        </div>
+          <h2>
+            Description
+            <v-btn
+             class="position-absolute" icon
+             @click="input_description = description; edit_description = true"
+              >
+              <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+          </h2>
+          <p v-if="!edit_description">{{ description }}</p>
+          <template v-else-if="edit_description">
+          <v-text-field
+          outlined
+          label="edition"
+          v-model="input_description"
+          >
+          </v-text-field>
+          <div class="d-flex">
+          <v-btn text>
+              Mettre à jour
+          </v-btn>
+          <v-btn text @click="edit_description = false">
+            Annuler
+          </v-btn>
+          </div>
 
+          </template>
+        </div>
       </v-col>
-      
     </v-row>
-        <options
-    @snackbar="activateSnack($event.color, $event.msg)" />
-        <v-snackbar v-model="snackbar" timeout="4000" :color="snackbarColor" top right>
+    <options @snackbar="activateSnack($event.color, $event.msg)" />
+    <v-snackbar
+      v-model="snackbar"
+      timeout="4000"
+      :color="snackbarColor"
+      top
+      right
+    >
       {{ snackbarMsg }}
     </v-snackbar>
   </v-container>
@@ -89,8 +117,8 @@
 
 <script>
 import postCard from "@/components/post/post.vue";
-import commentCard from '@/components/post/comment.vue';
-import options from "@/components/post/option.vue"
+import commentCard from "@/components/post/comment.vue";
+import options from "@/components/post/option.vue";
 
 export default {
   components: {
@@ -105,44 +133,50 @@ export default {
       lastName: "",
       bannerUrl: "",
       profilImgUrl: "",
-      description : "",
-      followed : false,
+      description: "",
+      followed: false,
       snackbar: false,
       snackbarColor: "",
-      snackbarMsg :"",
+      snackbarMsg: "",
+      edit_description : false,
+      input_description : ""
     };
   },
-  computed:{
-
-      activeComment:{
-          get(){
-              return this.$store.state.comment.active
-          }
-      },
-      posts:{
-        get(){
-          return this.$store.state.post.posts
-        }
+  computed: {
+    activeComment: {
+      get() {
+        return this.$store.state.comment.active;
       }
+    },
+    posts: {
+      get() {
+        return this.$store.state.post.posts;
+      }
+    }
   },
-  methods:{
-                activateSnack(color, msg) {
+  methods: {
+    activateSnack(color, msg) {
       this.snackbar = true;
       this.snackbarColor = color;
       this.snackbarMsg = msg;
     },
-    follow(){
-      if(this.followed){
-        fetch('http://localhost:3000/api/users/follow/'+ this.$route.params.id, {credentials:'include', method:'delete'})
-        .then(() => {
-          this.followed = false
-        })
-        .catch(error => console.log(error))
-      }
-      else if (!this.followed){
-        fetch("http://localhost:3000/api/users/follow/" + this.$route.params.id, {credentials: 'include'})
-        .then(()=> this.followed = true)
-        .catch(error => console.log(error))
+    follow() {
+      if (this.followed) {
+        fetch(
+          "http://localhost:3000/api/users/follow/" + this.$route.params.id,
+          { credentials: "include", method: "delete" }
+        )
+          .then(() => {
+            this.followed = false;
+          })
+          .catch(error => console.log(error));
+      } else if (!this.followed) {
+        fetch(
+          "http://localhost:3000/api/users/follow/" + this.$route.params.id,
+          { credentials: "include" }
+        )
+          .then(() => (this.followed = true))
+          .catch(error => console.log(error));
       }
     }
   },
@@ -155,7 +189,7 @@ export default {
           this.lastName = res.lastName;
           this.bannerUrl = res.bannerUrl;
           this.profilImgUrl = res.profilImgUrl;
-          this.description = res.description
+          this.description = res.description;
         })
       )
       .catch(error => console.log(error));
@@ -166,44 +200,45 @@ export default {
     )
       .then(response =>
         response.json().then(res => {
-          this.$store.dispatch("post/loadPost", res.posts)
+          this.$store.dispatch("post/loadPost", res.posts);
         })
       )
       .catch(error => console.log(error));
 
-    if(this.$route.params.id !== this.$store.state.user.userId){
-          fetch('http://localhost:3000/api/users/follow/check/' + this.$route.params.id, {credentials: "include"})
-          .then(res => {
-            if(res.status === 200){
-              this.followed = true
-            }
-            else if (res.status === 204){
-              this.followed = false
-            }
-          })
-          .catch(error => console.log(error))
+    if (this.$route.params.id !== this.$store.state.user.userId) {
+      fetch(
+        "http://localhost:3000/api/users/follow/check/" + this.$route.params.id,
+        { credentials: "include" }
+      )
+        .then(res => {
+          if (res.status === 200) {
+            this.followed = true;
+          } else if (res.status === 204) {
+            this.followed = false;
+          }
+        })
+        .catch(error => console.log(error));
     }
   }
 };
 </script>
 
 <style lang="scss">
-
-
-.v-input__prepend-outer{
-  margin:auto !important;
+.v-input__prepend-outer {
+  margin: auto !important;
 }
 
-.modify{
-  &--background{
+.modify {
+  &--background {
     position: absolute;
-    right:0px;
+    right: 0px;
   }
-  &--profile{
-    position:relative;
-    &--img{
-      position:absolute;
-      bottom:1em; right:0;
+  &--profile {
+    position: relative;
+    &--img {
+      position: absolute;
+      bottom: 1em;
+      right: 0;
       background: white;
       border: 1px solid grey;
     }
@@ -247,8 +282,8 @@ export default {
   }
 }
 
-#description{
-  position:sticky;
-  top:10vh;
+#description {
+  position: sticky;
+  top: 10vh;
 }
 </style>
