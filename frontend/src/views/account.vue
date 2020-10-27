@@ -81,6 +81,7 @@
             icon
             class="modify--background pa-3"
             @click="modify_photo_banner = true"
+            v-if="isUser"
             ><v-icon>mdi-pencil</v-icon>
           </v-btn>
           <v-container
@@ -103,6 +104,7 @@
                 icon
                 class="modify--profile--img pa-0 ma-0 rounded-circle"
                 @click="modify_photo_profile = true"
+                v-if="isUser"
                 ><v-icon>mdi-pencil</v-icon>
               </v-btn>
             </div>
