@@ -1,14 +1,88 @@
 <template>
   <v-container fluid class="pt-0 ma-0">
+    <template v-if="isUser">
+      <v-dialog
+        v-if="modify_photo_profile"
+        width="500"
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+        v-model="modify_photo_profile"
+        @input="
+          newsrcimg = undefined;
+          inputFile = undefined;
+        "
+      >
+        <v-card>
+          <v-container>
+            <v-row>
+              <v-col cols="12" class="mx-auto" md="6">
+                <div class="img-profil-wrapper rounded-circle">
+                  <img
+                    class="img-profile"
+                    alt="image à changer"
+                    :src="newsrcimg"
+                    v-if="newsrcimg"
+                  />
+                </div>
+              </v-col>
+              <v-col cols="10" md="6" class="mx-auto">
+                <v-file-input
+                  accept="image/png, image/jpeg"
+                  @change="parseImage($event)"
+                  v-model="inputFile"
+                ></v-file-input>
+                <v-btn @click="updateImg('profil')">
+                  Mettre à jour
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+      </v-dialog>
+      <v-dialog
+        v-if="modify_photo_banner"
+        width="500"
+        :fullscreen="$vuetify.breakpoint.xsOnly"
+        v-model="modify_photo_banner"
+        @input="
+          newsrcimg = undefined;
+          inputFile = undefined;
+        "
+      >
+        <v-card>
+          <v-container>
+            <v-row>
+              <v-col cols="12" class="mx-auto" md="6">
+                <img
+                  class="img-profile"
+                  alt="image à changer"
+                  :src="newsrcimg"
+                  v-if="newsrcimg"
+                />
+              </v-col>
+              <v-col cols="10" md="6" class="mx-auto">
+                <v-file-input
+                  accept="image/png, image/jpeg"
+                  @change="parseImage($event)"
+                  v-model="inputFile"
+                ></v-file-input>
+                <v-btn @click="updateImg('banner')">
+                  Mettre à jour
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+      </v-dialog>
+    </template>
     <v-row>
       <v-container fluid class="pt-0">
         <v-row>
-          <v-file-input
-            prepend-icon="mdi-pencil"
-            hide-input
+          <v-btn
+            icon
             class="modify--background pa-3"
-          >
-          </v-file-input>
+            @click="modify_photo_banner = true"
+            ><v-icon>mdi-pencil</v-icon>
+          </v-btn>
           <v-container
             fluid
             class="banner-block pa-0 d-flex align-center justify-center"
@@ -25,12 +99,12 @@
                   class="img-profil"
                 />
               </div>
-              <v-file-input
-                prepend-icon="mdi-pencil"
-                hide-input
+              <v-btn
+                icon
                 class="modify--profile--img pa-0 ma-0 rounded-circle"
-              >
-              </v-file-input>
+                @click="modify_photo_profile = true"
+                ><v-icon>mdi-pencil</v-icon>
+              </v-btn>
             </div>
           </v-container>
           <div class="name-card-wrapper">
@@ -38,10 +112,7 @@
               <h1>{{ firstName }} {{ lastName }}</h1>
             </v-card>
           </div>
-          <div
-            class="ml-auto mt-2 mr-2"
-            v-if="$store.state.user.userId != userId"
-          >
+          <div class="ml-auto mt-2 mr-2" v-if="!isUser">
             <v-btn color="primary" @click="follow">
               {{ followed ? "Ne plus suivre" : "Suivre" }}
             </v-btn>
@@ -71,33 +142,33 @@
         </v-container>
       </v-col>
       <v-col cols="3">
-        <div id="description">
+        <div id="description" class="position-md-sticky">
           <h2>
             Description
             <v-btn
-             class="position-absolute" icon
-             @click="input_description = description; edit_description = true"
-              >
+              class="position-absolute"
+              icon
+              v-if="isUser"
+              @click="
+                input_description = description;
+                edit_description = true;
+              "
+            >
               <v-icon>mdi-pencil</v-icon>
-              </v-btn>
+            </v-btn>
           </h2>
           <p v-if="!edit_description">{{ description }}</p>
           <template v-else-if="edit_description">
-          <v-text-field
-          outlined
-          label="edition"
-          v-model="input_description"
-          >
-          </v-text-field>
-          <div class="d-flex">
-          <v-btn text>
-              Mettre à jour
-          </v-btn>
-          <v-btn text @click="edit_description = false">
-            Annuler
-          </v-btn>
-          </div>
-
+            <v-text-field outlined label="edition" v-model="input_description">
+            </v-text-field>
+            <div class="d-flex">
+              <v-btn text @click="sendUpdate">
+                Mettre à jour
+              </v-btn>
+              <v-btn text @click="edit_description = false">
+                Annuler
+              </v-btn>
+            </div>
           </template>
         </div>
       </v-col>
@@ -138,11 +209,21 @@ export default {
       snackbar: false,
       snackbarColor: "",
       snackbarMsg: "",
-      edit_description : false,
-      input_description : ""
+      edit_description: false,
+      input_description: "",
+      modify_photo_profile: false,
+      modify_photo_banner: false,
+      inputFile: undefined,
+      newsrcimg: undefined
     };
   },
   computed: {
+    isUser() {
+      return (
+        this.$store.state.user.userId.toString() ===
+        this.$route.params.id.toString()
+      );
+    },
     activeComment: {
       get() {
         return this.$store.state.comment.active;
@@ -155,6 +236,13 @@ export default {
     }
   },
   methods: {
+    parseImage(evt) {
+      var reader = new FileReader();
+      reader.onload = e => {
+        this.newsrcimg = e.target.result;
+      };
+      reader.readAsDataURL(evt);
+    },
     activateSnack(color, msg) {
       this.snackbar = true;
       this.snackbarColor = color;
@@ -178,6 +266,70 @@ export default {
           .then(() => (this.followed = true))
           .catch(error => console.log(error));
       }
+    },
+    sendUpdate() {
+      fetch(
+        "http://localhost:3000/api/users/account/" + this.$route.params.id,
+        {
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          method: "put",
+          body: JSON.stringify({ description: this.input_description })
+        }
+      )
+        .then(response =>
+          response.json().then(res => {
+            this.snackbar = true;
+            this.snackbarMsg = "Votre description à bien été mis à jour !";
+            this.snackbarColor = "success";
+            this.edit_description = false;
+            this.description = res.user.description;
+          })
+        )
+        .catch(error => {
+          console.log(error);
+          this.snackbar = true;
+          this.snackbarColor = "error";
+          this.snackbarMsg = "Erreur lors de la requête, veuillez rééssayer";
+          this.edit_description = false;
+        });
+    },
+    updateImg(endpoint) {
+      const body = new FormData();
+      body.append("image", this.inputFile);
+      fetch(
+        "http://localhost:3000/api/users/account/" +
+          this.$store.state.user.userId +
+          "/" +
+          endpoint,
+        {
+          credentials: "include",
+          method: "put",
+          body
+        }
+      )
+        .then(response =>
+          response.json().then(res => {
+            this.activateSnack("success", "Image modifié !");
+            if (endpoint === "profil") {
+              this.$store.commit(
+                "user/pushProfilImgUrl",
+                res.user.profilImgUrl
+              );
+              this.$set(this, "profilImgUrl", res.user.profilImgUrl);
+            } else if (endpoint === "banner") {
+              this.$store.commit("user/pushBanner", res.user.bannerUrl);
+              this.$set(this, "bannerurl", res.user.bannerUrl);
+            }
+          })
+        )
+        .catch(error => {
+          console.log(error);
+          this.activateSnack(
+            "error",
+            "Erreur lors de l'envoi au serveur ! Veuillez rééssayer."
+          );
+        });
     }
   },
   beforeCreate() {
@@ -266,6 +418,7 @@ export default {
       background-color: white;
       overflow: hidden;
       position: relative;
+      border: 1px solid grey;
     }
   }
 }
