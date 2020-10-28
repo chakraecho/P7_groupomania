@@ -51,7 +51,7 @@ exports.login = (req, res, next) => {
               const account = user.dataValues
               req.session.email = email
               req.session.userId = account.userId
-              const isAdmin = account.role === '1' ? true : false
+              const isAdmin = account.roleId === 1 ? true : false
 
               return res.status(200).cookie('aBigSecret', jwt.sign(
                 { userId: account.email },
@@ -98,7 +98,7 @@ exports.verify = (req, res, next) => {
         else if (user) {
           const account = user.dataValues
           req.session.userId = account.userId
-          const isAdmin = account.role === '1' ? true : false
+          const isAdmin = account.roleId === 1 ? true : false
           return res.status(200).cookie('aBigSecret', jwt.sign(
             { userId: account.email },
             process.env.JWT_KEY,
