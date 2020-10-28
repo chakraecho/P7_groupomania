@@ -94,6 +94,7 @@ router.beforeEach((to, from, next) => {
               profilImgUrl: response.profilImgUrl,
               userId: response.userId
             }).then(() => {
+              store.commit("user/setAdmin", response.isAdmin)
               store.dispatch("handleAuth", true);
               next()
             })

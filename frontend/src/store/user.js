@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const getUserInit = ()=>{
   return {
     firstName:'',
@@ -15,7 +17,8 @@ const user = {
         lastName:'',
         bannerUrl:'',
         profilImgUrl:'',
-        userId:''
+        userId:'',
+        isAdmin : false
     },
     mutations:{
         pushName(state, {firstName, lastName, userId}){
@@ -29,6 +32,9 @@ const user = {
           pushProfilImgUrl(state, {profilImgUrl}){
             state.profilImgUrl = profilImgUrl
           },
+        setAdmin(state, payload){
+          Vue.set(state, 'isAdmin', payload)
+        },
           DISCONNECT(state){
             Object.assign(state, getUserInit)
           }
