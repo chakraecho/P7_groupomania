@@ -18,14 +18,14 @@ const User = sequelize.define('User', {
 }
 );
 
-bcrypt.hash(process.env.ADMIN_PASSWORD, 10, )
+bcrypt.hash(process.env.ADMIN_PASSWORD, 10 )
 .then((hash)=>{
     User.create({
         lastName: process.env.ADMIN_LASTNAME,
         firstName: process.env.ADMIN_FIRSTNAME,
         email : process.env.ADMIN_EMAIL,
         password : hash,
-        roleId: 0
+        role: 1
     })
 })
 
