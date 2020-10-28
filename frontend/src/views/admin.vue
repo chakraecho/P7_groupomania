@@ -1,0 +1,30 @@
+<template>
+  <v-container>
+    <h1>Administration</h1>
+    <h2>Liste des signalements</h2>
+    <v-row>
+      <v-container>
+        <v-row>
+          <v-simple-table>
+            <thead>
+            <tr>
+              <td>
+                Type
+              </td>
+              <td>
+                Message
+              </td>
+              <td>
+                Actions
+              </td>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </v-simple-table>
+        </v-row>
+      </v-container>
+    </v-row>
+  </v-container>
+</template>
