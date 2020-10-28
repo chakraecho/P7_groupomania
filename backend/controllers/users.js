@@ -17,14 +17,14 @@ exports.signup = (req, res) => {
         firstName: firstName,
         email: email,
         password: hash,
-        roleId : 2
+        roleId: 2
       })
         .then(() => res.status(201).json({
           message: 'Utilisateur créé !'
         }))
         .catch(error => res.status(500).json({ error }))
     })
-    .catch(error => res.status(400).json({error}))
+    .catch(error => res.status(400).json({ error }))
 }
 
 exports.login = (req, res, next) => {
@@ -116,12 +116,12 @@ exports.verify = (req, res, next) => {
 }
 
 exports.changeImg = (req, res, next) => {
-  const token = req.cookies.aBigSecret
-  const decoded = jwt.compare(token, process.env.JWT_KEY)
-  req.file ? (
-    User.update({ imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` }, { where: { email: decoded } })
+  req.files[0] ? (
+    User.update({ profilImgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}` }, { where: { userId: req.session.userId } })
       .then(() => {
-        res.status(200).json({ message: 'photo de profil modifié !' })
+        User.findOne({ where: { userId: req.session.userId }, attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"] })
+          .then(user => res.status(200).json({ user }))
+          .catch(error => res.status(500).json({ error }))
       })
       .catch(error => res.status(500).json({ message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.' }))
   ) : (
@@ -130,12 +130,12 @@ exports.changeImg = (req, res, next) => {
 }
 
 exports.changeBanner = (req, res) => {
-  const token = req.cookies.aBigSecret
-  const decoded = jwt.compare(token, process.env.JWT_KEY)
-  req.file ? (
-    User.update({ bannerUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` }, { where: { email: decoded } })
+  req.files[0] ? (
+    User.update({ bannerUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}` }, { where: { userId: req.session.userId } })
       .then(() => {
-        res.status(200).json({ message: 'image de bannière modifié !' })
+        User.findOne({ where: { userId: req.session.userId }, attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"] })
+          .then(user => res.status(200).json({ user }))
+          .catch(error => res.status(500).json({ error }))
       })
       .catch(error => res.status(500).json({ message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.' }))
   ) : (
@@ -143,15 +143,15 @@ exports.changeBanner = (req, res) => {
     )
 }
 
-exports.modify = (req, res)=>{
+exports.modify = (req, res) => {
   const body = req.body
-  User.update({...body}, {where : {userId : req.session.userId}})
-  .then(()=>{
-    User.findOne({where : {userId : req.session.userId}})
-    .then(user => res.status(200).json({user}))
-    .catch(error => res.status(500).json({error}))
-  })
-  .catch(error => res.status(500).json({error}))
+  User.update({ ...body }, { where: { userId: req.session.userId } })
+    .then(() => {
+      User.findOne({ where: { userId: req.session.userId }, attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"] })
+        .then(user => res.status(200).json({ user }))
+        .catch(error => res.status(500).json({ error }))
+    })
+    .catch(error => res.status(500).json({ error }))
 }
 
 exports.disconnect = (req, res) => {

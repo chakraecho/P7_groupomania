@@ -5,14 +5,15 @@ const userCtrl = require('./../controllers/users')
 const postCtrl = require('./../controllers/post')
 const followCtrl = require('./../controllers/follow')
 const notifCtrl = require('./../controllers/noctification')
+const multer = require('./../middleware/multer-config')
 
 router.post('/auth/signup', userCtrl.signup)
 router.post('/auth/login', userCtrl.login)
 router.post('/auth/verify', userCtrl.verify)
 
-
-router.put('/change/profil', userCtrl.changeImg)
-router.put('/change/banner', userCtrl.changeBanner)
+router.put("/account/:id", userCtrl.modify)
+router.put('/account/:id/profil',multer, userCtrl.changeImg)
+router.put('/account/:id/banner',multer,  userCtrl.changeBanner)
 
 router.get('/:id', userCtrl.getUser)
 
