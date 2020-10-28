@@ -9,7 +9,8 @@ const { groupMembers } = require('./../models/group')
 
 exports.createOne = (req, res, next) => {
     const body = JSON.parse(req.body.body)
-    if (req.files) {
+    console.log(req)
+    if (req.files.length > 0) {
         Post.create({
             content: body.content, like: 0, dislike: 0, userId: req.session.userId,
             imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`

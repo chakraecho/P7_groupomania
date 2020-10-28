@@ -17,7 +17,7 @@ exports.signup = (req, res) => {
         firstName: firstName,
         email: email,
         password: hash,
-        roleId: 2
+        role : 2
       })
         .then(() => res.status(201).json({
           message: 'Utilisateur créé !'
@@ -51,6 +51,8 @@ exports.login = (req, res, next) => {
               const account = user.dataValues
               req.session.email = email
               req.session.userId = account.userId
+              const isAdmin = account.role === '1' ? true : false
+
               return res.status(200).cookie('aBigSecret', jwt.sign(
                 { userId: account.email },
                 process.env.JWT_KEY,
@@ -60,7 +62,8 @@ exports.login = (req, res, next) => {
                 lastName: account.lastName,
                 profilImgUrl: account.profilImgUrl,
                 bannerUrl: account.bannerUrl,
-                userId: account.userId
+                userId: account.userId,
+                isAdmin
               })
             }
           })
@@ -95,6 +98,7 @@ exports.verify = (req, res, next) => {
         else if (user) {
           const account = user.dataValues
           req.session.userId = account.userId
+          const isAdmin = account.role === '1' ? true : false
           return res.status(200).cookie('aBigSecret', jwt.sign(
             { userId: account.email },
             process.env.JWT_KEY,
@@ -104,7 +108,8 @@ exports.verify = (req, res, next) => {
             lastName: account.lastName,
             profilImgUrl: account.profilImgUrl,
             bannerUrl: account.bannerUrl,
-            userId: account.userId
+            userId: account.userId,
+            isAdmin
           })
 
         }

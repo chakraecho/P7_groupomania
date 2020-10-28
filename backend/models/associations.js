@@ -5,6 +5,7 @@ const { groups, groupMembers, groupRole } = require('./group')
 const department = require('./department')
 const follow = require('./follow')
 const userRole = require('./role.js')
+const {admin} = require('./admin')
 
 //associations
 userRole.belongsTo(User, { foreignKey: { name: "roleId", allowNull: false } })
@@ -12,6 +13,7 @@ userRole.belongsTo(User, { foreignKey: { name: "roleId", allowNull: false } })
 Comments.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false } })
 Comments.belongsTo(Post, { foreignKey: { name: 'postId', allowNull: false },foreignKeyConstraint: true, onDelete: 'CASCADE', hooks: true  })
 
+User.belongsTo(admin, { foreignKey: { name: 'userId', allowNull: false },foreignKeyConstraint: true, onDelete: 'CASCADE', hooks: true  })
 
 commentLiked.belongsTo(Comments, { foreignKey: { name: 'commentId', allowNull: false } ,foreignKeyConstraint: true, onDelete: 'CASCADE', hooks: true })
 commentLiked.belongsTo(User, { foreignKey: { name: 'userId', allowNull: false },foreignKeyConstraint: true, onDelete: 'CASCADE', hooks: true  })
@@ -51,3 +53,4 @@ User.hasMany(noctification, { as: 'notified', foreignKey: { name: 'notified_id' 
 groups.hasMany(noctification, { foreignKey: { name: 'groupId' } })
 groups.hasMany(Post, { foreignKey: { name: 'groupId' } })
 groupRole.hasMany(groupMembers, { foreignKey: { name: 'role' } })
+admin.hasMany(User,{ foreignKey: { name: 'userId', allowNull: false },foreignKeyConstraint: true, onDelete: 'CASCADE', hooks: true  })
