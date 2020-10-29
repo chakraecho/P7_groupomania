@@ -1,7 +1,10 @@
 <template>
   <v-bottom-sheet v-if="post_option" v-model="post_option">
     <v-card>
-      <v-btn text> <v-icon>mdi-alert</v-icon> Signaler </v-btn>
+      <v-btn text
+      @click="alert_dialog = true"
+      >
+        <v-icon>mdi-alert</v-icon> Signaler </v-btn>
       <v-btn
         text
         v-if="option_post.userId === $store.state.user.userId"
@@ -55,6 +58,37 @@
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="alert_dialog" class="container">
+      <v-row>
+        <v-col>
+          <v-card>
+            <v-card-title>
+              Signaler un post
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col>
+                    <v-textarea
+                        auto-grow
+                        label="Décrivez le problème"
+                        v-model="alert_msg"
+                    >
+
+                    </v-textarea>
+                    <v-btn text @click="sendAlert">
+                      Envoyer
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+          </v-card>
+        </v-col>
+      </v-row>
+
+    </v-dialog>
 
   </v-bottom-sheet>
 </template>
@@ -66,6 +100,8 @@ export default {
     return {
       edit_dialog: false,
       editComment: "",
+      alert_dialog:false,
+      alert_msg : ""
     };
   },
   computed: {
@@ -106,7 +142,7 @@ export default {
     sendEdit(){
         const body = JSON.stringify({content: this.editComment})
 
-        fetch('http://localhost:3000/api/post/' + this.option_post.postId, {
+        fetch('http://localhost:3000/api/post/' + this.option_post.postId.toString() , {
             method:"put",
             credentials : "include",
             headers:{"Content-type": "application/json"},
@@ -122,9 +158,29 @@ export default {
                 
         .catch(error => {
           console.log(error);
+          this.closeAll();
           this.$emit("snackbar", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
         });
         
+    },
+    sendAlert(){
+        fetch('http://localhost:8080/api/admin/alert/' + this.option_post.postId, {
+          method:"post",
+          headers:{"Content-type": "application/json"},
+          body: JSON.stringify({
+            message : this.alert_msg,
+            type: 'post'
+          })
+        })
+      .then(()=>{
+        this.closeAll();
+        this.$emit('snackbar', {color: "success", msg: "Post signalé !"})
+      })
+      .catch((error )=>{
+        console.log(error)
+        this.closeAll();
+        this.$emit("snackbar", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
+      })
     }
   }
 };
