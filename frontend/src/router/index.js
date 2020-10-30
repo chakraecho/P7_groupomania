@@ -49,6 +49,7 @@ const router = new VueRouter({
 // auth verification
 router.beforeEach((to, from, next) => {
   store.dispatch('comment/neutraliseComment')
+
   if (to.name === 'login') {
     fetch('http://localhost:3000/api/users/auth/verify', {
       method: 'post',
@@ -75,6 +76,10 @@ router.beforeEach((to, from, next) => {
         }
 
       })
+        .catch(()=>{
+          store.dispatch("handleAuth", false);
+          next()
+        })
   }
   else if (from.name === 'login') {
     next()

@@ -285,7 +285,7 @@ export default {
             this.snackbarMsg = "Votre description à bien été mis à jour !";
             this.snackbarColor = "success";
             this.edit_description = false;
-            this.description = res.user.description;
+            this.description = res.group.description;
           })
         )
         .catch(error => {
@@ -321,7 +321,7 @@ export default {
               this.$set(this, "profilImgUrl", res.user.profilImgUrl);
             } else if (endpoint === "banner") {
               this.$store.commit("user/pushBanner", res.user.bannerUrl);
-              this.$set(this, "bannerurl", res.user.bannerUrl);
+              this.$set(this, "bannerurl", res.group.bannerUrl);
             }
           })
         )
@@ -335,7 +335,9 @@ export default {
     }
   },
   beforeCreate() {
-    fetch("http://localhost:3000/api/users/" + this.$route.params.id)
+    fetch("http://localhost:3000/api/users/" + this.$route.params.id, {
+      credentials: "include"
+    })
       .then(response =>
         response.json().then(resparse => {
           const res = resparse.user[0];
