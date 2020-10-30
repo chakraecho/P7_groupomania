@@ -29,7 +29,7 @@
           <v-icon>mdi-logout</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Se déconnecter</v-list-item-title>
-      </v-list-item><v-list-item link v-if="isAdmin">
+      </v-list-item><v-list-item link v-if="isAdmin" @click="$router.push('/admin/panel')">
         <v-list-item-icon>
           <v-icon>mdi-cog</v-icon>
         </v-list-item-icon>

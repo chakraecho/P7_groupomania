@@ -164,7 +164,7 @@ export default {
         
     },
     sendAlert(){
-        fetch('http://localhost:8080/api/admin/alert/' + this.option_post.postId, {
+        fetch('http://localhost:3000/api/admin/alert/' + this.option_post.postId, {
           method:"post",
           headers:{"Content-type": "application/json"},
           body: JSON.stringify({

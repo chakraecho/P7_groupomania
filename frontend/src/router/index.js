@@ -36,6 +36,11 @@ const routes = [
     path: '/notification',
     name: "notifications",
     component: () => import('../views/notification.vue')
+  },
+  {
+    path:'/admin/panel',
+    name:'adminpanel',
+    component: ()=> import('../views/admin.vue')
   }
 ];
 
