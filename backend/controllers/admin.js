@@ -1,8 +1,12 @@
-import admin from './../models/admin'
+const {admin} = require('./../models/admin')
 
 exports.createAlert = (req, res) => {
     const userId = req.session.userId
     const typeId = req.params.id
+    const types = ['post', 'comment']
+    if(!types.includes(req.body.type)){
+        return res.status(400).json({message : "format incorrect"})
+    }
     admin.create({
         type : req.body.type,
         typeId,

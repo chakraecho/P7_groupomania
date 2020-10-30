@@ -17,14 +17,21 @@ exports.getOwnGroups = (req, res) => {
 }
 
 exports.getOneGroup = (req, res) => {
-    const userID = req.session.userId
+    console.log(req.session)
+    const userId = req.session.userId
     groups.findAll({
         where: { groupId: req.params.id }
     })
         .then(group => {
-            res.status(200).json({ group })
+            groupMembers.findOne({where: {userId : req.session.userId, groupId : req.params.id}})
+                .then(role => res.status(200).json({group, role : role.role}))
+                .catch(error => {
+                    res.status(400).json({error})
+                    console.log(error)
+                })
+
         })
-        .catch(error => console.log(error))
+        .catch(error => res.status(500).json({error}))
 }
 
 exports.createGroup = (req, res, next) => {
@@ -56,7 +63,7 @@ exports.createGroup = (req, res, next) => {
         groupId: group.groupId,
         userId: user,
         isCreator: true,
-        isAdmin: true
+        role: 1
     }).then(groupMembers => {
         res.status(201).json({ message: 'groupe créé !', groupMembers, group })
     })
@@ -70,8 +77,10 @@ exports.modifyGroup = (req, res) => {
     const description = req.body.description
     const groupId = req.params.id
 
-    groups.update({ description, }, { where: { groupId } })
-        .then(() => res.status(200).json({ message: 'groupe modifié !' }))
+    groups.update({ description }, { where: { groupId } })
+        .then(() => groups.findOne({where : {groupId}})
+            .then(group => res.status(200).json({group}))
+            .catch(error => res.status(404).json({error})))
         .catch(() => res.status(500).json({ error }))
 }
 
@@ -84,7 +93,9 @@ exports.modifyImg = (req, res) => {
     })
     .then(()=>{
             groups.update({ imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` }, { where: { groupId } })
-        .then(() => res.status(200).json({ message: 'image de groupe modifié !' }))
+                .then(() => groups.findOne({where : {groupId}})
+                    .then(group => res.status(200).json({group}))
+                    .catch(error => res.status(404).json({error})))
         .catch((error) => res.status(500).json({ error }))
     })
     .catch(error => res.status(500).json({error}))
@@ -100,7 +111,9 @@ exports.modifyBanner = (req, res) => {
     })
     .then(()=>{
         groups.update({ bannerUrl: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` }, { where: { groupId } })
-        .then(() => res.status(200).json({ message: 'image de groupe modifié !' }))
+            .then(() => groups.findOne({where : {groupId}})
+                .then(group => res.status(200).json({group}))
+                .catch(error => res.status(404).json({error})))
         .catch((error) => res.status(500).json({ error }))
     })
     .catch(error => res.status(500).json({error}))

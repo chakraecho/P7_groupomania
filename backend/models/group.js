@@ -18,16 +18,6 @@ const groupRole = sequelize.define('groupRole', {
 }, { timestamps: false })
 
 
-groupRole.create(
-{
-    groupRoleId: 2,
-    roleName: 'admin'
-})
-groupRole.create(
-{
-    groupRoleId: 3,
-    roleName: 'user'
-})
 
 exports.groupRole = groupRole
 exports.groupMembers = groupMembers

@@ -8,7 +8,7 @@ const postCtrl = require('./../controllers/post')
 
 router.post('/', multer, groupCtrl.createGroup)
 router.post('/:id', groupCtrl.addMember)
-router.post('/:id/submit', postCtrl.postGroup)
+router.post('/:id/submit',multer,  postCtrl.postGroup)
 router.put('/:id', groupCtrl.modifyGroup)
 router.put('/:id/img', groupCtrl.modifyImg)
 router.put('/:id/banner', groupCtrl.modifyBanner)

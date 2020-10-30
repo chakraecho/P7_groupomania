@@ -68,6 +68,26 @@ userRole.create({
 .catch(error => console.log(error))
 
 
+groupRole.create(
+    {
+        groupRoleId: 1,
+        roleName: 'admin'
+    })
+    .catch(error => console.log(error))
+groupRole.create(
+    {
+        groupRoleId: 2,
+        roleName: 'user'
+    })
+    .catch(error => console.log(error))
+groupRole.create(
+    {
+        groupRoleId: 3,
+        roleName: 'banned'
+    })
+    .catch(error => console.log(error))
+
+
 bcrypt.hash(process.env.ADMIN_PASSWORD, 10 )
 .then((hash)=>{
     User.create({

@@ -45,6 +45,7 @@ myStore.sync();
 const userRoutes = require('./routes/users')
 const postRoutes = require('./routes/posts')
 const groupRoutes = require('./routes/group')
+const adminRoutes = require('./routes/admin')
 
 //middlewares
 app.use(helmet())
@@ -68,5 +69,6 @@ console.log('chemin du dossier:'+__dirname+ '\\assets')
 app.use('/api/users', userRoutes )
 app.use('/api/post', postRoutes)
 app.use('/api/group', groupRoutes)
+app.use('/api/admin', adminRoutes)
 
 module.exports = app
