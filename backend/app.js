@@ -60,11 +60,9 @@ app.use((req, res, next) => {
 
 app.use(bodyparser.json())
 app.use(cookieParser())
-
 //serve static files
 app.use('/assets', express.static(path.join(__dirname, '\\assets')));
 app.use('/uploads', express.static(path.join(__dirname, '\\uploads')));
-console.log('chemin du dossier:'+__dirname+ '\\assets')
 //routes
 app.use('/api/users', userRoutes )
 app.use('/api/post', postRoutes)

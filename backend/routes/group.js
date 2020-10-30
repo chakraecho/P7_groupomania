@@ -5,6 +5,7 @@ const multer = require('./../middleware/multer-config')
 
 const groupCtrl = require('./../controllers/group')
 const postCtrl = require('./../controllers/post')
+const searchCtrl = require('./../controllers/search')
 
 router.post('/', multer, groupCtrl.createGroup)
 router.post('/:id', groupCtrl.addMember)
@@ -13,9 +14,12 @@ router.put('/:id',groupCtrl.modifyGroup)
 router.put('/:id/img', multer,groupCtrl.modifyImg)
 router.put('/:id/banner',multer, groupCtrl.modifyBanner)
 
+router.get('/search', searchCtrl.findGroup)
+
 router.get('/list', groupCtrl.getOwnGroups)
 router.get('/:id', groupCtrl.getOneGroup)
 router.get('/:id/post', postCtrl.getAllfromGroups)
+
 
 router.delete('/:id', groupCtrl.deleteGroup)
 

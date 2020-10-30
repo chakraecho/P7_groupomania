@@ -1,4 +1,5 @@
 const {admin} = require('./../models/admin')
+const sequelizePagination = require("sequelize-paginate")
 
 exports.createAlert = (req, res) => {
     const userId = req.session.userId
@@ -13,14 +14,26 @@ exports.createAlert = (req, res) => {
         message : req.body.message,
         userId
     })
-        .then(()=> res.status(201))
+        .then(()=> res.status(201).json({message : "succès"}))
         .catch(error => res.status(500).json({error}))
 }
 
 exports.getAll = (req, res) => {
-    admin.findAll()
-        .then(alerts => res.status(200).json({alerts}))
+    const current_page = req.query.page ? req.query.page : 1
+    admin.paginate({page: req.query.page, paginate : 15})
+        .then(alerts => {
+            const prev = current_page === 1 ? process.env.BASE_URL + '/api/admin/list?page=1' : process.env.BASE_URL + '/api/list?page=' + (current_page-1)
+            const next = current_page === 1 ? process.env.BASE_URL + '/api/admin/list?page=1' : process.env.BASE_URL + '/api/list?page=' + (current_page-1)
+            const links = {
+                prev,
+                next,
+                first: process.env.BASE_URL +'/api/admin/list?page=1',
+                last : process.env.BASE_URL + '/api/admin/list?page=' + alerts.pages
+            }
+            res.status(200).json({...alerts, current_page, links})
+        })
         .catch(error => res.status(500).json({error}))
+
 }
 
 exports.delete = (req,res) => {
