@@ -1,5 +1,6 @@
 const sequelize = require('./../db-config')
 const Sequelize = require('sequelize')
+const sequelizePaginate = require('sequelize-paginate')
 
 
 const groups = sequelize.define('groups', {
@@ -17,7 +18,7 @@ const groupRole = sequelize.define('groupRole', {
     roleName: { type: Sequelize.STRING(20) }
 }, { timestamps: false })
 
-
+sequelizePaginate.paginate(groups)
 
 exports.groupRole = groupRole
 exports.groupMembers = groupMembers

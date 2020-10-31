@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('./../db-config')
 const bcrypt = require('bcrypt')
+const sequelizePaginate = require('sequelize-paginate')
 
 /*
  * USER
@@ -17,7 +18,7 @@ const User = sequelize.define('User', {
 }
 );
 
-
+sequelizePaginate.paginate(User)
 
 
 module.exports = User

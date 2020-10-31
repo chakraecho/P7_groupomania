@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('./../db-config');
 const User = require('./../models/users')
+const sequelizePaginate = require('sequelize-paginate')
 
 const Post = sequelize.define('Post', {
   postId: { type: Sequelize.INTEGER.UNSIGNED, autoIncrement: true, primaryKey: true },
@@ -29,6 +30,8 @@ const Comments = sequelize.define('Comments', {
 })
 
 
+
+
 const userLiked = sequelize.define('userLiked', {
   type: { type: Sequelize.BOOLEAN }
 })
@@ -37,6 +40,7 @@ const commentLiked = sequelize.define('commentLiked', {
   type: { type: Sequelize.BOOLEAN }
 })
 
+sequelizePaginate.paginate(Post)
 
 
 exports.Comments = Comments
