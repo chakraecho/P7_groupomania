@@ -23,8 +23,10 @@ router.get('/notification/:id', notifCtrl.getAll)
 
 router.get('/follow/:id', followCtrl.followOne)
 router.get('/follow/check/:id', followCtrl.checkFollow)
-router.delete('/follow/:id', followCtrl.deleteFollow)
 
+
+router.delete('/follow/:id', followCtrl.deleteFollow)
+router.delete('/delete', userCtrl.delete)
 router.delete('/disconnect', userCtrl.disconnect)
 
 

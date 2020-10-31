@@ -168,3 +168,12 @@ exports.disconnect = (req, res) => {
   res.cookie('aBigSecret', { expires: Date.now() }
     , { httpOnly: true, secure: false }).status(200)
 }
+
+exports.delete = (req, res) =>{
+  User.destroy({where:{userId: req.session.userId}})
+  .then(() => res.status(200).json({message : "compte supprimé !"}))
+  .catch(error => {
+    console.log(error)
+    res.status(500).json({error})
+  })
+}
