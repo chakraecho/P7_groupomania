@@ -1,6 +1,39 @@
 <template>
   <v-container fluid class="pt-0 ma-0">
     <template v-if="isUser">
+      <v-dialog v-model="menuDialog" v-if="menuDialog">
+        <v-card>
+          <v-container>
+            <v-row>
+              <v-btn text @click="deleteUser = true">
+                Supprimer mon compte
+              </v-btn>
+            </v-row>
+          </v-container>
+        </v-card>
+        <v-dialog v-model="deleteUser" v-if="deleteUser" persistent
+          ><v-card>
+            <v-container>
+              <p>
+                Etes vous sûre de vouloir supprimer votre Compte ? Toutes les
+                données relative tels que post et commentaires seront supprimé
+              </p>
+              <v-btn @click="deleteUserRequest()" class="mr-3">
+                Oui
+              </v-btn>
+              <v-btn
+                @click="
+                  deleteUser = false;
+                  menuDialog = false;
+                "
+                class="ml-3"
+              >
+                Non
+              </v-btn>
+            </v-container>
+          </v-card>
+        </v-dialog>
+      </v-dialog>
       <v-dialog
         v-if="modify_photo_profile"
         width="500"
@@ -114,6 +147,13 @@
               <h1>{{ firstName }} {{ lastName }}</h1>
             </v-card>
           </div>
+          <div class="position-absolute" @click="menuDialog = true">
+            <v-btn icon>
+              <v-icon>
+                mdi-dots-horizontal
+              </v-icon>
+            </v-btn>
+          </div>
           <div class="ml-auto mt-2 mr-2" v-if="!isUser">
             <v-btn color="primary" @click="follow">
               {{ followed ? "Ne plus suivre" : "Suivre" }}
@@ -216,7 +256,9 @@ export default {
       modify_photo_profile: false,
       modify_photo_banner: false,
       inputFile: undefined,
-      newsrcimg: undefined
+      newsrcimg: undefined,
+      menuDialog: false,
+      deleteUser: false
     };
   },
   computed: {
@@ -332,6 +374,25 @@ export default {
             "Erreur lors de l'envoi au serveur ! Veuillez rééssayer."
           );
         });
+    },
+    deleteUserRequest() {
+      fetch("http://localhost:3000/api/users/delete", {
+        method: "delete",
+        credentials: "include"
+      }).then(() => {
+        this.activateSnack(
+          "success",
+          "Votre compte à bien été suppprimé, vous allez être redirigé !"
+        );
+        this.$store.dispatch("user/disconnect");
+        setTimeout(() => {
+          this.$router.push("/login");
+        }, 2000);
+      })
+      .catch(error => {
+        console.log(error)
+        this.activateSnack("error", "Erreur lors de la requête au serveur !")
+      });
     }
   },
   beforeCreate() {
