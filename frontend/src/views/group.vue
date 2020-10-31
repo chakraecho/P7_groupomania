@@ -3,6 +3,37 @@
 
     <template v-if="isAdmin">
       <v-dialog
+      v-if="menuDialog"
+      v-model="menuDialog"
+      >
+        <v-card>
+            <v-container>
+              <v-row>
+                <v-col class="mx-auto">
+                  <v-btn text @click="deleteGroup = true">
+                    Supprimer le groupe
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-container>
+        </v-card>
+        <v-dialog
+        v-if="deleteGroup"
+        v-model="deleteGroup"
+        >
+        <v-card>
+          <p>Êtes vous sûre de vouloir supprimer le groupe ? Les données associées au groupe tels que les posts et commentaires seront supprimé.</p>
+          <v-btn text @click="deleteGroupRequest">
+              Oui
+          </v-btn>
+          <v-btn text @click="deleteGroup = false; menuDialog= false">
+            Non
+          </v-btn>
+            
+                    </v-card>
+        </v-dialog>
+      </v-dialog>
+      <v-dialog
           v-if="modify_photo_profile"
           width="500"
           :fullscreen="$vuetify.breakpoint.xsOnly"
@@ -119,6 +150,15 @@
             </v-card>
           </div>
         </v-row>
+        <v-row>
+          
+            <v-btn icon @click="menuDialog = true" >
+              <v-icon>
+                mdi-dots-horizontal
+              </v-icon>
+            </v-btn>
+       
+        </v-row>
       </v-container>
     </v-row>
     <v-row class="mt-5">
@@ -225,7 +265,9 @@ export default {
       modify_photo_profile: false,
       modify_photo_banner: false,
       inputFile: undefined,
-      newsrcimg: undefined
+      newsrcimg: undefined,
+      menuDialog : false,
+      deleteGroup : false
     };
   },
   methods: {
@@ -300,6 +342,21 @@ export default {
                 "Erreur lors de l'envoi au serveur ! Veuillez rééssayer."
             );
           });
+    },
+    deleteGroupRequest(){
+      fetch("http://localhost:3000/api/group/" + this.$route.params.id, {credentials : 'include', method:'delete'})
+      .then(()=> {
+        this.activateSnack('success', "Le groupe à bien été supprimé ! Vous allez être redirigé vers la page de feed !")
+        setTimeout(()=>{
+          this.$router.push('/')
+        }, 3000)
+      })
+      .catch(error => {
+        console.log(error)
+        this.activateSnack('error', "Erreur lors de l'envoi de la requête, veuillez contacter un administrateur")
+        this.menuDialog = false
+        this.deleteGroup = false
+      })
     }
   },
   computed: {
