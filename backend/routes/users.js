@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const {limit20, limit400} = require('./../middleware/express-limit')
 
 const userCtrl = require('./../controllers/users')
 const postCtrl = require('./../controllers/post')
@@ -11,29 +12,29 @@ const {isLoggedIn, isUser} = require('./../middleware/auth/user')
 
 const multer = require('./../middleware/multer-config')
 
-router.post('/auth/signup', userCtrl.signup)
-router.post('/auth/login', userCtrl.login)
-router.post('/auth/verify', userCtrl.verify)
+router.post('/auth/signup',limit20, userCtrl.signup)
+router.post('/auth/login',limit20,  userCtrl.login)
+router.post('/auth/verify',limit400, userCtrl.verify)
 
-router.get('/search',isLoggedIn, searchCtrl.searchUser)
+router.get('/search',limit400, isLoggedIn, searchCtrl.searchUser)
 
-router.put("/account/:id",isLoggedIn, isUser, userCtrl.modify)
-router.put('/account/:id/profil',isLoggedIn, isUser, multer, userCtrl.changeImg)
-router.put('/account/:id/banner',isLoggedIn, isUser, multer,  userCtrl.changeBanner)
+router.put("/account/:id",limit400, isLoggedIn, isUser, userCtrl.modify)
+router.put('/account/:id/profil',limit400, isLoggedIn, isUser, multer, userCtrl.changeImg)
+router.put('/account/:id/banner',limit400, isLoggedIn, isUser, multer,  userCtrl.changeBanner)
 
-router.get('/:id', userCtrl.getUser)
+router.get('/:id',limit400,  userCtrl.getUser)
 
-router.get('/:id/post',isLoggedIn, postCtrl.userPost)
+router.get('/:id/post',limit400, isLoggedIn, postCtrl.userPost)
 
-router.get('/notification/:id',isLoggedIn, isUser, notifCtrl.getAll)
+router.get('/notification/:id',limit400, isLoggedIn, isUser, notifCtrl.getAll)
 
-router.get('/follow/:id',isLoggedIn, followCtrl.followOne)
-router.get('/follow/check/:id',isLoggedIn, followCtrl.checkFollow)
+router.get('/follow/:id',limit400, isLoggedIn, followCtrl.followOne)
+router.get('/follow/check/:id',limit400, isLoggedIn, followCtrl.checkFollow)
 
 
-router.delete('/follow/:id',isLoggedIn, followCtrl.deleteFollow)
-router.delete('/delete',isLoggedIn, userCtrl.delete)
-router.delete('/disconnect', userCtrl.disconnect)
+router.delete('/follow/:id',limit400, isLoggedIn, followCtrl.deleteFollow)
+router.delete('/delete',limit400, isLoggedIn, userCtrl.delete)
+router.delete('/disconnect', limit400, userCtrl.disconnect)
 
 
 module.exports = router;
