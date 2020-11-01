@@ -327,7 +327,7 @@ export default {
             this.snackbarMsg = "Votre description à bien été mis à jour !";
             this.snackbarColor = "success";
             this.edit_description = false;
-            this.description = res.group.description;
+            this.description = res.user.description;
           })
         )
         .catch(error => {

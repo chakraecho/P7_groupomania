@@ -8,6 +8,10 @@
     <v-row class="mt-4">
       <v-col>
         <v-container>
+          <template v-if="notification === null">
+            
+          </template>
+          <template v-else-if="notifications.length > 0">
           <v-row v-for="notification in notifications" :key="notification.id">
             <v-col>
               <v-card>
@@ -42,6 +46,10 @@
               </v-card>
             </v-col>
           </v-row>
+          </template>
+          <template v-else>
+            <p>Aucune notifications, mangez un cookie et suivez des personnes </p>
+          </template>
         </v-container>
       </v-col>
     </v-row>
@@ -52,7 +60,7 @@
 export default {
   data() {
     return {
-      notifications: []
+      notifications: null
     };
   },
   beforeCreate() {

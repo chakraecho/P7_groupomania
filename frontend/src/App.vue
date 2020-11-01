@@ -1,8 +1,8 @@
 <template>
   <v-app id="app">
-    <headerComp app class="header pa-0 ma-0" />
+    <headerComp app class="header pa-0 ma-0" @handle-nav-bar="setDrawer()"/>
     <v-container app class="pa-0 d-flex" fluid>
-        <navbar id="nav-drawer" v-if="isAuth" />
+        <navbar ref="navDrawer" id="nav-drawer" v-if="isAuth" :drawer="drawer" />
       <v-main>
         <v-container fluid class="pa-0 ma-0">
           <router-view id="view" :key="$route.fullPath" />
@@ -20,6 +20,16 @@ export default {
   components: {
     headerComp,
     navbar
+  },
+  data(){
+    return{
+      drawer: false
+    } 
+  },
+  methods:{
+    setDrawer(){
+     this.$set(this, "drawer", !this.drawer)
+    }
   },
   computed: {
     isAuth: {
@@ -57,7 +67,8 @@ export default {
   }
   &-drawer{
     height:90vh !important;
-    position:sticky;
+    position: absolute;
+    z-index: 99;
     top:10vh !important;
   }
 }

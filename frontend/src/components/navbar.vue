@@ -2,6 +2,7 @@
 
   <v-navigation-drawer
     expand-on-hover
+    v-model="drawerState"
     :permanent="$vuetify.breakpoint.mdAndUp"
     class="d-flex navbar flex-column align-center justify-space-between"
   >
@@ -47,8 +48,14 @@ export default {
       get(){
         return this.$store.state.user.isAdmin
       }
+    },
+    drawerState:{
+      get(){
+        return this.drawer
+      }
     }
   },
+  props:['drawer'],
   methods: {
     disconnect() {
       fetch("http://localhost:3000/api/users/disconnect", {
