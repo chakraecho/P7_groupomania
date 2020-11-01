@@ -54,7 +54,9 @@ exports.login = (req, res, next) => {
                 const isAdmin = account.roleId === 1 ? true : false
 
               return res.status(200).cookie('aBigSecret', jwt.sign(
-                { userId: account.email },
+                { userId: account.userId ,
+                  email : account.email
+                },
                 process.env.JWT_KEY,
                 { expiresIn: '24h' }
               ), { httpOnly: true, secure: false }).json({
@@ -75,7 +77,8 @@ exports.login = (req, res, next) => {
 exports.getUser = (req, res) => {
   const id = req.params.id
   Users.findAll({
-    where: { userId: { [Op.eq]: id } }
+    where: { userId: { [Op.eq]: id } },
+    attributes : ['userId', 'firstName', "lastName", "profilImgUrl", "bannerUrl", "description"]
   })
     .then(user => res.status(200).json({ user }))
     .catch(error => res.status(500).json({ error }))
@@ -100,7 +103,9 @@ exports.verify = (req, res, next) => {
           req.session.userId = account.userId
           const isAdmin = account.roleId === 1 ? true : false
           return res.status(200).cookie('aBigSecret', jwt.sign(
-            { userId: account.email },
+            { userId: account.userId,
+              email : account.email
+             },
             process.env.JWT_KEY,
             { expiresIn: '24h' }
           ), { httpOnly: true, secure: false }).json({
