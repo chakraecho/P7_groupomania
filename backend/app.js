@@ -4,6 +4,7 @@ const helmet = require('helmet')
 const dotenv = require('dotenv')
 const cookieParser = require('cookie-parser')
 const path = require('path');
+const toobusy = require('toobusy-js')
 
 dotenv.config()
 
@@ -46,6 +47,15 @@ const userRoutes = require('./routes/users')
 const postRoutes = require('./routes/posts')
 const groupRoutes = require('./routes/group')
 const adminRoutes = require('./routes/admin')
+
+//overcharge server check
+app.use(function (req, res, next) {
+  if (toobusy()) {
+    res.send(503, "Serveur surchargé, veuillez rééssayer plus tard");
+  } else {
+    next();
+  }
+});
 
 //middlewares
 app.use(helmet())
