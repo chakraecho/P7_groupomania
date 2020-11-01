@@ -135,6 +135,7 @@ export default {
               profilImgUrl: res.profilImgUrl,
               userId : res.userId
                });
+               this.$store.commit('user/SET_ADMIN', res.isAdmin)
               this.$store.dispatch("handleAuth", true);
               this.$router.push("/");
             })
