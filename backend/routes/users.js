@@ -15,7 +15,7 @@ router.post('/auth/signup', userCtrl.signup)
 router.post('/auth/login', userCtrl.login)
 router.post('/auth/verify', userCtrl.verify)
 
-router.get('/search', searchCtrl.searchUser)
+router.get('/search',userSecurity.isLoggedIn, searchCtrl.searchUser)
 
 router.put("/account/:id",userSecurity.isLoggedIn, userSecurity.isUser, userCtrl.modify)
 router.put('/account/:id/profil',userSecurity.isLoggedIn, userSecurity.isUser, multer, userCtrl.changeImg)
