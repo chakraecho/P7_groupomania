@@ -5,20 +5,23 @@ const multer = require('./../middleware/multer-config')
 const postCtlr = require('./../controllers/post')
 const searchCtrl = require('./../controllers/search')
 
-
-router.get('/', postCtlr.getAll)
-router.post('/submit',multer,  postCtlr.createOne)
-router.put('/:id',multer, postCtlr.modifyOne)
-router.delete('/:id', postCtlr.deleteOne)
-
-router.get('/search', searchCtrl.searchPost)
-
-router.get('/:id/comment', postCtlr.getComment)
-router.post('/:id/comment',postCtlr.createComment)
-router.put('/:id/comment', postCtlr.modifyComment)
-router.delete('/:id/comment', postCtlr.deleteComment)
+const {isLoggedIn} = require('./../middleware/auth/user')
+const {isUsersPost, isUsersComment} = require('./../middleware/auth/post')
 
 
-router.post('/:id/like', postCtlr.like)
-router.post('/comment/:id/like', postCtlr.commentLike)
+router.get('/', isLoggedIn, postCtlr.getAll)
+router.post('/submit', isLoggedIn,multer,  postCtlr.createOne)
+router.put('/:id', isLoggedIn, isUsersPost, multer, postCtlr.modifyOne)
+router.delete('/:id', isLoggedIn, isUsersPost, postCtlr.deleteOne)
+
+router.get('/search',isLoggedIn, searchCtrl.searchPost)
+
+router.get('/:id/comment',isLoggedIn, postCtlr.getComment)
+router.post('/:id/comment',isLoggedIn, postCtlr.createComment)
+router.put('/:id/comment', isLoggedIn, isUsersComment,postCtlr.modifyComment)
+router.delete('/:id/comment',isLoggedIn, isUsersComment,postCtlr.deleteComment)
+
+
+router.post('/:id/like',isLoggedIn, postCtlr.like)
+router.post('/comment/:id/like',isLoggedIn, postCtlr.commentLike)
 module.exports = router
