@@ -2,10 +2,13 @@ const express = require('express')
 const router = express.Router()
 const adminCtrl = require('./../controllers/admin')
 
-router.get('/list', adminCtrl.getAll)
+const {isLoggedIn} = require('./../middleware/auth/user')
+const {isAdminUser} = require('./../middleware/auth/admin')
 
-router.post('/alert/:id', adminCtrl.createAlert)
+router.get('/list', isLoggedIn, isAdminUser, adminCtrl.getAll)
 
-router.delete('/alert/:id', adminCtrl.delete)
+router.post('/alert/:id',isLoggedIn, isAdminUser, adminCtrl.createAlert)
+
+router.delete('/alert/:id',isLoggedIn,isAdminUser, adminCtrl.delete)
 
 module.exports = router
