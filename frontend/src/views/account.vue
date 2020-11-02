@@ -181,6 +181,35 @@
               <commentCard />
             </v-col>
           </v-row>
+          <div class="pagination">
+            <div class="block-icon">
+              <button
+                :disabled="links.first === links.last"
+                @click="getDataTable(links.first)"
+              >
+                <v-icon>mdi-page-first</v-icon>
+              </button>
+              <button
+                :disabled="links.prev === null || links.prev === links.next"
+                @click="getDataTable(links.prev)"
+              >
+                <v-icon>mdi-chevron-left</v-icon>
+              </button>
+              <span class="current-page">{{ current_page }}</span>
+              <button
+                :disabled="links.next === null || links.prev === links.next"
+                @click="getDataTable(links.next)"
+              >
+                <v-icon>mdi-chevron-right</v-icon>
+              </button>
+              <button
+                :disabled="links.first === links.last"
+                @click="getDataTable(links.last)"
+              >
+                <v-icon>mdi-page-last</v-icon>
+              </button>
+            </div>
+          </div>
         </v-container>
       </v-col>
       <v-col cols="3">
@@ -258,7 +287,9 @@ export default {
       inputFile: undefined,
       newsrcimg: undefined,
       menuDialog: false,
-      deleteUser: false
+      deleteUser: false,
+      links: {},
+      current_page: 1
     };
   },
   computed: {
@@ -379,23 +410,38 @@ export default {
       fetch("http://localhost:3000/api/users/delete", {
         method: "delete",
         credentials: "include"
-      }).then(() => {
-        this.activateSnack(
-          "success",
-          "Votre compte à bien été suppprimé, vous allez être redirigé !"
-        );
-        this.$store.dispatch("user/disconnect");
-        setTimeout(() => {
-          this.$router.push("/login");
-        }, 2000);
       })
-      .catch(error => {
-        console.log(error)
-        this.activateSnack("error", "Erreur lors de la requête au serveur !")
-      });
+        .then(() => {
+          this.activateSnack(
+            "success",
+            "Votre compte à bien été suppprimé, vous allez être redirigé !"
+          );
+          this.$store.dispatch("user/disconnect");
+          setTimeout(() => {
+            this.$router.push("/login");
+          }, 2000);
+        })
+        .catch(error => {
+          console.log(error);
+          this.activateSnack("error", "Erreur lors de la requête au serveur !");
+        });
+    },
+    getDataTable(link) {
+      if (link === undefined) {
+        link = "http://localhost:3000/api/users/" + this.$route.params.id + "/post";
+      }
+      fetch(link, { credentials: "include" })
+        .then(response =>
+          response.json().then(res => {
+            this.$store.dispatch("post/loadPost", res.posts);
+            this.$set(this, "links", res.links)
+            this.$set(this, "current_page", res.current_page)
+          })
+        )
+        .catch(error => console.log(error));
     }
   },
-  beforeCreate() {
+  mounted() {
     fetch("http://localhost:3000/api/users/" + this.$route.params.id, {
       credentials: "include"
     })
@@ -411,16 +457,7 @@ export default {
       )
       .catch(error => console.log(error));
 
-    fetch(
-      "http://localhost:3000/api/users/" + this.$route.params.id + "/post",
-      { credentials: "include" }
-    )
-      .then(response =>
-        response.json().then(res => {
-          this.$store.dispatch("post/loadPost", res.posts);
-        })
-      )
-      .catch(error => console.log(error));
+      this.getDataTable()
 
     if (this.$route.params.id !== this.$store.state.user.userId) {
       fetch(

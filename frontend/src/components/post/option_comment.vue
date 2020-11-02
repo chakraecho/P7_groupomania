@@ -1,7 +1,7 @@
 <template>
   <v-bottom-sheet v-if="comment_option" v-model="comment_option">
     <v-card>
-      <v-btn text> <v-icon>mdi-alert</v-icon> Signaler </v-btn>
+      <v-btn text @click="sendAlert"> <v-icon>mdi-alert</v-icon> Signaler </v-btn>
       <v-btn
         text
         v-if="option_comment.userId === $store.state.user.userId"
@@ -145,7 +145,26 @@ export default {
             msg: "Erreur, veuillez rééssayer ou contacter un administrateur"
           });
         });
-    }
-  }
+    },
+    sendAlert(){
+        fetch('http://localhost:3000/api/admin/alert/' + this.option_post.postId, {
+          credentials: 'include',
+          method:"post",
+          headers:{"Content-type": "application/json"},
+          body: JSON.stringify({
+            message : this.alert_msg,
+            type: 'comment'
+          })
+        })
+      .then(()=>{
+        this.closeAll();
+        this.$emit('snackbar', {color: "success", msg: "Post signalé !"})
+      })
+      .catch((error )=>{
+        console.log(error)
+        this.closeAll();
+        this.$emit("snackbar", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
+      })
+  }}
 };
 </script>
