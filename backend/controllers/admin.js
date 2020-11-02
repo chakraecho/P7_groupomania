@@ -37,11 +37,11 @@ exports.getAll = (req, res) => {
 }
 
 exports.delete = (req,res) => {
-    admin.destroy({where : {id : req.body.id}})
-        .then(()=> res.status(200))
-        .catch(error => res.status(500))
+    admin.destroy({where : {id : req.params.id}})
+        .then(()=> res.status(200).json({message: "alert ok"}))
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({mssage: 'Erreur lors de la suppression'})
+        })
 }
 
-exports.deleteContent = (req, res) => {
-
-}

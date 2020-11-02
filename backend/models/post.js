@@ -41,6 +41,7 @@ const commentLiked = sequelize.define('commentLiked', {
 })
 
 sequelizePaginate.paginate(Post)
+sequelizePaginate.paginate(Comments)
 
 
 exports.Comments = Comments

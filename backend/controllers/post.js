@@ -5,6 +5,7 @@ const {Op} = require('sequelize')
 const noctification = require('./../models/noctification')
 const follow = require('./../models/follow')
 const {groupMembers} = require('./../models/group')
+const sequelizePagination = require('sequelize-paginate')
 
 
 exports.createOne = (req, res, next) => {
@@ -108,8 +109,13 @@ exports.getOne = (req, res, next) => {
 }
 
 exports.getAll = (req, res, next) => {
-    Post.findAll({
-        limit: 10, order: [['updatedAt', 'DESC']], include: [{
+    console.log(req.query)
+    const current_page = req.query.page ? req.query.page : 1
+
+    Post.paginate({
+        page: req.query.page,
+        paginate : 10
+        , include: [{
             model: User,
             attributes: ['lastName', 'firstName', 'profilImgUrl']
         }, {
@@ -124,16 +130,31 @@ exports.getAll = (req, res, next) => {
         }
         ]
     })
-        .then(posts => {
-            return res.status(200).json({posts})
-        })
-        .catch(error => res.status(404).json({error}))
+    .then(posts => {
+        const prev = current_page === 1 ? process.env.BASE_URL + '/api/'+ req.params.id +'/post?page=1' : process.env.BASE_URL + '/api/post?page=' + (current_page-1)
+        const next = current_page === posts.pages.toString() ? process.env.BASE_URL + '/api/'+ req.params.id +'/post?page='+posts.pages : process.env.BASE_URL + '/api/post?page=' + (current_page+1)
+        const links = {
+            prev,
+            next,
+            first: process.env.BASE_URL +'/api/post?page=1',
+            last : process.env.BASE_URL + '/api/post?page=' + posts.pages
+        }
+        res.status(200).json({...posts, posts : posts.docs, current_page, links})
+    })
+    .catch(error => {
+        console.log(error)
+        res.status(500).json({error})
+    })
 }
 
 exports.getAllfromGroups = (req, res, next) => {
-    Post.findAll({
+    const current_page = req.query.page ? req.query.page : 1
+    const next_page = current_page + 1
+    Post.paginate({
+        page: req.query.page,
+        paginate : 10,
         where: {groupId: {[Op.eq]: req.params.id}},
-        limit: 10, order: [['updatedAt', 'DESC']], include: [{
+         include: [{
             model: User,
             attributes: ['lastName', 'firstName', 'profilImgUrl']
         }, {
@@ -148,10 +169,21 @@ exports.getAllfromGroups = (req, res, next) => {
         }
         ]
     })
-        .then(posts => {
-            return res.status(200).json({posts})
-        })
-        .catch(error => res.status(404).json({error}))
+    .then(posts => {
+        const prev = current_page === 1 ? process.env.BASE_URL + '/api/group/'+ req.params.id +'/post?page=1' : process.env.BASE_URL + '/api/group/' + req.params.id +'/post?page=' + (current_page-1)
+        const next = posts.pages === current_page ? process.env.BASE_URL + '/api/group/'+ req.params.id +'/post?page=' + posts.pages : process.env.BASE_URL + '/api/group/' + req.params.id +'/post?page=' + next_page
+        const links = {
+            prev,
+            next,
+            first: process.env.BASE_URL +'/api/group/'+ req.params.id + '/post?page=1',
+            last : process.env.BASE_URL + '/api/group/'+ req.params.id + '/post?page=' + posts.pages
+        }
+        res.status(200).json({...posts, posts : posts.docs, current_page, links})
+    })
+    .catch(error => {
+        console.log(error)
+        res.status(500).json({error})
+    })
 }
 
 exports.modifyOne = (req, res, next) => {
