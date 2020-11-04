@@ -14,53 +14,121 @@
     </v-row>
     <v-row>
       <v-container v-if="selectedBlock === 'signup'">
-        <v-row>
-          <v-col>
-            <v-text-field outlined label="Nom" v-model="lastName">
-            </v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field outlined label="Prénom" v-model="firstName">
-            </v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-text-field outlined label="email" v-model="email">
-            </v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-text-field outlined label="mot de passe" type="password"  v-model="password">
-            </v-text-field>
-          </v-col>
-        </v-row>
-      </v-container>
-      <v-container v-else-if="selectedBlock === 'login'">
-        <v-row>
-          <v-col cols="10" class="mx-auto">
-            <v-text-field outlined label="email" v-model="loginEmail">
-            </v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="10" class="mx-auto">
-            <v-text-field outlined label="password" type="password" v-model="loginPassword">
-            </v-text-field>
-          </v-col>
-        </v-row>
-      </v-container>
-      <v-row v-if="selectedBlock === 'signup'" class="pa-0">
+        <validation-observer>
+          <v-row>
+            <v-col>
+              <validation-provider name="nom" rules="required|alpha" v-slot="v">
+                <v-text-field
+                  outlined
+                  label="Nom"
+                  :error-messages="v.errors"
+                  v-model="lastName"
+                >
+                </v-text-field>
+              </validation-provider>
+            </v-col>
+            <v-col>
+              <validation-provider
+                name="Prénom"
+                rules="required|alpha"
+                v-slot="v"
+              >
+                <v-text-field
+                  outlined
+                  label="Prénom"
+                  :error-messages="v.errors"
+                  v-model="firstName"
+                >
+                </v-text-field>
+              </validation-provider>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <validation-provider
+                name="email"
+                rules="required|email"
+                v-slot="v"
+              >
+                <v-text-field
+                  outlined
+                  label="email"
+                  :error-messages="v.errors"
+                  v-model="email"
+                >
+                </v-text-field>
+              </validation-provider>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <validation-provider
+                name="mot de passe"
+                rules="required|password"
+                v-slot="v"
+              >
+                <v-text-field
+                  outlined
+                  label="mot de passe"
+                  type="password"
+                  v-model="password"
+                  :error-messages="v.errors"
+                >
+                </v-text-field>
+              </validation-provider>
+            </v-col>
+          </v-row>
+          <v-row>
         <v-btn class="mx-auto" text @click="submitSignUp">
           S'inscrire
         </v-btn>
-      </v-row>
-      <v-row v-if="selectedBlock === 'login'" class="pa-0">
-        <v-btn class="mx-auto" text @click="submitLogin">
+          </v-row>
+        </validation-observer>
+      </v-container>
+      <v-container v-else-if="selectedBlock === 'login'">
+        <validation-observer>
+          <v-row>
+            <v-col cols="10" class="mx-auto">
+              <validation-provider
+                name="email"
+                rules="required|email"
+                v-slot="v"
+              >
+                <v-text-field
+                  outlined
+                  label="email"
+                  v-model="loginEmail"
+                  :error-messages="v.errors"
+                >
+                </v-text-field>
+              </validation-provider>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="10" class="mx-auto">
+              <validation-provider
+                name="mot de passe"
+                rules="required|password"
+                v-slot="v"
+              >
+                <v-text-field
+                  outlined
+                  label="password"
+                  type="password"
+                  v-model="loginPassword"
+                  :error-messages="v.errors"
+                >
+                </v-text-field>
+              </validation-provider>
+            </v-col>
+          </v-row>
+          <v-row>
+ <v-btn class="mx-auto" text @click="submitLogin">
           Se connecter
         </v-btn>
-      </v-row>
+          </v-row>
+        </validation-observer>
+      </v-container>
     </v-row>
   </v-container>
 </template>
@@ -79,6 +147,29 @@ export default {
     };
   },
   methods: {
+    /************************************************** */
+
+    /************************************************** */
+
+    errortext(v) {
+      return v.errors[0];
+    },
+    touchedAndInvalid(v) {
+      if (!v.touched) {
+        return false;
+      } else if (v.passed) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    touchedAndValid(v) {
+      if (v.touched && !v.passed) {
+        return false;
+      } else if (v.passed) {
+        return true;
+      }
+    },
     submitLogin() {
       fetch("http://localhost:3000/api/users/auth/login", {
         body: JSON.stringify({
@@ -91,14 +182,14 @@ export default {
         },
         credentials: "include"
       })
-      .then(response => response.json()        
-      .then(res => {
-          console.log(res)
-          this.$store.dispatch("user/login", { ...res });
-          this.$store.dispatch("handleAuth", true);
-          this.$router.push("/");
-        })
-      )
+        .then(response =>
+          response.json().then(res => {
+            console.log(res);
+            this.$store.dispatch("user/login", { ...res });
+            this.$store.dispatch("handleAuth", true);
+            this.$router.push("/");
+          })
+        )
 
         .catch(error => console.log(error));
     },
@@ -116,35 +207,37 @@ export default {
           "Content-Type": "application/json"
         }
       })
-      .then(response => response.json()
-      .then(() => {
-          fetch("http://localhost:3000/api/users/auth/login", {
-            body: JSON.stringify({
-              email: this.email,
-              password: this.password
-            }),
-            method: "post",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            credentials: "include"
-          }).then(response => response.json()
-                      .then(res => {
-              this.$store.dispatch("user/login", { firstName: res.firstName,
-              lastName: res.lastName,
-              profilImgUrl: res.profilImgUrl,
-              userId : res.userId
-               });
-               this.$store.commit('user/SET_ADMIN', res.isAdmin)
-              this.$store.dispatch("handleAuth", true);
-              this.$router.push("/");
-            })
-            .catch(error => console.log(error))
-          )
+        .then(response =>
+          response.json().then(() => {
+            fetch("http://localhost:3000/api/users/auth/login", {
+              body: JSON.stringify({
+                email: this.email,
+                password: this.password
+              }),
+              method: "post",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              credentials: "include"
+            }).then(response =>
+              response
+                .json()
+                .then(res => {
+                  this.$store.dispatch("user/login", {
+                    firstName: res.firstName,
+                    lastName: res.lastName,
+                    profilImgUrl: res.profilImgUrl,
+                    userId: res.userId
+                  });
+                  this.$store.commit("user/SET_ADMIN", res.isAdmin);
+                  this.$store.dispatch("handleAuth", true);
+                  this.$router.push("/");
+                })
+                .catch(error => console.log(error))
+            );
+          })
+        )
 
-        })
-      )
-        
         .catch(error => console.log(error));
     }
   }

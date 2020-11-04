@@ -54,6 +54,7 @@ export default {
     left:0px;
 }
 .loginBlock{
-    height:70vh;
+    
+    min-height:max-content;
 }
 </style>
