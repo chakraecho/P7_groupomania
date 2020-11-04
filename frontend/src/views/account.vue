@@ -165,51 +165,59 @@
     <v-row>
       <v-col>
         <v-container class="mt-5 pt-5">
-          <v-row justify="center">
-            <v-col cols="11" md="6" lg="5">
-              <v-row
-                justify="center"
-                v-for="post in posts"
-                :key="'post_' + post.postId"
-              >
-                <v-col>
-                  <postCard :post="post" :dataId="post.postId" />
-                </v-col>
-              </v-row>
-            </v-col>
-            <v-col cols="11" md="5" lg="4" class="pl-3" v-if="activeComment">
-              <commentCard />
-            </v-col>
-          </v-row>
-          <div class="pagination">
-            <div class="block-icon">
-              <button
-                :disabled="links.first === links.last"
-                @click="getDataTable(links.first)"
-              >
-                <v-icon>mdi-page-first</v-icon>
-              </button>
-              <button
-                :disabled="links.prev === null || links.prev === links.next"
-                @click="getDataTable(links.prev)"
-              >
-                <v-icon>mdi-chevron-left</v-icon>
-              </button>
-              <span class="current-page">{{ current_page }}</span>
-              <button
-                :disabled="links.next === null || links.prev === links.next"
-                @click="getDataTable(links.next)"
-              >
-                <v-icon>mdi-chevron-right</v-icon>
-              </button>
-              <button
-                :disabled="links.first === links.last"
-                @click="getDataTable(links.last)"
-              >
-                <v-icon>mdi-page-last</v-icon>
-              </button>
+          <template v-if="posts === null">
+
+          </template>
+          <template v-else-if="posts.length === 0">
+            <p>Cet utilisateur n'a aucun post</p>
+          </template>
+          <template v-else-if="posts.length > 0">
+            <v-row justify="center">
+              <v-col cols="11" md="6" lg="5">
+                <v-row
+                  justify="center"
+                  v-for="post in posts"
+                  :key="'post_' + post.postId"
+                >
+                  <v-col>
+                    <postCard :post="post" :dataId="post.postId" />
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-col cols="11" md="5" lg="4" class="pl-3" v-if="activeComment">
+                <commentCard />
+              </v-col>
+            </v-row>
+            <div class="pagination">
+              <div class="block-icon">
+                <button
+                  :disabled="links.first === links.last"
+                  @click="getDataTable(links.first)"
+                >
+                  <v-icon>mdi-page-first</v-icon>
+                </button>
+                <button
+                  :disabled="links.prev === null || links.prev === links.next"
+                  @click="getDataTable(links.prev)"
+                >
+                  <v-icon>mdi-chevron-left</v-icon>
+                </button>
+                <span class="current-page">{{ current_page }}</span>
+                <button
+                  :disabled="links.next === null || links.prev === links.next"
+                  @click="getDataTable(links.next)"
+                >
+                  <v-icon>mdi-chevron-right</v-icon>
+                </button>
+                <button
+                  :disabled="links.first === links.last"
+                  @click="getDataTable(links.last)"
+                >
+                  <v-icon>mdi-page-last</v-icon>
+                </button>
+              </div>
             </div>
-          </div>
+          </template>
         </v-container>
       </v-col>
       <v-col cols="3">
@@ -428,14 +436,15 @@ export default {
     },
     getDataTable(link) {
       if (link === undefined) {
-        link = "http://localhost:3000/api/users/" + this.$route.params.id + "/post";
+        link =
+          "http://localhost:3000/api/users/" + this.$route.params.id + "/post";
       }
       fetch(link, { credentials: "include" })
         .then(response =>
           response.json().then(res => {
             this.$store.dispatch("post/loadPost", res.posts);
-            this.$set(this, "links", res.links)
-            this.$set(this, "current_page", res.current_page)
+            this.$set(this, "links", res.links);
+            this.$set(this, "current_page", res.current_page);
           })
         )
         .catch(error => console.log(error));
@@ -457,7 +466,7 @@ export default {
       )
       .catch(error => console.log(error));
 
-      this.getDataTable()
+    this.getDataTable();
 
     if (this.$route.params.id !== this.$store.state.user.userId) {
       fetch(

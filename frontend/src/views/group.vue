@@ -158,17 +158,26 @@
         </v-row>
       </v-container>
     </v-row>
+    <v-row justify="end" class="mt-5">
+      <v-btn @click="joinGrouphandler()">
+        {{ isMember ? "Quitter le groupe" : "Rejoindre le groupe"}}
+      </v-btn>
+    </v-row>
     <v-row class="mt-5">
       <v-container>
         <v-row>
           <v-col>
             <v-row>
               <v-col cols="12" md="8" class="mx-auto">
-                <postCreator ref="postcreator" />
+                <postCreator ref="postcreator" v-if="isMember" />
               </v-col>
             </v-row>
-            <v-row justify="center" class="mt-5 pt-5">
-              
+            <template v-if="posts === null"> </template>
+            <template v-else-if="posts.length === 0">
+              <p>Aucun post dans le groupe</p>
+            </template>
+            <template v-else-if="posts.length > 0">
+              <v-row justify="center" class="mt-5 pt-5">
                 <v-col cols="11" md="6" lg="5">
                   <v-row
                     justify="center"
@@ -189,37 +198,37 @@
                 >
                   <commentCard />
                 </v-col>
-              
-            </v-row>
-            <div class="pagination">
-              <div class="block-icon">
-                <button
-                  :disabled="links.first === links.last"
-                  @click="getDataTable(links.first)"
-                >
-                  <v-icon>mdi-page-first</v-icon>
-                </button>
-                <button
-                  :disabled="links.prev === null || links.prev === links.next"
-                  @click="getDataTable(links.prev)"
-                >
-                  <v-icon>mdi-chevron-left</v-icon>
-                </button>
-                <span class="current-page">{{ current_page }}</span>
-                <button
-                  :disabled="links.next === null || links.prev === links.next"
-                  @click="getDataTable(links.next)"
-                >
-                  <v-icon>mdi-chevron-right</v-icon>
-                </button>
-                <button
-                  :disabled="links.first === links.last"
-                  @click="getDataTable(links.last)"
-                >
-                  <v-icon>mdi-page-last</v-icon>
-                </button>
+              </v-row>
+              <div class="pagination">
+                <div class="block-icon">
+                  <button
+                    :disabled="links.first === links.last"
+                    @click="getDataTable(links.first)"
+                  >
+                    <v-icon>mdi-page-first</v-icon>
+                  </button>
+                  <button
+                    :disabled="links.prev === null || links.prev === links.next"
+                    @click="getDataTable(links.prev)"
+                  >
+                    <v-icon>mdi-chevron-left</v-icon>
+                  </button>
+                  <span class="current-page">{{ current_page }}</span>
+                  <button
+                    :disabled="links.next === null || links.prev === links.next"
+                    @click="getDataTable(links.next)"
+                  >
+                    <v-icon>mdi-chevron-right</v-icon>
+                  </button>
+                  <button
+                    :disabled="links.first === links.last"
+                    @click="getDataTable(links.last)"
+                  >
+                    <v-icon>mdi-page-last</v-icon>
+                  </button>
+                </div>
               </div>
-            </div>
+            </template>
           </v-col>
           <v-col cols="3">
             <div id="description" class="position-md-sticky">
@@ -294,6 +303,7 @@ export default {
       description: "",
       posts: [],
       isAdmin: false,
+      isMember: false,
       snackbar: false,
       snackbarColor: "",
       snackbarMsg: "",
@@ -401,6 +411,42 @@ export default {
           this.menuDialog = false;
           this.deleteGroup = false;
         });
+    },
+    joinGrouphandler() {
+      if (this.isMember) {
+        fetch(
+          "http://localhost:3000/api/group/" + this.$route.params.id + "/leave",
+          {
+            credentials: "include",
+            method: "delete"
+          }
+        ).then(res => {
+          if (!res.ok) {
+            res.json().then(response => console.log(response.message));
+            this.activateSnack("error", "Il y a eu une erreur.");
+          } else {
+            this.isMember = false;
+            this.activateSnack("success", "vous avez quitté le groupe !");
+          }
+        });
+      } else if (!this.isMember) {
+        fetch(
+          "http://localhost:3000/api/group/" + this.$route.params.id + "/join",
+          {
+            credentials: "include",
+            method: "get"
+          }
+        ).then(res => {
+          if (!res.ok) {
+            res.json().then(response => console.log(response.message));
+            this.activateSnack("error", "Il y a eu une erreur.");
+          } else {
+            this.activateSnack("success", "Vous avez rejoins le groupe.");
+
+            this.isMember = true;
+          }
+        });
+      }
     }
   },
   computed: {
@@ -421,6 +467,9 @@ export default {
           this.bannerUrl = res.bannerUrl;
           this.imgUrl = res.imgUrl;
           this.description = res.description;
+          if (resparse.role) {
+            this.isMember = true;
+          }
           resparse.role === 1 ? (this.isAdmin = true) : (this.admin = false);
         })
       )

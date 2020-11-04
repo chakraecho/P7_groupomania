@@ -52,6 +52,9 @@ export default {
     drawerState:{
       get(){
         return this.drawer
+      },
+      set(val){
+        this.$set("set-drawer", val)
       }
     }
   },

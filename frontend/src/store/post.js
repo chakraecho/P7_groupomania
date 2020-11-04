@@ -3,7 +3,7 @@ import Vue from "vue"
 const post = {
     namespaced:true,
     state:{
-        posts:[],
+        posts:null,
         optionId : '',
         option : false
     },
@@ -15,6 +15,9 @@ const post = {
     mutations:{
         changePost(state, payload){
             state.posts = payload
+        },
+        DESACTIVE_POST(state){
+            Vue.set(state, "posts", null)
         },
         UPDATE_POST(state, payload) {
             const id = state.posts.findIndex(x => x.postId == payload.postId)

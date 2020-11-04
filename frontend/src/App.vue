@@ -1,8 +1,13 @@
 <template>
   <v-app id="app">
-    <headerComp app class="header pa-0 ma-0" @handle-nav-bar="setDrawer()"/>
+    <headerComp app class="header pa-0 ma-0" @handle-nav-bar="setDrawer(!drawer)"/>
     <v-container app class="pa-0 d-flex" fluid>
-        <navbar ref="navDrawer" id="nav-drawer" v-if="isAuth" :drawer="drawer" />
+        <navbar ref="navDrawer"
+         id="nav-drawer" 
+         v-if="isAuth"
+          :drawer="drawer"
+          @set-drawer="setDrawer($event)"
+           />
       <v-main>
         <v-container fluid class="pa-0 ma-0">
           <router-view id="view" :key="$route.fullPath" />
@@ -27,8 +32,8 @@ export default {
     } 
   },
   methods:{
-    setDrawer(){
-     this.$set(this, "drawer", !this.drawer)
+    setDrawer(val){
+     this.$set(this, "drawer", val)
     }
   },
   computed: {
@@ -67,7 +72,7 @@ export default {
   }
   &-drawer{
     height:90vh !important;
-    position: absolute;
+    position: fixed;
     z-index: 99;
     top:10vh !important;
   }

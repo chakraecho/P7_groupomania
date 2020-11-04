@@ -32,7 +32,7 @@
         </v-row>
         <v-row>
           <v-col>
-            <v-text-field outlined label="mot de passe" v-model="password">
+            <v-text-field outlined label="mot de passe" type="password"  v-model="password">
             </v-text-field>
           </v-col>
         </v-row>
@@ -46,7 +46,7 @@
         </v-row>
         <v-row>
           <v-col cols="10" class="mx-auto">
-            <v-text-field outlined label="password" v-model="loginPassword">
+            <v-text-field outlined label="password" type="password" v-model="loginPassword">
             </v-text-field>
           </v-col>
         </v-row>
