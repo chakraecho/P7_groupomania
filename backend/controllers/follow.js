@@ -17,7 +17,10 @@ exports.checkFollow = (req, res)=>{
                 res.status(200).json({result: "suivi"})
             }
         })
-        .catch(error => console.log(error) )
+        .catch(error => {
+            logger.write(error)
+            res.status(404).json({ message : "Echec lors de la vérification du suivi." })
+        } )
     }
 }
 
@@ -30,7 +33,10 @@ exports.followOne = (req,res)=>{
     else{
         Follow.create({follower, followed})
         .then(()=> res.status(200).json({message:'utilisateur suivi !'}))
-        .catch(error => res.status(500).json({error}))
+        .catch(error => {
+            logger.write(error)
+            res.status(404).json({ message : "Erreur lors de la création du suivi, veuillez rééssayer." })
+        })
     }
 }
 
@@ -47,5 +53,8 @@ exports.deleteFollow = (req,res)=>{
         }
     })
     .then(()=> res.status(200).json({message:'vous ne le suivez plus !'}))
-    .catch(error => res.status(400).json({error}))
+    .catch(error => {
+        logger.write(error)
+        res.status(404).json({ message : "Erreur lors de la suppression du suivi, veuillez rééssayer." })
+    })
 }

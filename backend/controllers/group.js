@@ -13,7 +13,10 @@ exports.getOwnGroups = (req, res) => {
         include: [{model: groups}]
     })
         .then(result => res.status(200).json({result}))
-        .catch(error => console.log(error))
+        .catch(error => {
+            logger.write(error)
+            res.status(500).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
+        })
 }
 
 exports.getOneGroup = (req, res) => {
@@ -37,7 +40,10 @@ exports.getOneGroup = (req, res) => {
             
 
         })
-        .catch(error => res.status(500).json({error}))
+        .catch(error => {
+            logger.write(error)
+            res.status(500).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
+        })
 }
 
 exports.createGroup = (req, res, next) => {
@@ -73,9 +79,15 @@ exports.createGroup = (req, res, next) => {
         }).then(groupMembers => {
             res.status(201).json({message: 'groupe créé !', groupMembers, group})
         })
-            .catch(error => res.status(500).json({message: 'groupe non trouvé !', error}))
+            .catch(error => {
+                logger.write(error)
+                res.status(500).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
+            })
     )
-        .catch(error => res.status(500).json({error}))
+        .catch(error => {
+            logger.write(error)
+            res.status(500).json({ message : "Erreur interne." })
+        })
 }
 
 exports.modifyGroup = (req, res) => {
@@ -86,8 +98,14 @@ exports.modifyGroup = (req, res) => {
     groups.update({description}, {where: {groupId}})
         .then(() => groups.findOne({where: {groupId}})
             .then(group => res.status(200).json({group}))
-            .catch(error => res.status(404).json({error})))
-        .catch(() => res.status(500).json({error}))
+            .catch(error => {
+                logger.write(error)
+                res.status(404).json({ message : "Groupe non trouvé." })
+            }))
+        .catch(() => {
+            logger.write(error)
+            res.status(500).json({ message : "Erreur lors de la modification des données, veuillez rééssayer." })
+        })
 }
 
 exports.modifyImg = (req, res) => {
@@ -99,15 +117,18 @@ exports.modifyImg = (req, res) => {
                 .then(() => groups.findOne({where: {groupId}})
                     .then(group => res.status(200).json({group}))
                     .catch(error => {
-                        console.log(error)
-                        res.status(500).json({error})
+                        logger.write(error)
+                        res.status(404).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
                     }))
                 .catch((error) => {
-                    console.log(error)
-                    res.status(500).json({error})
+                    logger.write(error)
+                    res.status(500).json({ message : "Erreur lors de la modification des données, veuillez rééssayer." })
                 })
         })
-        .catch(error => res.status(500).json({error}))
+        .catch(error => {
+            logger.write(error)
+            res.status(404).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
+        })
 }
 
 exports.modifyBanner = (req, res) => {
@@ -120,17 +141,17 @@ exports.modifyBanner = (req, res) => {
                 .then(() => groups.findOne({where: {groupId}})
                     .then(group => res.status(200).json({group}))
                     .catch(error => {
-                        console.log(error)
-                        res.status(500).json({error})
+                        logger.write(error)
+                        res.status(404).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
                     }))
                 .catch((error) => {
-                    console.log(error)
-                    res.status(500).json({error})
+                    logger.write(error)
+                    res.status(500).json({ message : "Erreur lors de la modification des données, veuillez rééssayer." })
                 })
         })
         .catch(error => {
-            console.log(error)
-            res.status(500).json({error})
+            logger.write(error)
+            res.status(404).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
         })
 
 }
@@ -139,6 +160,10 @@ exports.deleteGroup = (req, res) => {
     const groupId = req.params.id
     groups.destroy({where: {groupId}})
         .then(() => res.status(200).json({message: 'groupe supprimé !'}))
+        .catch(error => {
+            logger.write(error)
+            res.status(500).json({ message : "Erreur lors de la suppression des données, veuillez rééssayer." })
+        })
 }
 
 
@@ -148,7 +173,10 @@ exports.addMember = (req, res) => {
 
     groupMembers.create({userId, groupId, role: 2})
         .then(() => res.status(200).json({message: 'vous avez rejoint le groupe !'}))
-        .catch(error => res.status(500).json({error}))
+        .catch(error => {
+            logger.write(error)
+            res.status(500).json({ message : "Erreur lors de l'ajout au groupe', veuillez rééssayer." })
+        })
 }
 
 exports.deleteMember = (req, res) => {
@@ -158,7 +186,10 @@ exports.deleteMember = (req, res) => {
         }
     })
         .then(() => res.status(200).json({message: 'utilisateur supprimé !'}))
-        .catch(error => res.status(400).json({error}))
+        .catch(error => {
+            logger.write(error)
+            res.status(500).json({ message : "Erreur lors de la suppression des données, veuillez rééssayer." })
+        })
 }
 
 exports.leave = (req, res) => {
@@ -168,7 +199,7 @@ exports.leave = (req, res) => {
         }
     }).then(()=> res.status(200).json({message : "vous avez quitté le groupe !"}))
     .catch(error => {
-        console.log(error)
-        res.status(500).json({message : "erreur lors de la suppression"})
+        logger.write(error)
+        res.status(404).json({ message : "Erreur lors de la suppression des données, veuillez rééssayer." })
     })
 }
