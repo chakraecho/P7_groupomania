@@ -10,9 +10,11 @@ const searchCtrl = require('./../controllers/search')
 const {isLoggedIn} = require('./../middleware/auth/user')
 const {isUsersPost, isUsersComment} = require('./../middleware/auth/post')
 
+const notification = require('./../middleware/notification/notification')
+
 
 router.get('/', limit400, isLoggedIn, postCtlr.getAll)
-router.post('/submit', limit400, isLoggedIn,multer,  postCtlr.createOne)
+router.post('/submit', limit400, isLoggedIn,multer,  postCtlr.createOne, notification.newPostNotification)
 router.put('/:id', limit400, isLoggedIn, isUsersPost, multer, postCtlr.modifyOne)
 router.delete('/:id', limit400, isLoggedIn, isUsersPost, postCtlr.deleteOne)
 

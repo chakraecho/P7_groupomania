@@ -4,6 +4,13 @@ const bcrypt = require('bcrypt')
 const { Op } = require('sequelize')
 const session = require('express-session');
 const User = require('./../models/users');
+const fs = require('fs')
+
+
+var logger = fs.createWriteStream('log.txt', {
+  flags: 'a' // 'a' means appending (old data will be preserved)
+})
+
 
 exports.signup = (req, res) => {
   const email = req.body.email;
@@ -22,9 +29,13 @@ exports.signup = (req, res) => {
         .then(() => res.status(201).json({
           message: 'Utilisateur créé !'
         }))
-        .catch(error => res.status(500).json({ error }))
+        .catch(error => {
+          logger.write(error)
+          res.status(500).json({ message : "Erreur lors de la création de l'utilisateur, veuillez rééssayer." })})
     })
-    .catch(error => res.status(400).json({ error }))
+    .catch(error =>{
+      logger.write(error)
+       res.status(500).json({ message :"Erreur interne, veuillez contacter un administrateur." })})
 }
 
 exports.login = (req, res, next) => {
@@ -81,7 +92,9 @@ exports.getUser = (req, res) => {
     attributes : ['userId', 'firstName', "lastName", "profilImgUrl", "bannerUrl", "description"]
   })
     .then(user => res.status(200).json({ user }))
-    .catch(error => res.status(500).json({ error }))
+    .catch(error =>{
+      logger.write(error)
+       res.redirect("/404")})
 }
 
 exports.verify = (req, res, next) => {
@@ -131,9 +144,13 @@ exports.changeImg = (req, res, next) => {
       .then(() => {
         User.findOne({ where: { userId: req.session.userId }, attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"] })
           .then(user => res.status(200).json({ user }))
-          .catch(error => res.status(500).json({ error }))
+          .catch(error =>{
+            logger.write(error)
+             res.status(500).json({ message: "Erreur lors de la mise à jour des infos." })})
       })
-      .catch(error => res.status(500).json({ message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.' }))
+      .catch(error => {
+        logger.write(error)
+        res.status(500).json({ message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.' })})
   ) : (
       res.status(400).json({ message: 'image non upload !' })
     )
@@ -145,9 +162,14 @@ exports.changeBanner = (req, res) => {
       .then(() => {
         User.findOne({ where: { userId: req.session.userId }, attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"] })
           .then(user => res.status(200).json({ user }))
-          .catch(error => res.status(500).json({ error }))
+          .catch(error => {
+            logger.write(error)
+
+            res.status(500).json({ message : "Une erreur s'est produite lors de la mise à jour de la bannière." })})
       })
-      .catch(error => res.status(500).json({ message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.' }))
+      .catch(error =>{
+        logger.write(error)
+        res.status(500).json({ message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.' })})
   ) : (
       res.status(400).json({ message: 'image non upload !' })
     )
@@ -159,7 +181,9 @@ exports.modify = (req, res) => {
     .then(() => {
       User.findOne({ where: { userId: req.session.userId }, attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"] })
         .then(user => res.status(200).json({ user }))
-        .catch(error => res.status(500).json({ error }))
+        .catch(error =>{
+          logger.write(error)
+          res.status(500).json({ message : "Erreur lors de la récupération des données utilisateurs." })})
     })
     .catch(error => res.status(500).json({ error }))
 }
@@ -178,7 +202,7 @@ exports.delete = (req, res) =>{
   User.destroy({where:{userId: req.session.userId}})
   .then(() => res.status(200).json({message : "compte supprimé !"}))
   .catch(error => {
-    console.log(error)
-    res.status(500).json({error})
+    logger.write(error)
+    res.status(500).json({message : "Erreur lors de la suppréssion de l'utilisateur, veuillez contacter un administrateur."})
   })
 }

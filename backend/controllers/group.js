@@ -23,12 +23,18 @@ exports.getOneGroup = (req, res) => {
         where: {groupId: req.params.id}
     })
         .then(group => {
-            groupMembers.findOne({where: {userId: req.session.userId, groupId: req.params.id}})
+            try{
+                groupMembers.findOne({where: {userId: req.session.userId, groupId: req.params.id}})
                 .then(role => res.status(200).json({group, role: role.role}))
                 .catch(error => {
-                    res.status(400).json({error})
+                    res.status(200).json({group})
                     console.log(error)
                 })
+            }catch(e){
+                console.log(e)
+                res.status(200).json({group})
+            }
+            
 
         })
         .catch(error => res.status(500).json({error}))
@@ -137,10 +143,10 @@ exports.deleteGroup = (req, res) => {
 
 
 exports.addMember = (req, res) => {
-    const userId = req.body.userId
+    const userId = req.session.userId
     const groupId = req.params.id
 
-    groupMembers.create({userId, groupId})
+    groupMembers.create({userId, groupId, role: 2})
         .then(() => res.status(200).json({message: 'vous avez rejoint le groupe !'}))
         .catch(error => res.status(500).json({error}))
 }
@@ -153,4 +159,16 @@ exports.deleteMember = (req, res) => {
     })
         .then(() => res.status(200).json({message: 'utilisateur supprimé !'}))
         .catch(error => res.status(400).json({error}))
+}
+
+exports.leave = (req, res) => {
+    groupMembers.destroy({
+        where :{
+            [Op.and] : [{userId : req.session.userId}, {groupId : req.params.id}]
+        }
+    }).then(()=> res.status(200).json({message : "vous avez quitté le groupe !"}))
+    .catch(error => {
+        console.log(error)
+        res.status(500).json({message : "erreur lors de la suppression"})
+    })
 }

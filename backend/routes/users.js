@@ -27,6 +27,8 @@ router.get('/:id',limit400,  userCtrl.getUser)
 router.get('/:id/post',limit400, isLoggedIn, postCtrl.userPost)
 
 router.get('/notification/:id',limit400, isLoggedIn, isUser, notifCtrl.getAll)
+router.delete('/notification/:id', limit400, isLoggedIn, notifCtrl.deleteOne)
+router.delete('/notification', limit400, isLoggedIn, notifCtrl.deleteAll )
 
 router.get('/follow/:id',limit400, isLoggedIn, followCtrl.followOne)
 router.get('/follow/check/:id',limit400, isLoggedIn, followCtrl.checkFollow)

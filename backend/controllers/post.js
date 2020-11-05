@@ -20,15 +20,8 @@ exports.createOne = (req, res, next) => {
                     where: {
                         followed: req.session.userId
                     }
-                }).then(result => {
-                    if (result.length !== 0) {
-                        result.forEach(element => {
-                            const followed = element.dataValues.followed
-                            const follower = element.dataValues.follower
-                            noctification.create({type: 'post', notified_id: follower, creator_id: followed, seen: 0})
-                                .catch(error => console.log({error}))
-                        })
-                    }
+                }).then(() => {
+                    next()
                 })
             )
             .catch(error => res.status(500).json({error}))
@@ -39,23 +32,15 @@ exports.createOne = (req, res, next) => {
                     where: {
                         followed: req.session.userId
                     }
-                }).then(result => {
-                    if (result.length !== 0) {
-                        result.forEach(element => {
-                            const followed = element.dataValues.followed
-                            const follower = element.dataValues.follower
-                            noctification.create({type: 'post', notified_id: follower, creator_id: followed, seen: 0})
-                                .catch(error => console.log({error}))
-                        })
-                    }
+                }).then(() => {
+                    next()
                 })
             )
             .catch(error => res.status(500).json({error}))
     }
 
 }
-exports.postGroup = (req, res) => {    //create a post linked followed a group
-    console.log(req)
+exports.postGroup = (req, res, next) => {//next for notification creation    //create a post linked followed a group
     const body = JSON.parse(req.body.body)
     if (req.files.length > 0) {
         Post.create({
@@ -63,40 +48,12 @@ exports.postGroup = (req, res) => {    //create a post linked followed a group
             imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`, groupId: req.params.id
         })
             .then(() => res.status(201).json({message: 'post créé !'}))
-            .then(() => groupMembers.findAll({
-                    where: {
-                        groupId: req.params.id
-                    }
-                }).then(result => {
-                    if (result.length !== 0) {
-                        result.forEach(element => {
-                            const emittor = req.params.id
-                            const notified = element.dataValues.userId
-                            noctification.create({type: 'group_post', notified_id: notified,creator_id:req.session.userId, groupId: emittor, seen: 0})
-                                .catch(error => console.log({error}))
-                        })
-                    }
-                })
-            )
+            .then(() => next())
             .catch(error => res.status(500).json({error}))
     } else {
         Post.create({content: body.content, like: 0, dislike: 0, userId: req.session.userId, groupId : req.params.id})
             .then(() => res.status(201).json({message: 'post créé !'}))
-            .then(() => groupMembers.findAll({
-                    where: {
-                        groupId: req.params.id
-                    }
-                }).then(result => {
-                    if (result.length !== 0) {
-                        result.forEach(element => {
-                            const emittor = req.params.id
-                            const notified = element.dataValues.userId
-                            noctification.create({type: 'group_post', notified_id: notified,creator_id:req.session.userId, groupId: emittor, seen: 0})
-                                .catch(error => console.log({error}))
-                        })
-                    }
-                })
-            )
+            .then(() => next())
                 .catch(error => res.status(500).json({error}))
     }
 
@@ -109,7 +66,6 @@ exports.getOne = (req, res, next) => {
 }
 
 exports.getAll = (req, res, next) => {
-    console.log(req.query)
     const current_page = req.query.page ? req.query.page : 1
 
     Post.paginate({
@@ -156,7 +112,8 @@ exports.getAllfromGroups = (req, res, next) => {
         where: {groupId: {[Op.eq]: req.params.id}},
          include: [{
             model: User,
-            attributes: ['lastName', 'firstName', 'profilImgUrl']
+            attributes: ['lastName', 'firstName', 'profilImgUrl'],
+            required:false
         }, {
             model: userLiked,
             where: {
@@ -663,8 +620,15 @@ exports.commentLike = (req, res) => {
 //USER POST
 exports.userPost = (req, res) => {
     const id = req.params.id
-    Post.findAll({
-        where: {userId: id}, limit: 10, order: [['updatedAt', 'DESC']], include: [{
+    const current_page = req.query.page ? req.query.page : 1
+
+    Post.paginate({
+        where : {
+            userId : req.params.id
+        },
+        page: req.query.page,
+        paginate : 10
+        , include: [{
             model: User,
             attributes: ['lastName', 'firstName', 'profilImgUrl']
         }, {
@@ -679,7 +643,19 @@ exports.userPost = (req, res) => {
         }
         ]
     })
-        .then(posts => {
-            res.status(200).json({posts})
-        })
+    .then(posts => {
+        const prev = current_page === 1 ? process.env.BASE_URL + '/api/'+ req.params.id +'/post?page=1' : process.env.BASE_URL + '/api/post?page=' + (current_page-1)
+        const next = current_page === posts.pages.toString() ? process.env.BASE_URL + '/api/'+ req.params.id +'/post?page='+posts.pages : process.env.BASE_URL + '/api/post?page=' + (current_page+1)
+        const links = {
+            prev,
+            next,
+            first: process.env.BASE_URL +'/api/post?page=1',
+            last : process.env.BASE_URL + '/api/post?page=' + posts.pages
+        }
+        res.status(200).json({...posts, posts : posts.docs, current_page, links})
+    })
+    .catch(error => {
+        console.log(error)
+        res.status(500).json({error})
+    })
 }
