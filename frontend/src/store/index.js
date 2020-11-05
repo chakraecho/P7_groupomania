@@ -9,6 +9,10 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     isAuth: false,
+    snackbar : false,
+    snackColor:"",
+    snackMsg:""
+
     },
   mutations: {
     loggingIn(state){
@@ -16,6 +20,18 @@ export default new Vuex.Store({
     },
     disconnecting(state){
       state.isAuth = false
+    },
+    ACTIVE_SNACK(state){
+      Vue.set(state, "snackbar", true)
+    },
+    CLOSE_SNACK(state){
+      Vue.set(state, "snackbar", false)
+    },
+    SNACK_COLOR(state, payload){
+      Vue.set(state, "snackColor", payload)
+    },
+    SNACK_MSG(state, payload){
+      Vue.set(state, "snackMsg", payload)
     }
   },
   actions: {
@@ -26,6 +42,11 @@ export default new Vuex.Store({
       else if(session === false){
         commit('disconnecting')
       }
+    },
+    activateSnack({commit}, {color, msg}){
+      commit('ACTIVE_SNACK')
+      commit('SNACK_COLOR', color)
+      commit('SNACK_MSG', msg)
     }
   },
   modules: {

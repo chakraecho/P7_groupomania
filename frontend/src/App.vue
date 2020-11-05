@@ -1,5 +1,13 @@
 <template>
   <v-app id="app">
+            <v-snackbar
+    v-model="snackbar"
+    :color="snackColor"
+    timeout="5000"
+    top right
+    >
+      {{snackMsg}}
+    </v-snackbar>
     <headerComp app class="header pa-0 ma-0" @handle-nav-bar="setDrawer(!drawer)"/>
     <v-container app class="pa-0 d-flex" fluid>
         <navbar ref="navDrawer"
@@ -40,6 +48,24 @@ export default {
     isAuth: {
       get() {
         return this.$store.state.isAuth;
+      }
+    },
+    snackColor:{
+      get(){
+        return this.$store.state.snackColor
+      }
+    },
+    snackbar:{
+      get(){
+        return this.$store.state.snackbar
+      },
+      set(){
+        this.$store.commit("CLOSE_SNACK")
+      }
+    },
+    snackMsg:{
+      get(){
+        return this.$store.state.snackMsg
       }
     }
   }

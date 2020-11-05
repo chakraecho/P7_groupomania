@@ -125,6 +125,7 @@ export default {
             userId: this.$store.state.user.userId,
             content: this.content
           }),
+          credentials:"include",
           headers: {
             "Content-Type": "application/json"
           }
