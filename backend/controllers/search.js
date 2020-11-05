@@ -3,6 +3,12 @@ const { Op } = require('sequelize')
 const User = require('./../models/users')
 const {Post, userLiked} = require('./../models/post')
 const sequelizePaginate = require('sequelize-paginate')
+const fs = require('fs')
+
+
+var logger = fs.createWriteStream('log.txt', {
+  flags: 'a' // 'a' means appending (old data will be preserved)
+})
 
 exports.findGroup = (req, res) => {
     const query = '%' + req.query.group + '%'
@@ -27,8 +33,8 @@ exports.findGroup = (req, res) => {
             res.status(200).json({ result, links, current_page })
         })
         .catch(error => {
-            console.log(error)
-            res.status(400).json({ error })
+            logger.write(error)
+            res.status(500).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
         })
 }
 
@@ -59,8 +65,8 @@ exports.searchUser = (req, res)=>{
             res.status(200).json({ result, links, current_page })
         })
         .catch(error => {
-            console.log(error)
-            res.status(400).json({ error })
+            logger.write(error)
+            res.status(500).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
         })
 }
 
@@ -100,7 +106,7 @@ exports.searchPost = (req,res) => {
             res.status(200).json({ result, links, current_page })
         })
         .catch(error => {
-            console.log(error)
-            res.status(400).json({ error })
+            logger.write(error)
+            res.status(500).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
         })
 }
