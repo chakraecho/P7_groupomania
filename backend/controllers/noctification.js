@@ -2,6 +2,9 @@ const noctification = require('./../models/noctification')
 const user = require('./../models/users')
 const {groups} = require('./../models/group')
 const { Op } = require('sequelize')
+const fs = require('fs')
+
+fs.WriteStream('log.txt',{flags: 'a'})
 
 exports.getAll = (req, res) => {
     const id = req.params.id
@@ -44,7 +47,10 @@ exports.getAll = (req, res) => {
             }
             res.status(200).json({ ...result, result: result.docs, links, current_page })
         })
-        .catch(error => res.status(400).json({ error: 'error' + error.toString() }))
+        .catch(error => {
+            logger.write(error)
+            res.status(500).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
+        })
 }
 
 exports.deleteOne = (req, res) => {
@@ -55,8 +61,8 @@ exports.deleteOne = (req, res) => {
         }
     }).then(()=> res.status(200).json({ message :"notification supprimé !"}))
     .catch(error => {
-        console.log(error)
-        res.status(500).json({message :"erreur lors de la requete !"})
+        logger.write(error)
+        res.status(500).json({ message : "Erreur lors de la suppréssion." })
     })
 }
 
@@ -67,7 +73,7 @@ exports.deleteAll = (req, res) => {
         }
     }).then(()=> res.status(200).json({ message :"notifications supprimés !"}))
     .catch(error => {
-        console.log(error)
-        res.status(500).json({message :"erreur lors de la requete !"})
+        logger.write(error)
+        res.status(500).json({ message : "Erreur lors de la suppression des données." })
     })
 }
