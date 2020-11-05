@@ -1,5 +1,12 @@
 <template>
   <v-container justify-space-between class="d-flex flex-column">
+    <v-snackbar
+    v-model="snackbar"
+    :color="snackColor"
+    timeout="5000"
+    >
+      {{snackMsg}}
+    </v-snackbar>
     <v-row>
       <v-col>
         <v-btn text @click="selectedBlock = 'signup'">
@@ -79,9 +86,9 @@
             </v-col>
           </v-row>
           <v-row>
-        <v-btn class="mx-auto" text @click="submitSignUp">
-          S'inscrire
-        </v-btn>
+            <v-btn class="mx-auto" text @click="submitSignUp">
+              S'inscrire
+            </v-btn>
           </v-row>
         </validation-observer>
       </v-container>
@@ -123,9 +130,9 @@
             </v-col>
           </v-row>
           <v-row>
- <v-btn class="mx-auto" text @click="submitLogin">
-          Se connecter
-        </v-btn>
+            <v-btn class="mx-auto" text @click="submitLogin">
+              Se connecter
+            </v-btn>
           </v-row>
         </validation-observer>
       </v-container>
@@ -150,6 +157,11 @@ export default {
     /************************************************** */
 
     /************************************************** */
+    activateSnack(color, msg){
+      this.snackbar = true;
+      this.snackColor = color
+      this.snackMsg = msg
+    },
 
     errortext(v) {
       return v.errors[0];
@@ -219,22 +231,28 @@ export default {
                 "Content-Type": "application/json"
               },
               credentials: "include"
-            }).then(response =>
-              response
-                .json()
-                .then(res => {
-                  this.$store.dispatch("user/login", {
-                    firstName: res.firstName,
-                    lastName: res.lastName,
-                    profilImgUrl: res.profilImgUrl,
-                    userId: res.userId
-                  });
-                  this.$store.commit("user/SET_ADMIN", res.isAdmin);
-                  this.$store.dispatch("handleAuth", true);
-                  this.$router.push("/");
+            }).then(response => {
+              if (response.ok) {
+                response
+                  .json()
+                  .then(res => {
+                    this.$store.dispatch("user/login", {
+                      firstName: res.firstName,
+                      lastName: res.lastName,
+                      profilImgUrl: res.profilImgUrl,
+                      userId: res.userId
+                    });
+                    this.$store.commit("user/SET_ADMIN", res.isAdmin);
+                    this.$store.dispatch("handleAuth", true);
+                    this.$router.push("/");
+                  })
+                  .catch(error => console.log(error));
+              } else {
+                res.json().then(response => {
+                this.activateSnack("error", response.message)
                 })
-                .catch(error => console.log(error))
-            );
+              }
+            });
           })
         )
 
