@@ -194,13 +194,23 @@ export default {
         },
         credentials: "include"
       })
-        .then(response =>
-          response.json().then(res => {
+        .then(response =>{
+          if(response.ok){
+            response.json().then(res => {
             console.log(res);
             this.$store.dispatch("user/login", { ...res });
             this.$store.dispatch("handleAuth", true);
             this.$router.push("/");
           })
+          }else {
+            response.json().then(res => {
+            this.activateSnack("error", res.message)
+            this.loginPassword = ""
+            })
+          }
+           
+        }
+         
         )
 
         .catch(error => console.log(error));
