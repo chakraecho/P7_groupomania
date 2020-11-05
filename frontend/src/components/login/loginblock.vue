@@ -1,12 +1,5 @@
 <template>
   <v-container justify-space-between class="d-flex flex-column">
-    <v-snackbar
-    v-model="snackbar"
-    :color="snackColor"
-    timeout="5000"
-    >
-      {{snackMsg}}
-    </v-snackbar>
     <v-row>
       <v-col>
         <v-btn text @click="selectedBlock = 'signup'">
@@ -150,7 +143,8 @@ export default {
       email: "",
       password: "",
       loginEmail: "",
-      loginPassword: ""
+      loginPassword: "",
+
     };
   },
   methods: {
@@ -158,9 +152,7 @@ export default {
 
     /************************************************** */
     activateSnack(color, msg){
-      this.snackbar = true;
-      this.snackColor = color
-      this.snackMsg = msg
+      this.$emit('activate-snack', color, msg)
     },
 
     errortext(v) {
@@ -258,7 +250,7 @@ export default {
                   })
                   .catch(error => console.log(error));
               } else {
-                res.json().then(response => {
+                response.json().then(response => {
                 this.activateSnack("error", response.message)
                 })
               }

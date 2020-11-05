@@ -1,5 +1,13 @@
 <template>
   <v-container fluid class="login-page w-100">
+        <v-snackbar
+    v-model="snackbar"
+    :color="snackColor"
+    timeout="5000"
+    top right
+    >
+      {{snackMsg}}
+    </v-snackbar>
       <div class='wrapper indigo'>
       </div>
     <v-container align="center">
@@ -13,7 +21,9 @@
           class="position-absolute"
         >
           <v-card>
-            <login class="loginBlock"/>
+            <login class="loginBlock"
+            @activate-snack="activateSnack"
+            />
           </v-card>
         </v-col>
       </v-row>
@@ -29,7 +39,19 @@ export default {
     login
   },
   data() {
-    return {};
+    return {
+      snackbar : false,
+      snackColor:"",
+      snackMsg:""
+
+    };
+  },
+  methods:{
+    activateSnack(color, msg){
+      this.snackbar = true;
+      this.snackColor = color
+      this.snackMsg = msg
+    }
   }
 };
 </script>
