@@ -6,10 +6,19 @@ const noctification = require('./../models/noctification')
 const follow = require('./../models/follow')
 const {groupMembers} = require('./../models/group')
 const sequelizePagination = require('sequelize-paginate')
+const fs = require('fs')
+
+
+var logger = fs.createWriteStream('log.txt', {
+    flags: 'a' // 'a' means appending (old data will be preserved)
+  })
 
 
 exports.createOne = (req, res, next) => {
     const body = JSON.parse(req.body.body)
+    if(!body.content || body.content.length === 0){
+        return res.status(400).json({message : "il faut un contenu au post !"})
+    }
     if (req.files.length > 0) {
         Post.create({
             content: body.content, like: 0, dislike: 0, userId: req.session.userId,
@@ -24,7 +33,10 @@ exports.createOne = (req, res, next) => {
                     next()
                 })
             )
-            .catch(error => res.status(500).json({error}))
+            .catch(error => {
+                logger.write(error)
+                res.status(500).json({message : "Erreur lors de la création du post"})}
+                )
     } else {
         Post.create({content: body.content, like: 0, dislike: 0, userId: req.session.userId})
             .then(() => res.status(201).json({message: 'post créé !'}))
@@ -36,7 +48,9 @@ exports.createOne = (req, res, next) => {
                     next()
                 })
             )
-            .catch(error => res.status(500).json({error}))
+            .catch(error => {
+                logger.write(error)
+                res.status(500).json({message : "Erreur lors de la création du post"})})
     }
 
 }
@@ -49,12 +63,18 @@ exports.postGroup = (req, res, next) => {//next for notification creation    //c
         })
             .then(() => res.status(201).json({message: 'post créé !'}))
             .then(() => next())
-            .catch(error => res.status(500).json({error}))
+            .catch(error => {
+                logger.write(error)
+                res.status(500).json({message : "Erreur lors de la création du post"})
+            })
     } else {
         Post.create({content: body.content, like: 0, dislike: 0, userId: req.session.userId, groupId : req.params.id})
             .then(() => res.status(201).json({message: 'post créé !'}))
             .then(() => next())
-                .catch(error => res.status(500).json({error}))
+                .catch(error => {
+                    logger.write(error)
+                    res.status(500).json({message : "Erreur lors de la création du post"})
+                })
     }
 
 }
@@ -62,7 +82,9 @@ exports.postGroup = (req, res, next) => {//next for notification creation    //c
 exports.getOne = (req, res, next) => {
     Post.findOne({where: {postId: req.params.id}})
         .then(post => res.status(200).json({post}))
-        .catch(error => res.status(404).json({error}))
+        .catch(error => {
+            logger.write(error)
+            res.status(500).json({message : "Impossible de récupérer le post."})})
 }
 
 exports.getAll = (req, res, next) => {
@@ -98,8 +120,8 @@ exports.getAll = (req, res, next) => {
         res.status(200).json({...posts, posts : posts.docs, current_page, links})
     })
     .catch(error => {
-        console.log(error)
-        res.status(500).json({error})
+        logger.write(error)
+        res.status(500).json({message : "Erreur lors de la création des post."})
     })
 }
 
@@ -138,8 +160,8 @@ exports.getAllfromGroups = (req, res, next) => {
         res.status(200).json({...posts, posts : posts.docs, current_page, links})
     })
     .catch(error => {
-        console.log(error)
-        res.status(500).json({error})
+        logger.write(error)
+        res.status(500).json({message : "Erreur lors de la récupération des posts."})
     })
 }
 
@@ -172,14 +194,20 @@ exports.modifyOne = (req, res, next) => {
                 .then(post => res.status(200).json({post}))
                 .catch(error => res.status(500).json({error}))
         })
-        .catch(error => res.status(500).json({error}))
+        .catch(error =>{
+            logger.write(error)
+            res.status(500).json({message : "Erreur lors de la mis à jour du posts."})
+        })
 }
 
 exports.deleteOne = (req, res) => {
     const postId = req.params.id
     Post.destroy({where: {postId: postId}, include: [Comments, userLiked]})
         .then(() => res.status(200).json({message: 'post supprimé !'}))
-        .catch((error) => res.status(500).json({error}))
+        .catch((error) => {
+            logger.write(error)
+            res.status(500).json({message : "Erreur lors de la suppréssion du post."})
+        })
 }
 
 // COMMENT
@@ -192,22 +220,34 @@ exports.getComment = (req, res) => {
             {model: commentLiked, attributes: ['type'], where: {userId: req.session.userId}, required: false}]
     })
         .then(comment => res.status(200).json({comment}))
-        .catch(error => res.status(500).json(error))
+        .catch(error =>{
+            logger.write(error)
+            res.status(500).json({message : "Erreur lors de la récupération des commentaires."})
+        })
 }
 
 exports.createComment = (req, res) => {
     const postId = req.params.id
+    if(!req.body.content || req.body.content.length === 0){
+        return res.status(400).json({message : "Le commentaire doit avoir un contenu"})
+    }
     Comments.create({
         content: req.body.content,
         postId: req.params.id,
         userId: req.body.userId
     })
         .then(comment => res.status(201).json({comment}))
-        .catch(error => res.status(500).json({error}))
+        .catch(error => {
+            logger.write(error)
+            res.status(500).json({message : "Erreur lors de la création du commentaire."})
+        })
 }
 
 exports.modifyComment = (req, res) => {
     const content = req.body.content
+    if(!req.body.content || req.body.content.length === 0){
+        return res.status(400).json({message : "Le commentaire doit avoir un contenu"})
+    }
     Comments.update({content}, {
         where: {commentId: req.params.id}
     })
@@ -223,16 +263,25 @@ exports.modifyComment = (req, res) => {
                 .then(comment => {
                     res.status(200).json({comment})
                 })
-                .catch(error => res.status(500).json({error}))
+                .catch(error => {
+                    logger.write(error)
+                    res.status(500).json({message : "Erreur lors de la modification du commentaire."})
+                })
         })
-        .catch(error => res.status(500).json({error}))
+        .catch(error => {
+            logger.write(error)
+            res.status(500).json({message : "Erreur lors de la modification du commentaire."})
+        })
 }
 
 exports.deleteComment = (req, res) => {
     const id = req.params.id
     Comments.destroy({where: {commentId: id}})
         .then(() => res.status(200).json({message: 'commentaire supprimé !'}))
-        .catch(error => res.status(500).json({error}))
+        .catch(error => {
+            logger.write(error)
+            res.status(500).json({message : "Erreur lors de la suppréssion du commentaire."})
+        })
 }
 
 
@@ -278,11 +327,20 @@ exports.like = (req, res) => {
                                                             .then(post => {
                                                                 res.status(200).json({post})
                                                             })
-                                                            .catch(error => res.status(404).json({error}))
+                                                            .catch(error => {
+                                                                logger.write(error)
+                                                                res.status(500).json({message : "Erreur interne."})
+                                                            })
                                                     })
-                                                    .catch(error => res.status(409).json({error}))
+                                                    .catch(error =>{
+                                                        logger.write(error)
+                                                        res.status(409).json({message : "Ce like ne vous appartient pas !"})
+                                                    })
                                             }))
-                                        .catch(error => console.log(error))
+                                        .catch(error => {
+                                            logger.write(error)
+                                            res.status(500).json({message : "Erreur interne."})
+                                        })
                                     break;
                                 case false:
                                     Post.findAll({where: {postId: id}})
@@ -307,15 +365,27 @@ exports.like = (req, res) => {
                                                             ]
                                                         })
                                                             .then(post => res.status(200).json({post}))
-                                                            .catch(error => res.status(404).json({error}))
+                                                            .catch(error =>{
+                                                                logger.write(error)
+                                                                res.status(500).json({message : "Erreur interne."})
+                                                            })
                                                     })
-                                                    .catch(error => res.status(409).json({error}))
+                                                    .catch(error => {
+                                                        logger.write(error)
+                                                        res.status(409).json({message : "Ce like ne vous appartient pas !"})
+                                                    })
                                             }))
-                                        .catch(error => console.log(error))
+                                        .catch(error => {
+                                            logger.write(error)
+                                            res.status(500).json({message : "Erreur interne !"})
+                                        })
                                     break;
                             }
                         })
-                        .catch(error => console.log(error))
+                        .catch(error => {
+                            logger.write(error)
+                            res.status(500).json({message : "Erreur interne !"})
+                        })
 
                 } else if (like !== 0) {
                     res.status(409).json({message: 'like déjà existant'})
@@ -362,13 +432,25 @@ exports.like = (req, res) => {
                                                 ]
                                             })
                                                 .then(post => res.status(200).json({post}))
-                                                .catch(error => res.status(404).json({error})))
-                                            .catch(error => console.log(error))
+                                                .catch(error => {
+                                                    logger.write(error)
+                                                    res.status(409).json({message : "Ce like ne vous appartient pas !"})
+                                                }))
+                                            .catch(error => {
+                                                logger.write(error)
+                                                res.status(500).json({message : "erreur interne"})
+                                            })
 
                                     })
-                                    .catch(error => res.status(404).json({error}))
+                                    .catch(error => {
+                                        logger.write(error)
+                                        res.status(404).json({message : "Erreur"})
+                                    })
                             })
-                            .catch(error => res.status(409).json({message: 'vous avez déjà liké', error}))
+                            .catch(error => {
+                                logger.write(error)
+                                res.status(409).json({message : "Vous avez déjà liké"})
+                            })
                         break;
 
                     case -1:
@@ -411,15 +493,21 @@ exports.like = (req, res) => {
                                             .catch(error => res.status(404).json({error})))
                                         .catch(error => console.log(error))
                                 })
-                                .catch(error => res.status(404).json({error})))
-                            .catch(error => res.status(409).json({message: 'vous avez déjà liké', error}))
+                                .catch(error => {
+                                    logger.write(error)
+                                    res.status(500).json({message : "Erreur interne"})
+                                }))
+                            .catch(error => {
+                                logger.write(error)
+                                res.status(409).json({message : "Vous avez déjà liké"})
+                            })
                         break;
                     case 0:
                         res.status(404).json({message: 'like inexistant'})
                         break;
 
                     default:
-                        return res.status(403)
+                        return res.status(400).json({message: "mauvais format"})
                         break;
                 }
             }
@@ -497,15 +585,27 @@ exports.commentLike = (req, res) => {
                                                             ]
                                                         })
                                                             .then(comment => res.status(200).json({comment}))
-                                                            .catch(error => res.status(404).json({error}))
+                                                            .catch(error => {
+                                                                logger.write(error)
+                                                                res.status(500).json({message : "Ce like ne vous appartient pas !"})
+                                                            })
                                                     })
-                                                    .catch(error => res.status(409).json({error}))
+                                                    .catch(error => {
+                                                        logger.write(error)
+                                                        res.status(500).json({message : "like inexistant"})
+                                                    })
                                             }))
-                                        .catch(error => console.log(error))
+                                        .catch(error => {
+                                            logger.write(error)
+                                            res.status(500).json({message : "Erreur interne"})
+                                        })
                                     break;
                             }
                         })
-                        .catch(error => console.log(error))
+                        .catch(error => {
+                            logger.write(error)
+                            res.status(500).json({message : "Erreur interne"})
+                        })
 
                 } else if (like !== 0) {
                     res.status(409).json({message: 'like déjà existant'})
@@ -552,13 +652,25 @@ exports.commentLike = (req, res) => {
                                                 ]
                                             })
                                                 .then(comment => res.status(200).json({comment}))
-                                                .catch(error => res.status(404).json({error})))
-                                            .catch(error => console.log(error))
+                                                .catch(error => {
+                                                    logger.write(error)
+                                                    res.status(404).json({message : "Erreur interne"})
+                                                }))
+                                            .catch(error => {
+                                                logger.write(error)
+                                                res.status(500).json({message : "Erreur interne"})
+                                            })
 
                                     })
-                                    .catch(error => res.status(404).json({error}))
+                                    .catch(error => {
+                                        logger.write(error)
+                                        res.status(404).json({message : "Erreur interne"})
+                                    })
                             })
-                            .catch(error => res.status(409).json({message: 'vous avez déjà liké', error}))
+                            .catch(error => {
+                                logger.write(error)
+                                res.status(500).json({message : "Vous avez déjà liké"})
+                            })
                         break;
 
                     case -1:
@@ -598,11 +710,23 @@ exports.commentLike = (req, res) => {
                                             ]
                                         })
                                             .then(comment => res.status(200).json({comment}))
-                                            .catch(error => res.status(404).json({error})))
-                                        .catch(error => console.log(error))
+                                            .catch(error => {
+                                                logger.write(error)
+                                                res.status(404).json({message : "Erreur interne"})
+                                            }))
+                                        .catch(error => {
+                                            logger.write(error)
+                                            res.status(500).json({message : "Erreur interne"})
+                                        })
                                 })
-                                .catch(error => res.status(404).json({error})))
-                            .catch(error => res.status(409).json({message: 'vous avez déjà liké', error}))
+                                .catch(error => {
+                                    logger.write(error)
+                                    res.status(404).json({message : "Erreur interne"})
+                                }))
+                            .catch(error => {
+                                logger.write(error)
+                                res.status(409).json({message : "Vous avez déjà liké"})
+                            })
                         break;
                     case 0:
                         res.status(404).json({message: 'like inexistant'})
@@ -655,7 +779,7 @@ exports.userPost = (req, res) => {
         res.status(200).json({...posts, posts : posts.docs, current_page, links})
     })
     .catch(error => {
-        console.log(error)
-        res.status(500).json({error})
+        logger.write(error)
+        res.status(500).json({message : "Erreur lors de la récupération des données."})
     })
 }
