@@ -1,7 +1,9 @@
 <template>
   <v-bottom-sheet v-if="comment_option" v-model="comment_option">
     <v-card>
-      <v-btn text @click="sendAlert"> <v-icon>mdi-alert</v-icon> Signaler </v-btn>
+      <v-btn text @click="sendAlert">
+        <v-icon>mdi-alert</v-icon> Signaler
+      </v-btn>
       <v-btn
         text
         v-if="option_comment.userId === $store.state.user.userId"
@@ -98,12 +100,22 @@ export default {
           credentials: "include"
         }
       )
-        .then(() => {
-          this.closeAll();
-          this.$emit("snackbar", {
-            color: "success",
-            msg: "Commentaire supprimé !"
+        .then(response => {
+          this.$store.dispatch("comment/setId", {
+            postId: this.$store.state.comment.postId
           });
+          this.closeAll();
+          if (response.ok) {
+            this.$store.dispatch("activateSnack", {
+              color: "success",
+              msg: "Commentaire supprimé !"
+            });
+          } else {
+            this.$store.dispatch("activateSnack", {
+              color: "error",
+              msg: "Erreur lors de la suppression !"
+            });
+          }
         })
         .catch(error => {
           console.log(error);
@@ -129,13 +141,21 @@ export default {
       )
         .then(response =>
           response.json().then(res => {
-            this.$store.commit("comment/UPDATE_COMMENT", res.comment);
-
-            this.closeAll();
-            this.$emit("snackbar", {
-              color: "success",
-              msg: "Commentaire modifié !"
+            this.$store.dispatch("comment/setId", {
+              postId: this.$store.state.comment.postId
             });
+            this.closeAll();
+            if (response.ok) {
+              this.$store.dispatch("activateSnack", {
+                color: "success",
+                msg: res.message
+              });
+            } else {
+              this.$store.dispatch("activateSnack", {
+                color: "error",
+                msg: res.message
+              });
+            }
           })
         )
         .catch(error => {
@@ -146,25 +166,36 @@ export default {
           });
         });
     },
-    sendAlert(){
-        fetch('http://localhost:3000/api/admin/alert/' + this.option_post.postId, {
-          credentials: 'include',
-          method:"post",
-          headers:{"Content-type": "application/json"},
+    sendAlert() {
+      fetch(
+        "http://localhost:3000/api/admin/alert/" + this.option_post.postId,
+        {
+          credentials: "include",
+          method: "post",
+          headers: { "Content-type": "application/json" },
           body: JSON.stringify({
-            message : this.alert_msg,
-            type: 'comment'
+            message: this.alert_msg,
+            type: "comment"
           })
+        }
+      )
+        .then(response => {
+          this.closeAll();
+          if(response.ok){
+            this.$store.dispatch('activateSnack', {color : "success", msg :"commentaire signalé !"})
+          }else {
+            this.$store.dispatch('activateSnack', {color : "error", msg :"Erreur lors du signalement, contactez directement un administrateur."})
+          }
         })
-      .then(()=>{
-        this.closeAll();
-        this.$emit('snackbar', {color: "success", msg: "Post signalé !"})
-      })
-      .catch((error )=>{
-        console.log(error)
-        this.closeAll();
-        this.$emit("snackbar", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
-      })
-  }}
+        .catch(error => {
+          console.log(error);
+          this.closeAll();
+          this.$emit("snackbar", {
+            color: "error",
+            msg: "Erreur, veuillez rééssayer ou contacter un administrateur"
+          });
+        });
+    }
+  }
 };
 </script>

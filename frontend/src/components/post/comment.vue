@@ -30,7 +30,13 @@
             <v-col cols="7">
               <p>{{ comment.content }}</p>
             </v-col>
-            <v-btn icon class="ml-auto" @click="$store.dispatch('comment/open_sideoption', comment.commentId)">
+            <v-btn
+              icon
+              class="ml-auto"
+              @click="
+                $store.dispatch('comment/open_sideoption', comment.commentId)
+              "
+            >
               <v-icon>
                 mdi-dots-vertical
               </v-icon>
@@ -125,14 +131,27 @@ export default {
             userId: this.$store.state.user.userId,
             content: this.content
           }),
-          credentials:"include",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json"
           }
         }
-      ).then(() => {
+      ).then(response => {
         this.$store.dispatch("comment/setId", {
           postId: this.$store.state.comment.postId
+        });
+        response.json().then(res => {
+          if (response.ok) {
+            this.$store.dispatch("activateSnack", {
+              color: "success",
+              msg: "Commentaire envoyé !"
+            });
+          } else {
+            this.$store.dispatch("activateSnack", {
+              color: "error",
+              msg: res.message
+            });
+          }
         });
       });
     },
@@ -143,11 +162,19 @@ export default {
         body: JSON.stringify({ like: parseInt(value) }),
         headers: { "Content-Type": "application/json" }
       })
-        .then(response =>
+        .then(response => {
+          if (!response.ok) {
+            response.json().then(res => {
+              this.$store.dispatch("activateSnack", {
+                color: "error",
+                msg: res.message
+              });
+            });
+          }
           response.json().then(res => {
             this.$store.commit("comment/UPDATE_COMMENT", res.comment);
-          })
-        )
+          });
+        })
         .catch(error => console.log(error));
     }
   }
