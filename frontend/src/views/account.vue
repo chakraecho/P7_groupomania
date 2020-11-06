@@ -146,13 +146,13 @@
             <v-card class="name-card">
               <h1>{{ firstName }} {{ lastName }}</h1>
             </v-card>
-          </div>
-          <div class="position-absolute" @click="menuDialog = true">
-            <v-btn icon>
-              <v-icon>
-                mdi-dots-horizontal
-              </v-icon>
-            </v-btn>
+            <div class="menu--account">
+              <v-btn icon @click="menuDialog = true">
+                <v-icon>
+                  mdi-dots-horizontal
+                </v-icon>
+              </v-btn>
+            </div>
           </div>
           <div class="ml-auto mt-2 mr-2" v-if="!isUser">
             <v-btn color="primary" @click="follow">
@@ -549,5 +549,8 @@ export default {
 #description {
   position: sticky;
   top: 10vh;
+}
+
+.menu--account{
 }
 </style>
