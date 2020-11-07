@@ -13,7 +13,7 @@
       </v-card>
     </v-dialog>
     <v-row class="align-center justify-center">
-      <v-col cols="3" md="2" lg="1">
+      <v-col cols="2" md="1">
         <img
           :src="profilImgUrl"
           :alt="'photo de profil de' + getFullName"

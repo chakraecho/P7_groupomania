@@ -1,5 +1,8 @@
 <template>
   <v-container fluid class="pa-0 ma-0" id="post__create">
+    <v-dialog v-if="$vuetify.breakpoint.xs" v-model="activeComment">
+      <commentCard />
+    </v-dialog>
     <v-row>
       <v-col cols="12" md="6" class="mx-auto">
         <postCreator ref="postcreator" />
@@ -19,7 +22,7 @@
               </v-col>
             </v-row>
           </v-col>
-          <v-col cols="11" md="5" lg="4" class="pl-3" v-if="activeComment">
+          <v-col cols="11" md="5" lg="4" class="pl-3" v-if="$vuetify.breakpoint.mdAndUp && activeComment">
             <commentCard />
           </v-col>
         </v-row>
@@ -103,6 +106,9 @@ export default {
     activeComment: {
       get() {
         return this.$store.state.comment.active;
+      },
+      set(){
+        this.$store.dispatch("comment/neutraliseComment")
       }
     }
   },
