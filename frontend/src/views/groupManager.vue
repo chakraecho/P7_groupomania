@@ -219,6 +219,19 @@
 import getGroup from "@/components/group/ownGroup.vue";
 
 export default {
+  name : "group manager",
+
+  metaInfo(){
+    return {
+      title : "Menu de groupe",
+      meta : [{
+        name : "description",
+        content : "Créer, rechercher ou affichez vos groupe"
+      }]
+    }
+  },
+
+
   components: {
     getGroup
   },

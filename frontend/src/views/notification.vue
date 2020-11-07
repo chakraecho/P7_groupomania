@@ -8,9 +8,7 @@
     <v-row class="mt-4">
       <v-col>
         <v-container>
-          <template v-if="notification === null">
-            
-          </template>
+          <template v-if="notification === null"> </template>
           <template v-else-if="notifications.length > 0">
             <v-row>
               <v-btn @click="deleteAll">
@@ -20,46 +18,51 @@
                 Supprimer tous les notifications
               </v-btn>
             </v-row>
-          <v-row v-for="notification in notifications" :key="notification.id">
-            <v-col>
-              <v-card>
-                <v-card-text class="pa-0">
-                  <v-container>
-                    <v-row>
-                      <v-col cols="2" md="1">
-                        <div class="profile--wrapper rounded-circle">
-                          <img
-                            class="profile--img rounded-circle"
-                            :src="notification.creator.profilImgUrl"
-                            :alt="
-                              'image de profile de ' +
-                                notification.creator.lastName +
-                                ' ' +
-                                notification.creator.firstName
-                            "
-                          />
-                        </div>
-                      </v-col>
-                      <v-col>
-                        <p v-if="notification.groupId === null">
-                          {{ notification.creator.lastName }} {{ notification.creator.firstName }} à publié un post !
-                        </p>
-                        <p v-else>
-                          {{ notification.creator.lastName }} {{ notification.creator.firstName }} à publié un post dans le groupe {{ notification.group.groupName}}
-                        </p>
-                      </v-col>
-                      <v-btn icon @click="deleteNotif(notification.id)">
-                        <v-icon>
-                          mdi-close
-                        </v-icon>
-                      </v-btn>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-                      <div class="pagination">
+            <v-row v-for="notification in notifications" :key="notification.id">
+              <v-col>
+                <v-card>
+                  <v-card-text class="pa-0">
+                    <v-container>
+                      <v-row>
+                        <v-col cols="2" md="1">
+                          <div class="profile--wrapper rounded-circle">
+                            <img
+                              class="profile--img rounded-circle"
+                              :src="notification.creator.profilImgUrl"
+                              :alt="
+                                'image de profile de ' +
+                                  notification.creator.lastName +
+                                  ' ' +
+                                  notification.creator.firstName
+                              "
+                            />
+                          </div>
+                        </v-col>
+                        <v-col>
+                          <p v-if="notification.groupId === null">
+                            {{ notification.creator.lastName }}
+                            {{ notification.creator.firstName }} à publié un
+                            post !
+                          </p>
+                          <p v-else>
+                            {{ notification.creator.lastName }}
+                            {{ notification.creator.firstName }} à publié un
+                            post dans le groupe
+                            {{ notification.group.groupName }}
+                          </p>
+                        </v-col>
+                        <v-btn icon @click="deleteNotif(notification.id)">
+                          <v-icon>
+                            mdi-close
+                          </v-icon>
+                        </v-btn>
+                      </v-row>
+                    </v-container>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+            <div class="pagination">
               <div class="block-icon">
                 <button
                   :disabled="links.first === links.last"
@@ -90,7 +93,9 @@
             </div>
           </template>
           <template v-else>
-            <p>Aucune notifications, mangez un cookie et suivez des personnes </p>
+            <p>
+              Aucune notifications, mangez un cookie et suivez des personnes
+            </p>
           </template>
         </v-container>
       </v-col>
@@ -100,72 +105,83 @@
 
 <script>
 export default {
+  name :"notification",
+
+  metaInfo(){
+    return{
+      title : "notifications - groupomania",
+      meta: [{
+        name :"description",
+        content: "Centre de notifications de l'utilisateur groupomania."
+      }]
+    } 
+ },
+
   data() {
     return {
       notifications: null,
-            current_page: 1,
+      current_page: 1,
       links: {}
     };
   },
-  methods:{
-    activateSnack(color, msg){
-      this.$store.dispatch("activateSnack", {color, msg})
+  methods: {
+    activateSnack(color, msg) {
+      this.$store.dispatch("activateSnack", { color, msg });
     },
-    getDataTable(link){
-      if(link === undefined){
-        link = "http://localhost:3000/api/users/notification/" +this.$store.state.user.userId
+    getDataTable(link) {
+      if (link === undefined) {
+        link =
+          "http://localhost:3000/api/users/notification/" +
+          this.$store.state.user.userId;
       }
-    fetch(
-      link,
-      { credentials: "include" }
-    )
-      .then(response =>
-        response.json().then(res => {
-          this.notifications = res.result;
-          this.links = res.links,
-          this.current_page = res.current_page
+      fetch(link, { credentials: "include" })
+        .then(response =>
+          response.json().then(res => {
+            this.notifications = res.result;
+            (this.links = res.links), (this.current_page = res.current_page);
+          })
+        )
+        .catch(error => console.log(error));
+    },
+    deleteNotif(id) {
+      fetch("http://localhost:3000/api/users/notification/" + id, {
+        method: "delete",
+        credentials: "include"
+      })
+        .then(res => {
+          if (res.ok) {
+            this.activateSnack("success", "notification supprimé !");
+            this.getDataTable();
+          } else {
+            this.activateSnack("error", "erreur lors de la requête !");
+          }
         })
-      )
-      .catch(error => console.log(error));
+        .catch(error => {
+          console.log(error);
+          this.activateSnack("error", "Echec lors de l'envoi de la requête !");
+        });
     },
-    deleteNotif(id){
-      fetch('http://localhost:3000/api/users/notification/' + id, {
-        method:"delete",
-        credentials: 'include'
+    deleteAll() {
+      fetch("http://localhost:3000/api/users/notification", {
+        method: "delete",
+        credentials: "include"
       })
-      .then(res => {
-        if(res.ok){
-          this.activateSnack("success", "notification supprimé !")
-          this.getDataTable()
-        }else {
-          this.activateSnack("error", "erreur lors de la requête !")
-        }
-      })
-      .catch(error => {
-        console.log(error)
-        this.activateSnack("error", "Echec lors de l'envoi de la requête !")
-      })
-    },
-    deleteAll(){
-      fetch('http://localhost:3000/api/users/notification', {
-        method:'delete',
-        credentials:'include'
-      }).then(res => {
-        if(res.ok){
-          this.activateSnack("success", "notifications supprimé !")
-          this.getDataTable()
-        }else {
-          this.activateSnack("error", "erreur lors de la requête !")
-        }
-      })
-      .catch(error => {
-        console.log(error)
-        this.activateSnack("error", "Echec lors de l'envoi de la requête !")
-      })
+        .then(res => {
+          if (res.ok) {
+            this.activateSnack("success", "notifications supprimé !");
+            this.getDataTable();
+          } else {
+            this.activateSnack("error", "erreur lors de la requête !");
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          this.activateSnack("error", "Echec lors de l'envoi de la requête !");
+        });
     }
   },
   mounted() {
-    this.getDataTable()
+    this.getDataTable();
   }
 };
 </script>

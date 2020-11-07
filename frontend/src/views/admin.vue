@@ -89,6 +89,19 @@
 
 <script>
 export default {
+  name:"admin panel",
+  metaInfo(){
+    return {
+      title: "Panneau de signalement - groupomania",
+      meta : [{
+        name :"description",
+        content :"Panneau d'administration du réseau social groupomania."
+      },{
+        name : "robots",
+        content : "noarchive"
+      }]
+    }
+  },
   data() {
     return {
       alerts: null,

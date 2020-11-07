@@ -28,6 +28,18 @@
 import login from "@/components/login/loginblock.vue";
 
 export default {
+  name :"connexion/inscription",
+
+  metaInfo(){
+    return {
+      title : "Connexion/inscription - groupomania",
+      meta:[{
+        name : "description",
+        content: "Page de connexion et inscription de groupomania.fr"
+      }]
+    }
+  },
+
   components: {
     login
   },

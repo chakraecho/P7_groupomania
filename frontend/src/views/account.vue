@@ -277,6 +277,22 @@ import commentCard from "@/components/post/comment.vue";
 import options from "@/components/post/option.vue";
 
 export default {
+  name: "account",
+  metaInfo() {
+    return {
+      title:
+        this.$store.state.user.userId.toString() ===
+        this.$route.params.id.tostring()
+          ? "Mon compte - groupomania"
+          : this.getFullName + " - groupomania",
+      meta: [
+        {
+          name: "description",
+          content: `Compte groupomania de ${this.getFullName}`
+        }
+      ]
+    };
+  },
   components: {
     postCard,
     commentCard,
@@ -310,6 +326,9 @@ export default {
         this.$route.params.id.toString()
       );
     },
+    getFullName() {
+      return this.firstName + " " + this.lastName;
+    },
     activeComment: {
       get() {
         return this.$store.state.comment.active;
@@ -333,7 +352,7 @@ export default {
       reader.readAsDataURL(evt);
     },
     activateSnack(color, msg) {
-      this.$store.dispatch('activateSnack', {color, msg})
+      this.$store.dispatch("activateSnack", { color, msg });
     },
     follow() {
       if (this.followed) {
@@ -366,12 +385,18 @@ export default {
       )
         .then(response =>
           response.json().then(res => {
-            if(response.ok){
-            this.$store.dispatch('activateSnack', {color: "success", msg: res.message})
-            this.edit_description = false;
-            this.description = res.user.description;
-            }else {
-              this.$store.dispatch("activateSnack.", {color: "error", msg : res.message})
+            if (response.ok) {
+              this.$store.dispatch("activateSnack", {
+                color: "success",
+                msg: res.message
+              });
+              this.edit_description = false;
+              this.description = res.user.description;
+            } else {
+              this.$store.dispatch("activateSnack.", {
+                color: "error",
+                msg: res.message
+              });
             }
           })
         )

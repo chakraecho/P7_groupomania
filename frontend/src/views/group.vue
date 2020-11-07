@@ -290,6 +290,18 @@ import options from "@/components/post/option.vue";
 import optionComment from "@/components/post/option_comment.vue"
 
 export default {
+  name:"group",
+
+  metaInfo(){
+    return {
+      title : this.groupName + ' - groupomania',
+      meta :[{
+        name : "description",
+        content: `La page du groupe ${this.groupName} du réseau social Groupomania`
+      }]
+    }
+  },
+
   components: {
     postCard,
     commentCard,
