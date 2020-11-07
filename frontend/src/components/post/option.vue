@@ -132,11 +132,12 @@ export default {
       })
         .then(() => {
           this.closeAll();
-          this.$emit('snackbar', {color: "success", msg: "Commentaire supprimé !"})
+          this.$store.dispatch('activateSnack', {color: "success", msg: "Commentaire supprimé !"})
+          this.$emit("reload-post")
         })
         .catch(error => {
           console.log(error);
-          this.$emit("snackbar", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
+          this.$store.disptach("activateSnack", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
         });
     },
     sendEdit(){
@@ -152,7 +153,8 @@ export default {
         .then(res => {
           this.$store.commit('post/UPDATE_POST', res.post)
           this.closeAll();
-          this.$emit('snackbar', {color: "success", msg: "Commentaire modifié !"})
+          this.$store.dispatch('activateSnack', {color: "success", msg: "Commentaire modifié !"})
+                    this.$emit("reload-post")
         })
         )
                 
@@ -175,12 +177,12 @@ export default {
         })
       .then(()=>{
         this.closeAll();
-        this.$emit('snackbar', {color: "success", msg: "Post signalé !"})
+        this.$store.dispatch('activateSnack', {color: "success", msg: "Post signalé !"})
       })
       .catch((error )=>{
         console.log(error)
         this.closeAll();
-        this.$emit("snackbar", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
+        this.$store.dispatch("activateSnack", {color: "error", msg:"Erreur, veuillez rééssayer ou contacter un administrateur"});
       })
     }
   }

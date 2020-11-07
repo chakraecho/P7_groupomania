@@ -107,6 +107,9 @@
         </v-card>
       </v-dialog>
     </template>
+    <v-dialog v-if="$vuetify.breakpoint.xs" v-model="activeComment">
+      <commentCard />
+    </v-dialog>
     <v-row>
       <v-container fluid class="pt-0">
         <v-row>
@@ -127,22 +130,21 @@
               <div class="photo-wrapper justify-self-center">
                 <div class=" modify--profile">
                   <div
-                      class="img-profil-wrapper rounded-circle d-flex align-items-center justify-center"
+                    class="img-profil-wrapper rounded-circle d-flex align-items-center justify-center"
                   >
                     <img
-                        :src="profilImgUrl"
-                        :alt="'photo de profil de ' + firstName + ' ' + lastName"
-                        class="img-profil"
+                      :src="profilImgUrl"
+                      :alt="'photo de profil de ' + firstName + ' ' + lastName"
+                      class="img-profil"
                     />
                   </div>
-
                 </div>
                 <v-btn
-                    icon
-                    class="modify--profile--img pa-0 ma-0 rounded-circle"
-                    @click="modify_photo_profile = true"
-                    v-if="isUser"
-                ><v-icon>mdi-pencil</v-icon>
+                  icon
+                  class="modify--profile--img pa-0 ma-0 rounded-circle"
+                  @click="modify_photo_profile = true"
+                  v-if="isUser"
+                  ><v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </div>
               <div class="name-card-wrapper mt-2">
@@ -158,7 +160,6 @@
                 </div>
               </div>
             </div>
-
           </v-container>
           <div class="ml-auto mt-2 mr-2" v-if="!isUser">
             <v-btn color="primary" @click="follow">
@@ -170,10 +171,9 @@
     </v-row>
     <v-row class="flex-column-reverse flex-md-row">
       <v-col>
+        <h2>Post de cet utilisateur</h2>
         <v-container class="mt-5 pt-5">
-          <template v-if="posts === null">
-
-          </template>
+          <template v-if="posts === null"> </template>
           <template v-else-if="posts.length === 0">
             <p>Cet utilisateur n'a aucun post</p>
           </template>
@@ -190,7 +190,13 @@
                   </v-col>
                 </v-row>
               </v-col>
-              <v-col cols="11" md="5" lg="4" class="pl-3" v-if="activeComment">
+              <v-col
+                cols="11"
+                md="5"
+                lg="4"
+                class="pl-3"
+                v-if="$vuetify.breakpoint.mdAndUp && activeComment"
+              >
                 <commentCard />
               </v-col>
             </v-row>
@@ -226,17 +232,17 @@
           </template>
         </v-container>
       </v-col>
-      <v-col cols="3">
+      <v-col cols="12" md="3">
         <div id="description" class="position-md-sticky">
           <div class="d-flex flex-row">
             <h2>
               Description
             </h2>
             <v-btn
-                class="position-absolute"
-                icon
-                v-if="isUser"
-                @click="
+              class="position-absolute"
+              icon
+              v-if="isUser"
+              @click="
                 input_description = description;
                 edit_description = true;
               "
@@ -262,15 +268,6 @@
       </v-col>
     </v-row>
     <options @snackbar="activateSnack($event.color, $event.msg)" />
-    <v-snackbar
-      v-model="snackbar"
-      timeout="4000"
-      :color="snackbarColor"
-      top
-      right
-    >
-      {{ snackbarMsg }}
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -294,9 +291,6 @@ export default {
       profilImgUrl: "",
       description: "",
       followed: false,
-      snackbar: false,
-      snackbarColor: "",
-      snackbarMsg: "",
       edit_description: false,
       input_description: "",
       modify_photo_profile: false,
@@ -319,6 +313,9 @@ export default {
     activeComment: {
       get() {
         return this.$store.state.comment.active;
+      },
+      set() {
+        this.$store.dispatch("comment/neutraliseComment");
       }
     },
     posts: {
@@ -336,9 +333,7 @@ export default {
       reader.readAsDataURL(evt);
     },
     activateSnack(color, msg) {
-      this.snackbar = true;
-      this.snackbarColor = color;
-      this.snackbarMsg = msg;
+      this.$store.dispatch('activateSnack', {color, msg})
     },
     follow() {
       if (this.followed) {
@@ -371,11 +366,13 @@ export default {
       )
         .then(response =>
           response.json().then(res => {
-            this.snackbar = true;
-            this.snackbarMsg = "Votre description à bien été mis à jour !";
-            this.snackbarColor = "success";
+            if(response.ok){
+            this.$store.dispatch('activateSnack', {color: "success", msg: res.message})
             this.edit_description = false;
             this.description = res.user.description;
+            }else {
+              this.$store.dispatch("activateSnack.", {color: "error", msg : res.message})
+            }
           })
         )
         .catch(error => {
@@ -400,21 +397,27 @@ export default {
           body
         }
       )
-        .then(response =>
-          response.json().then(res => {
-            this.activateSnack("success", "Image modifié !");
-            if (endpoint === "profil") {
-              this.$store.commit(
-                "user/pushProfilImgUrl",
-                res.user.profilImgUrl
-              );
-              this.$set(this, "profilImgUrl", res.user.profilImgUrl);
-            } else if (endpoint === "banner") {
-              this.$store.commit("user/pushBanner", res.user.bannerUrl);
-              this.$set(this, "bannerurl", res.group.bannerUrl);
-            }
-          })
-        )
+        .then(response => {
+          if (response.ok) {
+            response.json().then(res => {
+              this.activateSnack("success", "Image modifié !");
+              if (endpoint === "profil") {
+                this.$store.commit(
+                  "user/pushProfilImgUrl",
+                  res.user.profilImgUrl
+                );
+                this.$set(this, "profilImgUrl", res.user.profilImgUrl);
+              } else if (endpoint === "banner") {
+                this.$store.commit("user/pushBanner", res.user.bannerUrl);
+                this.$set(this, "bannerurl", res.group.bannerUrl);
+              }
+            });
+          } else {
+            response.json().then(res => {
+              this.activateSnack("error", res.message);
+            });
+          }
+        })
         .catch(error => {
           console.log(error);
           this.activateSnack(
@@ -428,15 +431,22 @@ export default {
         method: "delete",
         credentials: "include"
       })
-        .then(() => {
-          this.activateSnack(
-            "success",
-            "Votre compte à bien été suppprimé, vous allez être redirigé !"
-          );
-          this.$store.dispatch("user/disconnect");
-          setTimeout(() => {
-            this.$router.push("/login");
-          }, 2000);
+        .then(res => {
+          if (res.ok) {
+            this.activateSnack(
+              "success",
+              "Votre compte à bien été suppprimé, vous allez être redirigé !"
+            );
+            this.$store.dispatch("user/disconnect");
+            setTimeout(() => {
+              this.$router.push("/login");
+            }, 2000);
+          } else {
+            this.activateSnack(
+              "error",
+              "Erreur lors de la requête au serveur !"
+            );
+          }
         })
         .catch(error => {
           console.log(error);
@@ -463,16 +473,23 @@ export default {
     fetch("http://localhost:3000/api/users/" + this.$route.params.id, {
       credentials: "include"
     })
-      .then(response =>
-        response.json().then(resparse => {
-          const res = resparse.user[0];
-          this.firstName = res.firstName;
-          this.lastName = res.lastName;
-          this.bannerUrl = res.bannerUrl;
-          this.profilImgUrl = res.profilImgUrl;
-          this.description = res.description;
-        })
-      )
+      .then(response => {
+        if (response.ok) {
+          response.json().then(resparse => {
+            const res = resparse.user;
+            if (resparse.user === null) {
+              this.$router.push("/notfound");
+            }
+            this.firstName = res.firstName;
+            this.lastName = res.lastName;
+            this.bannerUrl = res.bannerUrl;
+            this.profilImgUrl = res.profilImgUrl;
+            this.description = res.description;
+          });
+        } else {
+          this.$router.push("/notfound");
+        }
+      })
       .catch(error => console.log(error));
 
     this.getDataTable();
@@ -531,11 +548,11 @@ export default {
     border: solid 1px grey;
   }
   &-profil {
-    width: 80%;
+    width: 100%;
 
     &-wrapper {
-      width:10vw;
-      height:10vw;
+      width: 10vw;
+      height: 10vw;
       background-color: white;
       overflow: hidden;
       position: relative;
@@ -554,37 +571,36 @@ export default {
   }
 }
 
-.d-grid{
-  display:grid
+.d-grid {
+  display: grid;
 }
-.justify-self-center{
+.justify-self-center {
   justify-self: center;
 }
 
-.menu--account{
+.menu--account {
   position: absolute;
-  right:0;
-
+  right: 0;
 }
 
-.photo-wrapper{
-  display:grid;
+.photo-wrapper {
+  display: grid;
   width: max-content;
-  position:relative;
+  position: relative;
 }
 </style>
 
 <style lang="scss">
-@media screen and (max-width: 960px){
-  .img-profil-wrapper{
-    width:100px;
-    height:100px;
+@media screen and (max-width: 960px) {
+  .img-profil-wrapper {
+    width: 100px;
+    height: 100px;
   }
 }
 </style>
 
 <style lang="scss">
-@media screen and (min-width : 960px){
+@media screen and (min-width: 960px) {
   #description {
     position: sticky;
     top: 10vh;

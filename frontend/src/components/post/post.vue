@@ -1,9 +1,14 @@
 <template>
   <div>
-    <v-card>
+    <v-card class="position-relative">
+
       <v-card-title class="pa-0 post-header">
+        
         <v-row>
-          <v-col class="py-0">
+                <div  class="rounded-circle img-profil" @click="$router.push('/account/' + userId)">
+            <img :src="User.profilImgUrl" :alt="'image de profil de ' + fullName" class="w-100" />
+          </div>
+          <v-col class="py-0 ml-10 ml-md-5">
             <p>{{ fullName }}</p>
           </v-col>
           <v-col class="ml-auto py-0 ">
@@ -117,13 +122,16 @@ export default {
         })
       );
     }
+  },
+  mounted(){
+    this.$el.querySelector('.img-profil').style.height = this.$el.querySelector('.img-profil').style.width
   }
 };
 </script>
 
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 .active-btn {
   background-color: grey;
 }
@@ -145,5 +153,23 @@ export default {
 
 .text--minor{
   font-size: 15px;
+}
+
+.img-profil{
+  position: absolute;
+  top:-10px; left:-10px;
+  width:50px; height:50px; 
+  overflow: hidden;
+  border: 2px solid grey;
+  background-color: lightcyan;
+  &:hover{
+    cursor: pointer;
+  }
+}
+.w-100{
+  width:100%;
+}
+.position-relative{
+  position:relative;
 }
 </style>

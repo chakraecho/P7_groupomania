@@ -1,5 +1,6 @@
 <template>
   <v-container fluid class="pt-0 ma-0">
+    <!-- admin dialog -->
     <template v-if="isAdmin">
       <v-dialog v-if="menuDialog" v-model="menuDialog">
         <v-card>
@@ -108,6 +109,10 @@
         </v-card>
       </v-dialog>
     </template>
+    <!-- comment dialog for mobile devices -->
+      <v-dialog v-if="$vuetify.breakpoint.xs" v-model="activeComment">
+      <commentCard :key="comment_key" />
+    </v-dialog>
     <v-row>
       <v-container fluid class="pt-0">
         <v-row>
@@ -160,16 +165,20 @@
     </v-row>
     <v-row justify="end" class="mt-5">
       <v-btn @click="joinGrouphandler()">
-        {{ isMember ? "Quitter le groupe" : "Rejoindre le groupe"}}
+        {{ isMember ? "Quitter le groupe" : "Rejoindre le groupe" }}
       </v-btn>
     </v-row>
     <v-row class="mt-5">
       <v-container>
-        <v-row>
+        <div class="d-flex flex-column-reverse flex-md-row">
           <v-col>
             <v-row>
               <v-col cols="12" md="8" class="mx-auto">
-                <postCreator ref="postcreator" v-if="isMember" />
+                <postCreator
+                  ref="postcreator"
+                  v-if="isMember"
+                  @send-post="getDataTable"
+                />
               </v-col>
             </v-row>
             <template v-if="posts === null"> </template>
@@ -178,7 +187,7 @@
             </template>
             <template v-else-if="posts.length > 0">
               <v-row justify="center" class="mt-5 pt-5">
-                <v-col cols="11" md="6" lg="5">
+                <v-col cols="11" md="6">
                   <v-row
                     justify="center"
                     v-for="post in posts"
@@ -194,9 +203,9 @@
                   md="5"
                   lg="4"
                   class="pl-3"
-                  v-if="activeComment"
+                  v-if="$vuetify.breakpoint.mdAndUp && activeComment"
                 >
-                  <commentCard />
+                  <commentCard :key="comment_key" />
                 </v-col>
               </v-row>
               <div class="pagination">
@@ -230,7 +239,7 @@
               </div>
             </template>
           </v-col>
-          <v-col cols="3">
+          <v-col cols="12" md="3">
             <div id="description" class="position-md-sticky">
               <h2>
                 Description
@@ -265,19 +274,11 @@
               </template>
             </div>
           </v-col>
-        </v-row>
+        </div>
       </v-container>
     </v-row>
-    <options @snackbar="activateSnack($event.color, $event.msg)" />
-    <v-snackbar
-      v-model="snackbar"
-      timeout="4000"
-      :color="snackbarColor"
-      top
-      right
-    >
-      {{ snackbarMsg }}
-    </v-snackbar>
+    <options @snackbar="activateSnack($event.color, $event.msg)" @reload-post="getDataTable()" />
+    <optionComment @reload-comment="comment_key++" />
   </v-container>
 </template>
 
@@ -286,13 +287,15 @@ import postCard from "@/components/post/post.vue";
 import commentCard from "@/components/post/comment.vue";
 import postCreator from "@/components/post/createPost.vue";
 import options from "@/components/post/option.vue";
+import optionComment from "@/components/post/option_comment.vue"
 
 export default {
   components: {
     postCard,
     commentCard,
     postCreator,
-    options
+    options,
+    optionComment
   },
   data() {
     return {
@@ -301,12 +304,8 @@ export default {
       bannerUrl: "",
       imgUrl: "",
       description: "",
-      posts: [],
       isAdmin: false,
       isMember: false,
-      snackbar: false,
-      snackbarColor: "",
-      snackbarMsg: "",
       edit_description: false,
       input_description: "",
       modify_photo_profile: false,
@@ -316,14 +315,53 @@ export default {
       menuDialog: false,
       deleteGroup: false,
       links: {},
-      current_page: 1
+      current_page: 1,
+      comment_key : 0
     };
+  },
+  computed: {
+    activeComment: {
+      get() {
+        return this.$store.state.comment.active;
+      }
+    },
+    posts: {
+      get() {
+        return this.$store.state.post.posts;
+      }
+    }
   },
   methods: {
     activateSnack(color, msg) {
-      this.snackbar = true;
-      this.snackbarColor = color;
-      this.snackbarMsg = msg;
+      this.$store.dispatch("activateSnack", { color, msg });
+    },
+    getDataTable(link) {
+      if (link === undefined) {
+        link =
+          "http://localhost:3000/api/group/" + this.$route.params.id + "/post";
+      }
+      fetch(link, { credentials: "include" })
+        .then(response =>
+          response.json().then(res => {
+            if (response.ok) {
+              this.$store.dispatch("post/loadPost", res.posts);
+              this.links = res.links;
+              this.current_page = res.current_page;
+            } else {
+              this.activateSnack(
+                "error",
+                "Erreur lors de la récupération des posts utilisateur."
+              );
+            }
+          })
+        )
+        .catch(error => {
+          this.activateSnack(
+            "error",
+            "Erreur lors de la récupération des posts utilisateur."
+          );
+          console.log(error);
+        });
     },
     parseImage(evt) {
       var reader = new FileReader();
@@ -341,18 +379,28 @@ export default {
       })
         .then(response =>
           response.json().then(res => {
-            this.snackbar = true;
-            this.snackbarMsg = "Votre description à bien été mis à jour !";
-            this.snackbarColor = "success";
-            this.edit_description = false;
-            this.description = res.group.description;
+            if (response.ok) {
+              this.activateSnack(
+                "success",
+                "Votre description à bien été mis à jour !"
+              );
+              this.edit_description = false;
+              this.description = res.group.description;
+            } else {
+              this.activateSnack(
+                "error",
+                "Erreur lors de la requête, veuillez rééssayer"
+              );
+            }
+            this.getDataTable();
           })
         )
         .catch(error => {
           console.log(error);
-          this.snackbar = true;
-          this.snackbarColor = "error";
-          this.snackbarMsg = "Erreur lors de la requête, veuillez rééssayer";
+          this.activateSnack(
+            "error",
+            "Erreur lors de la requête, veuillez rééssayer"
+          );
           this.edit_description = false;
         });
     },
@@ -372,11 +420,17 @@ export default {
       )
         .then(response =>
           response.json().then(res => {
-            this.activateSnack("success", "Image modifié !");
-            if (endpoint === "img") {
-              this.imgUrl = res.group.imgUrl;
-            } else if (endpoint === "banner") {
-              this.bannerUrl = res.group.bannerUrl;
+            if (response.ok) {
+              this.activateSnack("success", "Image modifié !");
+              if (endpoint === "img") {
+                this.imgUrl = res.group.imgUrl;
+              } else if (endpoint === "banner") {
+                this.bannerUrl = res.group.bannerUrl;
+              }
+              this.getDataTable();
+            } else {
+              this.activateSnack("error", res.message);
+              this.getDataTable();
             }
           })
         )
@@ -393,14 +447,21 @@ export default {
         credentials: "include",
         method: "delete"
       })
-        .then(() => {
-          this.activateSnack(
-            "success",
-            "Le groupe à bien été supprimé ! Vous allez être redirigé vers la page de feed !"
-          );
-          setTimeout(() => {
-            this.$router.push("/");
-          }, 3000);
+        .then(res => {
+          if (res.ok) {
+            this.activateSnack(
+              "success",
+              "Le groupe à bien été supprimé ! Vous allez être redirigé vers la page de feed !"
+            );
+            setTimeout(() => {
+              this.$router.push("/");
+            }, 3000);
+          } else {
+            this.activateSnack(
+              "error",
+              "Erreur lors de l'envoi de la requête, veuillez contacter un administrateur"
+            );
+          }
         })
         .catch(error => {
           console.log(error);
@@ -449,41 +510,31 @@ export default {
       }
     }
   },
-  computed: {
-    activeComment: {
-      get() {
-        return this.$store.state.comment.active;
-      }
-    }
-  },
-  beforeCreate() {
+
+  beforeMount() {
     fetch("http://localhost:3000/api/group/" + this.$route.params.id, {
       credentials: "include"
     })
       .then(response =>
         response.json().then(resparse => {
-          const res = resparse.group[0];
-          this.groupName = res.groupName;
-          this.bannerUrl = res.bannerUrl;
-          this.imgUrl = res.imgUrl;
-          this.description = res.description;
-          if (resparse.role) {
-            this.isMember = true;
+          if (response.ok) {
+            const res = resparse.group[0];
+            this.groupName = res.groupName;
+            this.bannerUrl = res.bannerUrl;
+            this.imgUrl = res.imgUrl;
+            this.description = res.description;
+            if (resparse.role) {
+              this.isMember = true;
+            }
+            resparse.role === 1 ? (this.isAdmin = true) : (this.admin = false);
+          } else {
+            this.$router.push("/notfound");
           }
-          resparse.role === 1 ? (this.isAdmin = true) : (this.admin = false);
         })
       )
       .catch(error => console.log(error));
-    fetch(
-      "http://localhost:3000/api/group/" + this.$route.params.id + "/post",
-      { credentials: "include" }
-    )
-      .then(response =>
-        response.json().then(res => {
-          this.posts = res.posts;
-        })
-      )
-      .catch(error => console.log(error));
+
+    this.getDataTable();
   }
 };
 </script>

@@ -1,12 +1,5 @@
 <template>
   <v-container>
-    <v-snackbar
-    :color="snackbarColor"
-    v-model="snackbar"
-    timeout="3000"
-    >
-      {{snackbarMsg}}
-    </v-snackbar>
     <v-row>
       <v-col>
         <h1>Centre de notification</h1>
@@ -20,22 +13,23 @@
           </template>
           <template v-else-if="notifications.length > 0">
             <v-row>
-              <v-btn icon @click="deleteAll">
+              <v-btn @click="deleteAll">
                 <v-icon>
                   mdi-delete
                 </v-icon>
+                Supprimer tous les notifications
               </v-btn>
             </v-row>
           <v-row v-for="notification in notifications" :key="notification.id">
             <v-col>
               <v-card>
-                <v-card-text>
+                <v-card-text class="pa-0">
                   <v-container>
                     <v-row>
                       <v-col cols="2" md="1">
                         <div class="profile--wrapper rounded-circle">
                           <img
-                            class="profile--img"
+                            class="profile--img rounded-circle"
                             :src="notification.creator.profilImgUrl"
                             :alt="
                               'image de profile de ' +
@@ -110,17 +104,12 @@ export default {
     return {
       notifications: null,
             current_page: 1,
-      links: {},
-      snackbar: false,
-      snackbarMsg : "",
-      snackbarColor : ""
+      links: {}
     };
   },
   methods:{
     activateSnack(color, msg){
-      this.snackbar = true
-      this.snackbarColor = color
-      this.snackbarMsg = msg
+      this.$store.dispatch("activateSnack", {color, msg})
     },
     getDataTable(link){
       if(link === undefined){
@@ -188,6 +177,7 @@ export default {
   }
   &--img {
     width: 100%;
+    border: 2px grey solid;
   }
 }
 </style>

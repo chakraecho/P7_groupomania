@@ -110,6 +110,7 @@ export default {
               color: "success",
               msg: "Commentaire supprimé !"
             });
+            this.$emit('reload-comment')
           } else {
             this.$store.dispatch("activateSnack", {
               color: "error",
@@ -156,6 +157,7 @@ export default {
                 msg: res.message
               });
             }
+                        this.$emit('reload-comment')
           })
         )
         .catch(error => {

@@ -16,7 +16,7 @@
           :drawer="drawer"
           @set-drawer="setDrawer($event)"
            />
-      <v-main>
+      <v-main id="main">
         <v-container fluid class="pa-0 ma-0">
           <router-view id="view" :key="$route.fullPath" />
         </v-container>
@@ -83,7 +83,10 @@ export default {
 #view {
   position: relative;
   min-height: 90vh;
+}
+#main{
   background-color: lightslategrey;
+
 }
 
 #nav {

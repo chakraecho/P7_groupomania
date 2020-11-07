@@ -1,12 +1,14 @@
 <template>
   <v-card id="comment-block">
 
-    <v-container class="container-fluid border py-15 ov-scroll">
+    <v-container class="container-fluid border d-flex flex-column justify-between h-100">
       <v-card-title id="title">
         <p text-center>Commentaires</p>
       </v-card-title>
-      <v-row class="comment-list">
-        <v-row
+      <div class="comment-list">
+                <p v-if="comments.length === 0" class="text-center">Pas de commentaire pour le moment, n'hésitez pas à commenter</p>
+
+        <div
             class="align-items-center"
             v-for="comment in comments"
             :key="comment"
@@ -15,9 +17,10 @@
           <v-col>
             <v-row>
               <v-col
-                  cols="3"
-                  md="2"
-                  class=" d-flex flex-column justify-content-between "
+                  cols="2"
+                  md="3"
+                  class=" profil-link"
+                  @click="$router.push('/account/' + comment.userId)"
               >
                 <img
                     :src="comment.User.profilImgUrl"
@@ -27,7 +30,7 @@
                     ' ' +
                     comment.User.lastName
                 "
-                    class="rounded-circle w-100"
+                    class="rounded-circle w-100 border"
                 />
               </v-col>
               <v-col cols="7">
@@ -87,12 +90,8 @@
               </v-btn>
             </v-row>
           </v-col>
-        </v-row>
-      </v-row>
-
-
-        <p v-if="comments.length === 0" class="text-center">Pas de commentaire pour le moment, n'hésitez pas à commenter</p>
-
+        </div>
+      </div>
       <div align="center" class=" d-flex flex-row input-lign">
         <v-col cols="8" md="10" lg="10">
           <v-text-field outline label="commentez !" v-model="content">
@@ -186,27 +185,36 @@ export default {
 };
 </script>
 
-<style>
-#title{
-  position:absolute;
-  top:0; left:0;
+<style lang="scss" scoped>
+.border{
+  border : 1px solid grey;
 }
 
 #comment-block{
   height:90vh;
 }
-
-.input-lign{
-  position: absolute;
-  bottom: 0; left:0;
+.w-100{
   width:100%
 }
 
-.ov-scroll{
-  overflow: scroll;
+.input-lign{
+
+  width:100%
 }
 
+
 .comment-list{
-  max-height:50vh
+  height:100%;
+  overflow-y: scroll;
+}
+
+.h-100{
+  height:100%
+}
+
+.profil-link{
+    &:hover{
+    cursor: pointer;
+  }
 }
 </style>

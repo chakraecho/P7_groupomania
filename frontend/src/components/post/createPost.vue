@@ -15,29 +15,29 @@
     <v-row class="align-center justify-center">
       <v-col cols="2" md="1">
         <img
-            :src="profilImgUrl"
-            :alt="'photo de profil de' + getFullName"
-            class="w-100"
+          :src="profilImgUrl"
+          :alt="'photo de profil de' + getFullName"
+          class="w-100 img-profil rounded-circle"
         />
       </v-col>
       <v-col cols="6" md="9" lg="9">
         <v-textarea
-            name="new-comment"
-            rows="2"
-            dense
-            autogrow
-            placeholder="Quelque chose à dire ?"
-            v-model="content"
+          name="new-comment"
+          rows="2"
+          dense
+          autogrow
+          placeholder="Quelque chose à dire ?"
+          v-model="content"
         >
         </v-textarea>
       </v-col>
       <v-col cols="1" md="1" class="d-flex flex-column">
         <v-file-input
-            accept="image/png,image/jpg"
-            hide-input
-            prepend-icon="mdi-image-plus"
-            v-model="image"
-            @change="parseImg($event)"
+          accept="image/png,image/jpg"
+          hide-input
+          prepend-icon="mdi-image-plus"
+          v-model="image"
+          @change="parseImg($event)"
         >
         </v-file-input>
         <v-btn icon @click="sendPost()">
@@ -48,12 +48,16 @@
       </v-col>
     </v-row>
     <v-row v-if="srcImg.length > 2" class="pa-2">
-      <div
-
-          class="img-block mx-auto"
-      >
-        <img :src="srcImg" alt="photo à envoyer" class="img--inside"/>
-        <v-btn icon class="ml-auto mr-3 mt-3 btn--close" @click="srcImg=''; image = undefined">
+      <div class="img-block mx-auto">
+        <img :src="srcImg" alt="photo à envoyer" class="img--inside" />
+        <v-btn
+          icon
+          class="ml-auto mr-3 mt-3 btn--close"
+          @click="
+            srcImg = '';
+            image = undefined;
+          "
+        >
           <v-icon>
             mdi-close
           </v-icon>
@@ -64,7 +68,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   data() {
@@ -90,71 +94,93 @@ export default {
     },
     sendPost() {
       this.loading = true;
-      let body = new FormData()
-      body.append("body", JSON.stringify({
-        userId: this.$store.state.user.userId,
-        content: this.content
-      }))
+      let body = new FormData();
+      body.append(
+        "body",
+        JSON.stringify({
+          userId: this.$store.state.user.userId,
+          content: this.content
+        })
+      );
 
       if (this.image !== undefined) {
-        body.append("file", this.image)
+        body.append("file", this.image);
       }
-
 
       if (this.$route.name !== "group") {
         fetch("http://localhost:3000/api/post/submit", {
           method: "POST",
           body,
           credentials: "include"
-        }).then(res => {
-          if (res.ok) {
-            this.loading = false;
-            res.json().then(response => {
-              this.$store.dispatch('activateSnack', {color: "success", msg: response.message})
-            })
-          } else {
-            this.loading = false
-            res.json().then(response => {
-              this.$store.dispatch('activateSnack', {color: "error", msg: response.message})
-            })
-          }
         })
-            .catch(error => {
-              console.log(error)
-              this.$store.dispatch('activateSnack', {
-                color: "error",
-                msg: "Une erreur s'est produite lors de l'envoi !"
-              })
+          .then(res => {
+            if (res.ok) {
+              this.loading = false;
+              res.json().then(response => {
+                this.$store.dispatch("activateSnack", {
+                  color: "success",
+                  msg: response.message
+                });
+                this.$emit('send-post')
+              });
+            } else {
+              this.loading = false;
+              res.json().then(response => {
+                this.$store.dispatch("activateSnack", {
+                  color: "error",
+                  msg: response.message
+                });
+              });
+                              this.$emit('send-post')
+
+            }
+          })
+          .catch(error => {
+            console.log(error);
+            this.$store.dispatch("activateSnack", {
+              color: "error",
+              msg: "Une erreur s'est produite lors de l'envoi !"
             });
+          });
       } else {
         fetch(
-            "http://localhost:3000/api/group/" +
+          "http://localhost:3000/api/group/" +
             this.$route.params.id +
             "/submit",
-            {
-              method: "POST",
-              body,
-              credentials: "include"
-            }
-        ).then(res => {
-          if (res.ok) {
-            this.loading = false;
-            res.json().then(response => {
-              this.$store.dispatch('activateSnack', {color: "success", msg: response.message})
-            })
-          } else {
-            this.loading = false
-            res.json().then(response => {
-              this.$store.dispatch('activateSnack', {color: "error", msg: response.message})
-            })
+          {
+            method: "POST",
+            body,
+            credentials: "include"
           }
-        }).catch(error => {
-          console.log(error)
-          this.$store.dispatch('activateSnack', {
-            color: "error",
-            msg: "Une erreur s'est produite lors de l'envoi !"
+        )
+          .then(res => {
+            if (res.ok) {
+              this.loading = false;
+              res.json().then(response => {
+                this.$store.dispatch("activateSnack", {
+                  color: "success",
+                  msg: response.message
+                });
+              });
+                              this.$emit('send-post')
+
+            } else {
+              this.loading = false;
+              res.json().then(response => {
+                this.$store.dispatch("activateSnack", {
+                  color: "error",
+                  msg: response.message
+                });
+              });
+            }
           })
-        });
+          .catch(error => {
+            console.log(error);
+            this.$store.dispatch("activateSnack", {
+              color: "error",
+              msg: "Une erreur s'est produite lors de l'envoi !"
+            });
+          });
       }
     }
   }
@@ -166,7 +192,6 @@ export default {
   &--inside {
     width: 100%;
     height: 100%;
-
   }
 
   &-block {
@@ -183,13 +208,17 @@ export default {
 </style>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 .w-100 {
   width: 100%;
 }
 
 .w-50 {
   width: 50%;
+}
+
+.img-profil {
+  border: 2px grey solid;
 }
 
 /**

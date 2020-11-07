@@ -10,6 +10,7 @@
     </v-row>
     <v-row>
       <v-container>
+        <h2>#feeds</h2>
         <v-row justify="center">
           <v-col cols="11" md="6" lg="5">
             <v-row
@@ -23,7 +24,7 @@
             </v-row>
           </v-col>
           <v-col cols="11" md="5" lg="4" class="pl-3" v-if="$vuetify.breakpoint.mdAndUp && activeComment">
-            <commentCard />
+            <commentCard class="comment-position" />
           </v-col>
         </v-row>
         <div class="pagination">
@@ -59,15 +60,6 @@
     </v-row>
     <options @snackbar="activateSnack($event.color, $event.msg)" />
     <optionComment @snackbar="activateSnack($event.color, $event.msg)" />
-    <v-snackbar
-      v-model="snackbar"
-      timeout="4000"
-      :color="snackbarColor"
-      top
-      right
-    >
-      {{ snackbarMsg }}
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -90,9 +82,6 @@ export default {
   },
   data() {
     return {
-      snackbar: false,
-      snackbarColor: "",
-      snackbarMsg: "",
       links: {},
       current_page: 1
     };
@@ -114,9 +103,7 @@ export default {
   },
   methods: {
     activateSnack(color, msg) {
-      this.snackbar = true;
-      this.snackbarColor = color;
-      this.snackbarMsg = msg;
+      this.$store.dispatch('activateSnack', {color, msg})
     },
     getDataTable(link) {
       if (link === undefined) {
@@ -145,5 +132,10 @@ export default {
   &__create {
     border-bottom: 1px solid blue;
   }
+}
+
+.comment-position{
+  position:sticky;
+  top:10vh;
 }
 </style>

@@ -41,6 +41,11 @@ const routes = [
     path:'/admin/panel',
     name:'adminpanel',
     component: ()=> import('../views/admin.vue')
+  },
+  {
+    path : "*",
+    name : "notFound",
+    component : ()=> import('./../views/404.vue')
   }
 ];
 

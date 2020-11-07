@@ -1,14 +1,5 @@
 <template>
   <v-container>
-    <v-snackbar
-      timeout="3000"
-      v-model="snackbar"
-      :color="snackbarColor"
-      top
-      right
-    >
-      {{ snackbarMsg }}
-    </v-snackbar>
     <h1>Administration</h1>
     <h2>Liste des signalements</h2>
     <v-row>
@@ -102,17 +93,12 @@ export default {
     return {
       alerts: null,
       current_page: 1,
-      links: {},
-      snackbar: false,
-      snabarMsg: "",
-      snackbarColor: ""
+      links: {}
     };
   },
   methods: {
     activateSnack(color, msg) {
-      this.$set(this, "snackbar", true);
-      this.$set(this, "snackbarColor", color);
-      this.$set(this, "snackbarMsg", msg);
+      this.$store.dispatch('activateSnack', {color, msg})
     },
     getData(link) {
       if (link === undefined) {
