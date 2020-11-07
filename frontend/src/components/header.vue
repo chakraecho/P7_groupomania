@@ -2,7 +2,7 @@
   <header class="indigo">
     <v-container
       fluid
-      class="d-flex flex-column justify-center h-100 pa-0 ma-0"
+      class="d-flex flex-column  border-red justify-center h-100 pa-0 ma-0"
     >
       <v-row align="center" id="grid-row">
         <v-app-bar-nav-icon
@@ -165,6 +165,35 @@
                           <v-col cols="11" md="5"> </v-col>
                         </template>
                       </v-row>
+                      <div class="pagination" v-if="datas !== null && datas.length > 0">
+                        <div class="block-icon">
+                          <button
+                              :disabled="links.first === links.last"
+                              @click="getDataTable(links.first)"
+                          >
+                            <v-icon>mdi-page-first</v-icon>
+                          </button>
+                          <button
+                              :disabled="links.prev === null || links.prev === links.next"
+                              @click="getDataTable(links.prev)"
+                          >
+                            <v-icon>mdi-chevron-left</v-icon>
+                          </button>
+                          <span class="current-page">{{ current_page }}</span>
+                          <button
+                              :disabled="links.next === null || links.prev === links.next"
+                              @click="getDataTable(links.next)"
+                          >
+                            <v-icon>mdi-chevron-right</v-icon>
+                          </button>
+                          <button
+                              :disabled="links.first === links.last"
+                              @click="getDataTable(links.last)"
+                          >
+                            <v-icon>mdi-page-last</v-icon>
+                          </button>
+                        </div>
+                      </div>
                     </v-container>
                   </v-col>
                 </v-row>
@@ -175,6 +204,7 @@
             <v-text-field
               @click="searchDialog = true"
               solo
+              dense
               hide-details
               readonly
               id="searchInput"
@@ -199,7 +229,9 @@ export default {
       searchDialog: false,
       searchInput: "",
       datas: null,
-      selected: "users"
+      selected: "users",
+      links : {},
+      current_page: 0
     };
   },
   computed: {
@@ -230,6 +262,8 @@ export default {
       ).then(async response => {
         const res = await response.json();
         this.datas = res.result.docs;
+        this.links = res.links
+        this.current_page = res.current_page
       });
     }
   }
@@ -257,6 +291,10 @@ export default {
   &--in {
     width: 100%;
   }
+}
+
+.border-red{
+  border-bottom: 3px solid #d74949;
 }
 
 @media screen and (max-width: 960px) {

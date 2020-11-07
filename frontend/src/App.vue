@@ -83,6 +83,7 @@ export default {
 #view {
   position: relative;
   min-height: 90vh;
+  background-color: lightslategrey;
 }
 
 #nav {
