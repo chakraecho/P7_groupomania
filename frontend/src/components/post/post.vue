@@ -6,8 +6,8 @@
           <v-col class="py-0">
             <p>{{ fullName }}</p>
           </v-col>
-          <v-col class="ml-auto py-0">
-            <p>{{ date }}</p>
+          <v-col class="ml-auto py-0 ">
+            <p class="text--minor">le {{ date }}</p>
           </v-col>
 
           <v-btn icon class="position-absolute mr-3" @click="$store.dispatch('post/open_sideoption', dataId)">
@@ -25,9 +25,9 @@
       </v-card-text>
       <v-card-actions class="pa-0 h5">
         <v-row justify-space-between>
-          <v-col>
+          <v-col >
             <v-btn
-              text
+              icon
               :disabled="likefocus == true ? true : false"
               :class="likefocus == false ? 'active-btn' : 'inactive'"
               @click="likefocus === false ? sendLike(0) : sendLike(-1)"
@@ -36,7 +36,7 @@
             </v-btn>
             {{ likes }}
             <v-btn
-              text
+              icon
               :disabled="likefocus == false ? true : false"
               :class="likefocus == true ? 'active-btn' : 'inactive'"
               @click="likefocus === true ? sendLike(0) : sendLike(1)"
@@ -143,5 +143,7 @@ export default {
 }
 
 
-
+.text--minor{
+  font-size: 15px;
+}
 </style>

@@ -123,37 +123,43 @@
             :style="{ 'background-image': 'url(' + bannerUrl + ')' }"
             style="background-size : cover"
           >
-            <div class=" modify--profile">
-              <div
-                class="img-profil-wrapper rounded-circle d-flex align-items-center justify-center"
-              >
-                <img
-                  :src="profilImgUrl"
-                  :alt="'photo de profil de ' + firstName + ' ' + lastName"
-                  class="img-profil"
-                />
-              </div>
-              <v-btn
-                icon
-                class="modify--profile--img pa-0 ma-0 rounded-circle"
-                @click="modify_photo_profile = true"
-                v-if="isUser"
+            <div class="d-grid">
+              <div class="photo-wrapper justify-self-center">
+                <div class=" modify--profile">
+                  <div
+                      class="img-profil-wrapper rounded-circle d-flex align-items-center justify-center"
+                  >
+                    <img
+                        :src="profilImgUrl"
+                        :alt="'photo de profil de ' + firstName + ' ' + lastName"
+                        class="img-profil"
+                    />
+                  </div>
+
+                </div>
+                <v-btn
+                    icon
+                    class="modify--profile--img pa-0 ma-0 rounded-circle"
+                    @click="modify_photo_profile = true"
+                    v-if="isUser"
                 ><v-icon>mdi-pencil</v-icon>
-              </v-btn>
+                </v-btn>
+              </div>
+              <div class="name-card-wrapper mt-2">
+                <v-card class="name-card">
+                  <h1>{{ firstName }} {{ lastName }}</h1>
+                </v-card>
+                <div class="menu--account">
+                  <v-btn icon @click="menuDialog = true">
+                    <v-icon>
+                      mdi-dots-horizontal
+                    </v-icon>
+                  </v-btn>
+                </div>
+              </div>
             </div>
+
           </v-container>
-          <div class="name-card-wrapper">
-            <v-card class="name-card">
-              <h1>{{ firstName }} {{ lastName }}</h1>
-            </v-card>
-            <div class="menu--account">
-              <v-btn icon @click="menuDialog = true">
-                <v-icon>
-                  mdi-dots-horizontal
-                </v-icon>
-              </v-btn>
-            </div>
-          </div>
           <div class="ml-auto mt-2 mr-2" v-if="!isUser">
             <v-btn color="primary" @click="follow">
               {{ followed ? "Ne plus suivre" : "Suivre" }}
@@ -162,7 +168,7 @@
         </v-row>
       </v-container>
     </v-row>
-    <v-row>
+    <v-row class="flex-column-reverse flex-md-row">
       <v-col>
         <v-container class="mt-5 pt-5">
           <template v-if="posts === null">
@@ -222,20 +228,23 @@
       </v-col>
       <v-col cols="3">
         <div id="description" class="position-md-sticky">
-          <h2>
-            Description
+          <div class="d-flex flex-row">
+            <h2>
+              Description
+            </h2>
             <v-btn
-              class="position-absolute"
-              icon
-              v-if="isUser"
-              @click="
+                class="position-absolute"
+                icon
+                v-if="isUser"
+                @click="
                 input_description = description;
                 edit_description = true;
               "
             >
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
-          </h2>
+          </div>
+
           <p v-if="!edit_description">{{ description }}</p>
           <template v-else-if="edit_description">
             <v-text-field outlined label="edition" v-model="input_description">
@@ -498,6 +507,7 @@ export default {
   }
   &--profile {
     position: relative;
+
     &--img {
       position: absolute;
       bottom: 1em;
@@ -524,8 +534,8 @@ export default {
     width: 80%;
 
     &-wrapper {
-      width: 10vw;
-      height: 10vw;
+      width:10vw;
+      height:10vw;
       background-color: white;
       overflow: hidden;
       position: relative;
@@ -539,18 +549,45 @@ export default {
   width: max-content;
   padding: 10px;
   &-wrapper {
-    position: absolute;
-    top: 27vh;
     margin: auto;
     width: 100%;
   }
 }
 
-#description {
-  position: sticky;
-  top: 10vh;
+.d-grid{
+  display:grid
+}
+.justify-self-center{
+  justify-self: center;
 }
 
 .menu--account{
+  position: absolute;
+  right:0;
+
+}
+
+.photo-wrapper{
+  display:grid;
+  width: max-content;
+  position:relative;
+}
+</style>
+
+<style lang="scss">
+@media screen and (max-width: 960px){
+  .img-profil-wrapper{
+    width:100px;
+    height:100px;
+  }
+}
+</style>
+
+<style lang="scss">
+@media screen and (min-width : 960px){
+  #description {
+    position: sticky;
+    top: 10vh;
+  }
 }
 </style>

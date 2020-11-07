@@ -2,7 +2,7 @@
   <header class="indigo">
     <v-container
       fluid
-      class="d-flex flex-column justify-center h-100 pa-0 ma-0"
+      class="d-flex flex-column  border-red justify-center h-100 pa-0 ma-0"
     >
       <v-row align="center" id="grid-row">
         <v-app-bar-nav-icon
@@ -204,6 +204,7 @@
             <v-text-field
               @click="searchDialog = true"
               solo
+              dense
               hide-details
               readonly
               id="searchInput"
@@ -290,6 +291,10 @@ export default {
   &--in {
     width: 100%;
   }
+}
+
+.border-red{
+  border-bottom: 3px solid #d74949;
 }
 
 @media screen and (max-width: 960px) {
