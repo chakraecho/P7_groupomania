@@ -5,7 +5,7 @@
     </v-dialog>
     <v-row>
       <v-col cols="12" md="6" class="mx-auto">
-        <postCreator ref="postcreator" />
+        <postCreator ref="postcreator" @send-post="getDataTable()" />
       </v-col>
     </v-row>
     <v-row>
@@ -22,7 +22,7 @@
               :key="'post_' + post.postId"
             >
               <v-col>
-                <postCard :post="post" :dataId="post.postId" />
+                <postCard :post="post" :dataId="post.postId" @send-post="getDataTable()" />
               </v-col>
             </v-row>
           </v-col>

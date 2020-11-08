@@ -177,7 +177,7 @@
                 <postCreator
                   ref="postcreator"
                   v-if="isMember"
-                  @send-post="getDataTable"
+                  @send-post="getDataTable()"
                 />
               </v-col>
             </v-row>
