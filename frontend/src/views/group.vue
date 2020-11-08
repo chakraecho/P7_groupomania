@@ -181,6 +181,7 @@
                 />
               </v-col>
             </v-row>
+            <h2  class="white--text">Posts du groupe</h2>
             <template v-if="posts === null"> </template>
             <template v-else-if="posts.length === 0">
               <p>Aucun post dans le groupe</p>
@@ -241,7 +242,7 @@
           </v-col>
           <v-col cols="12" md="3">
             <div id="description" class="position-md-sticky">
-              <h2>
+              <h2  class="white--text">
                 Description
                 <v-btn
                   class="position-absolute"
@@ -255,10 +256,11 @@
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </h2>
-              <p v-if="!edit_description">{{ description }}</p>
+              <p v-if="!edit_description"  class="white--text">{{ description }}</p>
               <template v-else-if="edit_description">
                 <v-text-field
                   outlined
+                   class="white--text"
                   label="edition"
                   v-model="input_description"
                 >

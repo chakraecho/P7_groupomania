@@ -171,11 +171,11 @@
     </v-row>
     <v-row class="flex-column-reverse flex-md-row">
       <v-col>
-        <h2>Post de cet utilisateur</h2>
+        <h2 class="white--text">Post de cet utilisateur</h2>
         <v-container class="mt-5 pt-5">
           <template v-if="posts === null"> </template>
           <template v-else-if="posts.length === 0">
-            <p>Cet utilisateur n'a aucun post</p>
+            <p class="white--text">Cet utilisateur n'a aucun post</p>
           </template>
           <template v-else-if="posts.length > 0">
             <v-row justify="center">
@@ -197,7 +197,7 @@
                 class="pl-3"
                 v-if="$vuetify.breakpoint.mdAndUp && activeComment"
               >
-                <commentCard />
+                <commentCard id="comment-wrapper" />
               </v-col>
             </v-row>
             <div class="pagination">
@@ -235,7 +235,7 @@
       <v-col cols="12" md="3">
         <div id="description" class="position-md-sticky">
           <div class="d-flex flex-row">
-            <h2>
+            <h2 class="white--text">
               Description
             </h2>
             <v-btn
@@ -251,9 +251,9 @@
             </v-btn>
           </div>
 
-          <p v-if="!edit_description">{{ description }}</p>
+          <p v-if="!edit_description"  class="white--text">{{ description }}</p>
           <template v-else-if="edit_description">
-            <v-text-field outlined label="edition" v-model="input_description">
+            <v-text-field outlined label="edition"  class="white--text" v-model="input_description">
             </v-text-field>
             <div class="d-flex">
               <v-btn text @click="sendUpdate">
@@ -612,6 +612,12 @@ export default {
   display: grid;
   width: max-content;
   position: relative;
+}
+
+#comment-wrapper{
+  position:sticky;
+  top:10vh;
+  height:90vh;
 }
 </style>
 

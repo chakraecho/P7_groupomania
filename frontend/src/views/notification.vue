@@ -1,14 +1,14 @@
 <template>
-  <v-container>
+  <v-container >
     <v-row>
       <v-col>
-        <h1>Centre de notification</h1>
+        <h1  class="white--text">Centre de notification</h1>
       </v-col>
     </v-row>
     <v-row class="mt-4">
       <v-col>
         <v-container>
-          <template v-if="notification === null"> </template>
+          <template v-if="notifications === null"> </template>
           <template v-else-if="notifications.length > 0">
             <v-row>
               <v-btn @click="deleteAll">
@@ -18,6 +18,7 @@
                 Supprimer tous les notifications
               </v-btn>
             </v-row>
+
             <v-row v-for="notification in notifications" :key="notification.id">
               <v-col>
                 <v-card>
@@ -93,7 +94,7 @@
             </div>
           </template>
           <template v-else>
-            <p>
+            <p  class="white--text">
               Aucune notifications, mangez un cookie et suivez des personnes
             </p>
           </template>
@@ -105,17 +106,19 @@
 
 <script>
 export default {
-  name :"notification",
+  name: "notification",
 
-  metaInfo(){
-    return{
-      title : "notifications - groupomania",
-      meta: [{
-        name :"description",
-        content: "Centre de notifications de l'utilisateur groupomania."
-      }]
-    } 
- },
+  metaInfo() {
+    return {
+      title: "notifications - groupomania",
+      meta: [
+        {
+          name: "description",
+          content: "Centre de notifications de l'utilisateur groupomania."
+        }
+      ]
+    };
+  },
 
   data() {
     return {
@@ -196,4 +199,5 @@ export default {
     border: 2px grey solid;
   }
 }
+
 </style>

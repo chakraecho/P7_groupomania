@@ -10,7 +10,7 @@
     </v-row>
     <v-row>
       <v-container>
-        <h2>#feeds</h2>
+        <h2  class="white--text">#feeds</h2>
         <v-row justify="center">
           <v-col cols="11" md="6" lg="5">
             <v-row

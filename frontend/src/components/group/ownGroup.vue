@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
-      
-    <p v-if="groupList.length === 0">
+    <p v-if="groupList === null">Chargement...</p>
+    <p v-else-if="groupList.length === 0">
       
         Vous n'appartenez à aucun groupe ! Vous pouvez soit créer un groupe ou
         en rechercher un !

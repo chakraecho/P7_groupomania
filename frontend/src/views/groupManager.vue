@@ -198,9 +198,9 @@
                               Aucun groupe trouvé !
                             </template>
                           </template>
-                          <tempalte v-else>
+                          <template v-else>
                             <p>Veuillez rechercher un groupe</p>
-                          </tempalte>
+                          </template>
                         </v-container>
                       </v-row>
                     </v-container>
@@ -219,7 +219,7 @@
 import getGroup from "@/components/group/ownGroup.vue";
 
 export default {
-  name : "group manager",
+  name : "groupManager",
 
   metaInfo(){
     return {

@@ -16,7 +16,7 @@
       <v-col cols="2" md="1">
         <img
           :src="profilImgUrl"
-          :alt="'photo de profil de' + getFullName"
+          :alt="'photo de profil du compte'"
           class="w-100 img-profil rounded-circle"
         />
       </v-col>
@@ -25,7 +25,7 @@
           name="new-comment"
           rows="2"
           dense
-          autogrow
+          auto-grow
           placeholder="Quelque chose à dire ?"
           v-model="content"
         >

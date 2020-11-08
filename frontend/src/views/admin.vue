@@ -89,7 +89,7 @@
 
 <script>
 export default {
-  name:"admin panel",
+  name:"adminPanel",
   metaInfo(){
     return {
       title: "Panneau de signalement - groupomania",
@@ -121,7 +121,6 @@ export default {
         credentials: "include"
       }).then(response =>
         response.json().then(res => {
-          console.log(res);
           this.alerts = res.docs;
           this.links = res.links;
         })

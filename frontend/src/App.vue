@@ -1,21 +1,21 @@
 <template>
   <v-app id="app">
-            <v-snackbar
-    v-model="snackbar"
-    :color="snackColor"
-    timeout="5000"
-    top right
-    >
-      {{snackMsg}}
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="5000" top right>
+      {{ snackMsg }}
     </v-snackbar>
-    <headerComp app class="header pa-0 ma-0" @handle-nav-bar="setDrawer(!drawer)"/>
+    <headerComp
+      app
+      class="header pa-0 ma-0"
+      @handle-nav-bar="setDrawer(!drawer)"
+    />
     <v-container app class="pa-0 d-flex" fluid>
-        <navbar ref="navDrawer"
-         id="nav-drawer" 
-         v-if="isAuth"
-          :drawer="drawer"
-          @set-drawer="setDrawer($event)"
-           />
+      <navbar
+        ref="navDrawer"
+        id="nav-drawer"
+        v-if="isAuth"
+        :drawer="drawer"
+        @set-drawer="setDrawer($event)"
+      />
       <v-main id="main">
         <v-container fluid class="pa-0 ma-0">
           <router-view id="view" :key="$route.fullPath" />
@@ -34,14 +34,14 @@ export default {
     headerComp,
     navbar
   },
-  data(){
-    return{
+  data() {
+    return {
       drawer: false
-    } 
+    };
   },
-  methods:{
-    setDrawer(val){
-     this.$set(this, "drawer", val)
+  methods: {
+    setDrawer(val) {
+      this.$set(this, "drawer", val);
     }
   },
   computed: {
@@ -50,22 +50,22 @@ export default {
         return this.$store.state.isAuth;
       }
     },
-    snackColor:{
-      get(){
-        return this.$store.state.snackColor
+    snackColor: {
+      get() {
+        return this.$store.state.snackColor;
       }
     },
-    snackbar:{
-      get(){
-        return this.$store.state.snackbar
+    snackbar: {
+      get() {
+        return this.$store.state.snackbar;
       },
-      set(){
-        this.$store.commit("CLOSE_SNACK")
+      set() {
+        this.$store.commit("CLOSE_SNACK");
       }
     },
-    snackMsg:{
-      get(){
-        return this.$store.state.snackMsg
+    snackMsg: {
+      get() {
+        return this.$store.state.snackMsg;
       }
     }
   }
@@ -84,9 +84,8 @@ export default {
   position: relative;
   min-height: 90vh;
 }
-#main{
+#main {
   background-color: lightslategrey;
-
 }
 
 #nav {
@@ -100,17 +99,20 @@ export default {
       color: #42b983;
     }
   }
-  &-drawer{
-    height:90vh !important;
+  &-drawer {
+    height: 90vh !important;
     position: fixed;
     z-index: 99;
-    top:10vh !important;
+    top: 10vh !important;
   }
 }
 
 .header {
   height: 10vh;
-  position:sticky;
-  top:0px; z-index:6;
+  position: sticky;
+  top: 0px;
+  z-index: 6;
 }
+
+
 </style>
