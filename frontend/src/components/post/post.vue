@@ -111,7 +111,7 @@ export default {
       }
     },
     sendLike(like) {
-      fetch("http://localhost:3000/api/post/" + this.postId + "/like", {
+      fetch(process.env.VUE_APP_BACKEND + "/api/post/" + this.postId + "/like", {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         method: "post",

@@ -175,7 +175,7 @@ export default {
       }
     },
     submitLogin() {
-      fetch("http://localhost:3000/api/users/auth/login", {
+      fetch(process.env.VUE_APP_BACKEND + "/api/users/auth/login", {
         body: JSON.stringify({
           email: this.loginEmail,
           password: this.loginPassword
@@ -214,7 +214,7 @@ export default {
         firstName: this.firstName,
         lastName: this.lastName
       });
-      fetch("http://localhost:3000/api/users/auth/signup", {
+      fetch(process.env.VUE_APP_BACKEND + "api/users/auth/signup", {
         body,
         method: "post",
         headers: {
@@ -223,7 +223,7 @@ export default {
       })
         .then(response =>
           response.json().then(() => {
-            fetch("http://localhost:3000/api/users/auth/login", {
+            fetch(process.env.VUE_APP_BACKEND + "api/users/auth/login", {
               body: JSON.stringify({
                 email: this.email,
                 password: this.password

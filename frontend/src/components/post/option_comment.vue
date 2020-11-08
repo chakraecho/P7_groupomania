@@ -92,7 +92,7 @@ export default {
     },
     deleteComment() {
       fetch(
-        "http://localhost:3000/api/post/" +
+        process.env.VUE_APP_BACKEND + "/api/post/" +
           this.option_comment.commentId +
           "/comment",
         {
@@ -130,7 +130,7 @@ export default {
       const body = JSON.stringify({ content: this.editComment });
 
       fetch(
-        "http://localhost:3000/api/post/" +
+        process.env.VUE_APP_BACKEND + "/api/post/" +
           this.option_comment.commentId +
           "/comment",
         {
@@ -170,7 +170,7 @@ export default {
     },
     sendAlert() {
       fetch(
-        "http://localhost:3000/api/admin/alert/" + this.option_post.postId,
+        process.env.VUE_APP_BACKEND + "/api/admin/alert/" + this.option_post.postId,
         {
           credentials: "include",
           method: "post",

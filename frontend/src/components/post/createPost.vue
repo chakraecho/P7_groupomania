@@ -108,7 +108,7 @@ export default {
       }
 
       if (this.$route.name !== "group") {
-        fetch("http://localhost:3000/api/post/submit", {
+        fetch(process.env.VUE_APP_BACKEND + "/api/post/submit", {
           method: "POST",
           body,
           credentials: "include"
@@ -143,10 +143,7 @@ export default {
             });
           });
       } else {
-        fetch(
-          "http://localhost:3000/api/group/" +
-            this.$route.params.id +
-            "/submit",
+        fetch(process.env.VUE_APP_BACKEND + "/api/group/" +this.$route.params.id + "/submit",
           {
             method: "POST",
             body,

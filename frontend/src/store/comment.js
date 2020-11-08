@@ -54,7 +54,7 @@ const comment = {
         setId({ commit }, { postId }) {
             commit('setPostId', postId)
             if (postId !== null) {
-                fetch("http://localhost:3000/api/post/" + postId + "/comment", {
+                fetch(process.env.VUE_APP_BACKEND + "/api/post/" + postId + "/comment", {
                     method: "GET",
                     credentials: "include",
                 }).then((response) =>

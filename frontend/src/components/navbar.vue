@@ -67,7 +67,7 @@ export default {
   props:['drawer'],
   methods: {
     disconnect() {
-      fetch("http://localhost:3000/api/users/disconnect", {
+      fetch(process.env.VUE_APP_BACKEND + "/api/users/disconnect", {
         method: "delete",
         credentials: "include"
       })
