@@ -13,6 +13,7 @@ exports.getAll = (req, res) => {
     noctification.paginate({
         page: req.query.page,
         paginate : 10,
+        order : [['createdAt', 'DESC']],
         where: {
             notified_id: {
                 [Op.eq]: id,

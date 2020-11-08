@@ -2,6 +2,12 @@ const { groups, groupMembers, groupRole } = require('../../models/group')
 const notification = require('../../models/noctification')
 const follow = require('../../models/follow')
 const { Comments, commentLiked, Post } = require('./../../models/post')
+const fs = require('fs')
+
+
+var logger = fs.createWriteStream('log.txt', {
+    flags: 'a' // 'a' means appending (old data will be preserved)
+  })
 
 
 exports.newGroupPostNotification = (req) => {
@@ -42,7 +48,7 @@ exports.newPostNotification = (req) => {
         .then(members => {
             let filterMembers = []
             for (let member of members) {
-                const memberId = member.dataValues.userId
+                const memberId = member.follower
                 if(memberId !== req.session.userId){
                     filterMembers.push({
                         type: "post",
@@ -54,7 +60,7 @@ exports.newPostNotification = (req) => {
             }
 
             notification.bulkCreate(filterMembers)
-                .catch(error => console.log(error))
+                .catch(error => logger.write(error))
         })
 }
 
@@ -106,6 +112,6 @@ exports.commentNotification = (req) => {
             })
     }).then(() => {
         notification.bulkCreate(users)
-            .catch(error => console.log(error))
+            .catch(error => logger.write(error))
     })
 }

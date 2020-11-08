@@ -87,14 +87,14 @@ exports.login = (req, res, next) => {
 
 exports.getUser = (req, res) => {
   const id = req.params.id
-  Users.findAll({
+  Users.findOne({
     where: { userId: { [Op.eq]: id } },
     attributes : ['userId', 'firstName', "lastName", "profilImgUrl", "bannerUrl", "description"]
   })
     .then(user => res.status(200).json({ user }))
     .catch(error =>{
       logger.write(error)
-       res.redirect("/404")})
+       res.redirect("/notfound").json({message : "vous vous êtes perdu"})})
 }
 
 exports.verify = (req, res, next) => {
@@ -143,7 +143,7 @@ exports.changeImg = (req, res, next) => {
     User.update({ profilImgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}` }, { where: { userId: req.session.userId } })
       .then(() => {
         User.findOne({ where: { userId: req.session.userId }, attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"] })
-          .then(user => res.status(200).json({ user }))
+          .then(user => res.status(200).json({ user , message : "Image bien modifié !"}))
           .catch(error =>{
             logger.write(error)
              res.status(500).json({ message: "Erreur lors de la mise à jour des infos." })})
@@ -161,7 +161,7 @@ exports.changeBanner = (req, res) => {
     User.update({ bannerUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}` }, { where: { userId: req.session.userId } })
       .then(() => {
         User.findOne({ where: { userId: req.session.userId }, attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"] })
-          .then(user => res.status(200).json({ user }))
+          .then(user => res.status(200).json({ user, message : "Image bien modifé !" }))
           .catch(error => {
             logger.write(error)
 
@@ -180,7 +180,7 @@ exports.modify = (req, res) => {
   User.update({ ...body }, { where: { userId: req.session.userId } })
     .then(() => {
       User.findOne({ where: { userId: req.session.userId }, attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"] })
-        .then(user => res.status(200).json({ user }))
+        .then(user => res.status(200).json({ user , message : "Information bien modifé !"}))
         .catch(error =>{
           logger.write(error)
           res.status(500).json({ message : "Erreur lors de la récupération des données utilisateurs." })})

@@ -24,10 +24,9 @@ exports.isUsersPost = (req, res, next) => {
 }
 
 exports.isUsersComment = (req, res, next) => {
-    try {
-        Comments.findOne({ where: { postId: req.params.id } })
+        Comments.findOne({ where: { commentId: req.params.id } })
             .then(result => {
-                if (result.userId.toString()=== req.session.userId){
+                if (result.userId.toString() === req.session.userId.toString()){
                     next()
                 }
                 else {
@@ -38,11 +37,7 @@ exports.isUsersComment = (req, res, next) => {
                 console.log(error)
                 res.status(404).json({ message: "erreur serveur, veuillez rééssayer" })
             })
-    }
-    catch (e) {
-        console.log(e)
-        res.status(500).json({ message: "erreur interne serveur" })
-    }
+
 }
 
 exports.isUsersLike = (req, res, next) => {

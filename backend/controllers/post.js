@@ -14,6 +14,7 @@ var logger = fs.createWriteStream('log.txt', {
   })
 
 
+
 exports.createOne = (req, res, next) => {
     const body = JSON.parse(req.body.body)
     if(!body.content || body.content.length === 0){
@@ -25,14 +26,7 @@ exports.createOne = (req, res, next) => {
             imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`
         })
             .then(() => res.status(201).json({message: 'post créé !'}))
-            .then(() => follow.findAll({
-                    where: {
-                        followed: req.session.userId
-                    }
-                }).then(() => {
-                    next()
-                })
-            )
+            .then(() => next())
             .catch(error => {
                 logger.write(error)
                 res.status(500).json({message : "Erreur lors de la création du post"})}
@@ -40,14 +34,7 @@ exports.createOne = (req, res, next) => {
     } else {
         Post.create({content: body.content, like: 0, dislike: 0, userId: req.session.userId})
             .then(() => res.status(201).json({message: 'post créé !'}))
-            .then(() => follow.findAll({
-                    where: {
-                        followed: req.session.userId
-                    }
-                }).then(() => {
-                    next()
-                })
-            )
+            .then(() => next())
             .catch(error => {
                 logger.write(error)
                 res.status(500).json({message : "Erreur lors de la création du post"})})
@@ -92,8 +79,9 @@ exports.getAll = (req, res, next) => {
 
     Post.paginate({
         page: req.query.page,
-        paginate : 10
-        , include: [{
+        paginate : 10,
+        order: [['createdAt', 'DESC']],
+         include: [{
             model: User,
             attributes: ['lastName', 'firstName', 'profilImgUrl']
         }, {
@@ -131,6 +119,7 @@ exports.getAllfromGroups = (req, res, next) => {
     Post.paginate({
         page: req.query.page,
         paginate : 10,
+        order:[['createdAt', "DESC"]],
         where: {groupId: {[Op.eq]: req.params.id}},
          include: [{
             model: User,
@@ -751,6 +740,7 @@ exports.userPost = (req, res) => {
             userId : req.params.id
         },
         page: req.query.page,
+        order : [['createdAt', 'DESC']],
         paginate : 10
         , include: [{
             model: User,

@@ -20,7 +20,7 @@ exports.createAlert = (req, res) => {
 
 exports.getAll = (req, res) => {
     const current_page = req.query.page ? req.query.page : 1
-    admin.paginate({page: req.query.page, paginate : 15})
+    admin.paginate({page: req.query.page, paginate : 15, order : [['createdAt', 'DESC']]})
         .then(alerts => {
             const prev = current_page === 1 ? process.env.BASE_URL + '/api/admin/list?page=1' : process.env.BASE_URL + '/api/list?page=' + (current_page-1)
             const next = current_page === 1 ? process.env.BASE_URL + '/api/admin/list?page=1' : process.env.BASE_URL + '/api/list?page=' + (current_page+1)

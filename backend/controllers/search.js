@@ -16,7 +16,7 @@ exports.findGroup = (req, res) => {
     const route = "/api/group/search?"
 
     groups.paginate({
-        page: req.query.page, paginate: 10,
+        page: req.query.page, paginate: 10, order : [['createdAt', 'DESC']],
         where: {
             groupName: { [Op.like]: query }
         }
@@ -44,6 +44,7 @@ exports.searchUser = (req, res)=>{
     const route = '/api/users/search?'
 
     User.paginate({
+        order:[['createdAt', 'DESC']],
         page: req.query.page, paginate: 10,
         where: {
             [Op.or]: [{
@@ -76,6 +77,7 @@ exports.searchPost = (req,res) => {
     const route = '/api/users/search?'
     Post.paginate({
         page: req.query.page, paginate: 10,
+        order : [['createdAt', 'DESC']],
         where: {
             content : { [Op.like]: query }
         },
