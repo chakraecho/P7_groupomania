@@ -1,8 +1,11 @@
 const http = require('http')
 const app = require('./app')
+const https = require('https')
+const fs = require('fs')
 
-
-
+const options = {
+  key: fs.readFileSync('selfsigned.key'),
+  cert: fs.readFileSync('selfsigned.crt')};
 
 const normalizePort = val => {
   const port = parseInt(val, 10);
@@ -39,15 +42,17 @@ const errorHandler = error => {
 };
 
 const server = http.createServer(app);
+const sslServer = https.createServer(options, app)
 
-server.on('error', errorHandler);
-server.on('listening', () => {
+sslServer.on('error', errorHandler);
+sslServer.on('listening', () => {
   const address = server.address();
   const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
   console.log('Listening on ' + bind);
 });
 
-server.on('close', ()=>{
+sslServer.on('close', ()=>{
   sequelize.close()
 })
-server.listen(port);
+sslServer.listen(port);
+
