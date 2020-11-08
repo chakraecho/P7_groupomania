@@ -11,6 +11,9 @@
     <v-row>
       <v-container>
         <h2  class="white--text">#feeds</h2>
+        <template v-if="posts === null"></template>
+        <p v-else-if="posts.length === 0">Il n'y a encore aucun post.</p>
+        <template v-else-if="posts.length > 0">
         <v-row justify="center">
           <v-col cols="11" md="6" lg="5">
             <v-row
@@ -56,6 +59,8 @@
             </button>
           </div>
         </div>
+        </template>
+
       </v-container>
     </v-row>
     <options @snackbar="activateSnack($event.color, $event.msg)" />
@@ -118,7 +123,7 @@ export default {
     },
     getDataTable(link) {
       if (link === undefined) {
-        link = "http://localhost:3000/api/post/";
+        link = process.env.BACKEND + "/api/post/";
       }
       fetch(link, { credentials: "include" })
         .then(response =>

@@ -133,9 +133,7 @@ export default {
     },
     getDataTable(link) {
       if (link === undefined) {
-        link =
-          "http://localhost:3000/api/users/notification/" +
-          this.$store.state.user.userId;
+        link =process.env.BACKEND + "/api/users/notification/" +this.$store.state.user.userId;
       }
       fetch(link, { credentials: "include" })
         .then(response =>
@@ -147,7 +145,7 @@ export default {
         .catch(error => console.log(error));
     },
     deleteNotif(id) {
-      fetch("http://localhost:3000/api/users/notification/" + id, {
+      fetch(process.env.BACKEND + "/api/users/notification/" + id, {
         method: "delete",
         credentials: "include"
       })
@@ -165,7 +163,7 @@ export default {
         });
     },
     deleteAll() {
-      fetch("http://localhost:3000/api/users/notification", {
+      fetch(process.env.BACKEND + "/api/users/notification", {
         method: "delete",
         credentials: "include"
       })

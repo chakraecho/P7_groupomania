@@ -250,7 +250,7 @@ export default {
   methods: {
     retrieveData() {
       fetch(
-        process.env.VUE_APP_BACKEND + "/api/" +
+        process.env.BACKEND + "/api/" +
           this.selected +
           "/search?" +
           this.selected +

@@ -126,7 +126,7 @@ export default {
       this.$store.commit("post/CLOSE_OPTION");
     },
     deletePost() {
-      fetch(process.env.VUE_APP_BACKEND + "/api/post/" + this.option_post.postId, {
+      fetch(process.env.BACKEND + "/api/post/" + this.option_post.postId, {
         method: "delete",
         credentials: "include"
       })
@@ -143,7 +143,7 @@ export default {
     sendEdit(){
         const body = JSON.stringify({content: this.editComment})
 
-        fetch(process.env.VUE_APP_BACKEND + '/api/post/' + this.option_post.postId.toString() , {
+        fetch(process.env.BACKEND + '/api/post/' + this.option_post.postId.toString() , {
             method:"put",
             credentials : "include",
             headers:{"Content-type": "application/json"},
@@ -166,7 +166,7 @@ export default {
         
     },
     sendAlert(){
-        fetch(process.env.VUE_APP_BACKEND + '/api/admin/alert/' + this.option_post.postId, {
+        fetch(process.env.BACKEND + '/api/admin/alert/' + this.option_post.postId, {
           credentials: 'include',
           method:"post",
           headers:{"Content-type": "application/json"},

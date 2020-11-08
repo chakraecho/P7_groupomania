@@ -284,7 +284,7 @@ export default {
         body.append("profileImg", this.profilImg);
       }
 
-      fetch("http://localhost:3000/api/group/", {
+      fetch(process.env.BACKEND + "/api/group/", {
         body,
         method: "POST",
         credentials: "include"
@@ -306,7 +306,7 @@ export default {
     searchGroup(link) {
       if (link === undefined) {
         link =
-          "http://localhost:3000/api/group/search?group=" + this.inputSearch;
+          process.env.BACKEND + "/api/group/search?group=" + this.inputSearch;
       }
       if (this.inputSearch.length > 0) {
         fetch(link, {

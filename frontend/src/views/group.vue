@@ -352,7 +352,7 @@ export default {
     getDataTable(link) {
       if (link === undefined) {
         link =
-          "http://localhost:3000/api/group/" + this.$route.params.id + "/post";
+          process.env.BACKEND + "/api/group/" + this.$route.params.id + "/post";
       }
       fetch(link, { credentials: "include" })
         .then(response =>
@@ -385,7 +385,7 @@ export default {
       reader.readAsDataURL(evt);
     },
     sendUpdate() {
-      fetch("http://localhost:3000/api/group/" + this.$route.params.id, {
+      fetch(process.env.BACKEND + "/api/group/" + this.$route.params.id, {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         method: "put",
@@ -422,7 +422,7 @@ export default {
       const body = new FormData();
       body.append("image", this.inputFile);
       fetch(
-        "http://localhost:3000/api/group/" +
+        process.env.BACKEND + "/api/group/" +
           this.$route.params.id +
           "/" +
           endpoint,
@@ -457,7 +457,7 @@ export default {
         });
     },
     deleteGroupRequest() {
-      fetch("http://localhost:3000/api/group/" + this.$route.params.id, {
+      fetch(process.env.BACKEND + "/api/group/" + this.$route.params.id, {
         credentials: "include",
         method: "delete"
       })
@@ -490,7 +490,7 @@ export default {
     joinGrouphandler() {
       if (this.isMember) {
         fetch(
-          "http://localhost:3000/api/group/" + this.$route.params.id + "/leave",
+          process.env.BACKEND + "/api/group/" + this.$route.params.id + "/leave",
           {
             credentials: "include",
             method: "delete"
@@ -506,7 +506,7 @@ export default {
         });
       } else if (!this.isMember) {
         fetch(
-          "http://localhost:3000/api/group/" + this.$route.params.id + "/join",
+          process.env.BACKEND + "/api/group/" + this.$route.params.id + "/join",
           {
             credentials: "include",
             method: "get"
@@ -526,7 +526,7 @@ export default {
   },
 
   beforeMount() {
-    fetch("http://localhost:3000/api/group/" + this.$route.params.id, {
+    fetch(process.env.BACKEND + "/api/group/" + this.$route.params.id, {
       credentials: "include"
     })
       .then(response =>

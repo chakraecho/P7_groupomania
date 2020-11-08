@@ -126,7 +126,7 @@ export default {
   methods: {
     sendComment() {
       fetch(
-        process.env.VUE_APP_BACKEND + "/api/post/" +
+        process.env.BACKEND + "/api/post/" +
           this.$store.state.comment.postId +
           "/comment",
         {
@@ -160,7 +160,7 @@ export default {
       });
     },
     commentLike({ id, value }) {
-      fetch(process.env.VUE_APP_BACKEND + "/api/post/comment/" + id + "/like", {
+      fetch(process.env.BACKEND + "/api/post/comment/" + id + "/like", {
         method: "post",
         credentials: "include",
         body: JSON.stringify({ like: parseInt(value) }),

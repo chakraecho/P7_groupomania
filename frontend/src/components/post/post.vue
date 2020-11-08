@@ -111,7 +111,7 @@ export default {
       }
     },
     sendLike(like) {
-      fetch(process.env.VUE_APP_BACKEND + "/api/post/" + this.postId + "/like", {
+      fetch(process.env.BACKEND + "/api/post/" + this.postId + "/like", {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         method: "post",
