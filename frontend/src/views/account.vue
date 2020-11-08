@@ -357,7 +357,7 @@ export default {
     follow() {
       if (this.followed) {
         fetch(
-          process.env.BACKEND + "/api/users/follow/" + this.$route.params.id,
+          process.env.VUE_APP_BACKEND + "/api/users/follow/" + this.$route.params.id,
           { credentials: "include", method: "delete" }
         )
           .then(() => {
@@ -366,7 +366,7 @@ export default {
           .catch(error => console.log(error));
       } else if (!this.followed) {
         fetch(
-          process.env.BACKEND + "/api/users/follow/" + this.$route.params.id,
+          process.env.VUE_APP_BACKEND + "/api/users/follow/" + this.$route.params.id,
           { credentials: "include" }
         )
           .then(() => (this.followed = true))
@@ -375,7 +375,7 @@ export default {
     },
     sendUpdate() {
       fetch(
-        process.env.BACKEND + "/api/users/account/" + this.$route.params.id,
+        process.env.VUE_APP_BACKEND + "/api/users/account/" + this.$route.params.id,
         {
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -412,7 +412,7 @@ export default {
       const body = new FormData();
       body.append("image", this.inputFile);
       fetch(
-        process.env.BACKEND + "/api/users/account/" +
+        process.env.VUE_APP_BACKEND + "/api/users/account/" +
           this.$store.state.user.userId +
           "/" +
           endpoint,
@@ -452,7 +452,7 @@ export default {
         });
     },
     deleteUserRequest() {
-      fetch(process.env.BACKEND + "/api/users/delete", {
+      fetch(process.env.VUE_APP_BACKEND + "/api/users/delete", {
         method: "delete",
         credentials: "include"
       })
@@ -481,7 +481,7 @@ export default {
     getDataTable(link) {
       if (link === undefined) {
         link =
-          process.env.BACKEND + "/api/users/" + this.$route.params.id + "/post";
+          process.env.VUE_APP_BACKEND + "/api/users/" + this.$route.params.id + "/post";
       }
       fetch(link, { credentials: "include" })
         .then(response =>
@@ -495,7 +495,7 @@ export default {
     }
   },
   mounted() {
-    fetch(process.env.BACKEND + "/api/users/" + this.$route.params.id, {
+    fetch(process.env.VUE_APP_BACKEND + "/api/users/" + this.$route.params.id, {
       credentials: "include"
     })
       .then(response => {
@@ -521,7 +521,7 @@ export default {
 
     if (this.$route.params.id !== this.$store.state.user.userId) {
       fetch(
-        process.env.BACKEND + "/api/users/follow/check/" + this.$route.params.id,
+        process.env.VUE_APP_BACKEND + "/api/users/follow/check/" + this.$route.params.id,
         { credentials: "include" }
       )
         .then(res => {

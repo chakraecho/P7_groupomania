@@ -44,7 +44,7 @@ export default {
     };
   },
   beforeCreate() {
-    fetch(process.env.BACKEND + "/api/group/list", { credentials: "include" })
+    fetch(process.env.VUE_APP_BACKEND + "/api/group/list", { credentials: "include" })
       .then(response =>
         response.json().then(res => (this.groupList = res.result))
       )

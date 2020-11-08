@@ -284,7 +284,7 @@ export default {
         body.append("profileImg", this.profilImg);
       }
 
-      fetch(process.env.BACKEND + "/api/group/", {
+      fetch(process.env.VUE_APP_BACKEND + "/api/group/", {
         body,
         method: "POST",
         credentials: "include"
@@ -306,7 +306,7 @@ export default {
     searchGroup(link) {
       if (link === undefined) {
         link =
-          process.env.BACKEND + "/api/group/search?group=" + this.inputSearch;
+          process.env.VUE_APP_BACKEND + "/api/group/search?group=" + this.inputSearch;
       }
       if (this.inputSearch.length > 0) {
         fetch(link, {

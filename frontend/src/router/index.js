@@ -62,7 +62,7 @@ router.beforeEach((to, from, next) => {
   store.commit('post/DESACTIVE_POST')
 
   if (to.name === 'login') {
-    fetch(process.env.BACKEND + '/api/users/auth/verify', {
+    fetch(process.env.VUE_APP_BACKEND + '/api/users/auth/verify', {
       method: 'post',
       credentials: 'include'
     })
@@ -96,7 +96,7 @@ router.beforeEach((to, from, next) => {
     next()
   }
   else {
-    fetch(process.env.BACKEND + '/api/users/auth/verify', {
+    fetch(process.env.VUE_APP_BACKEND + '/api/users/auth/verify', {
       method: 'post',
       credentials: 'include'
     })

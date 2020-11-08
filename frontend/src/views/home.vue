@@ -123,7 +123,7 @@ export default {
     },
     getDataTable(link) {
       if (link === undefined) {
-        link = process.env.BACKEND + "/api/post/";
+        link = process.env.VUE_APP_BACKEND + "/api/post/";
       }
       fetch(link, { credentials: "include" })
         .then(response =>

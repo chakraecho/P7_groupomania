@@ -133,7 +133,7 @@ export default {
     },
     getDataTable(link) {
       if (link === undefined) {
-        link =process.env.BACKEND + "/api/users/notification/" +this.$store.state.user.userId;
+        link =process.env.VUE_APP_BACKEND + "/api/users/notification/" +this.$store.state.user.userId;
       }
       fetch(link, { credentials: "include" })
         .then(response =>
@@ -145,7 +145,7 @@ export default {
         .catch(error => console.log(error));
     },
     deleteNotif(id) {
-      fetch(process.env.BACKEND + "/api/users/notification/" + id, {
+      fetch(process.env.VUE_APP_BACKEND + "/api/users/notification/" + id, {
         method: "delete",
         credentials: "include"
       })
@@ -163,7 +163,7 @@ export default {
         });
     },
     deleteAll() {
-      fetch(process.env.BACKEND + "/api/users/notification", {
+      fetch(process.env.VUE_APP_BACKEND + "/api/users/notification", {
         method: "delete",
         credentials: "include"
       })

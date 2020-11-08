@@ -115,7 +115,7 @@ export default {
     },
     getData(link) {
       if (link === undefined) {
-        link = process.env.BACKEND +"/api/admin/list";
+        link = process.env.VUE_APP_BACKEND +"/api/admin/list";
       }
       fetch(link, {
         credentials: "include"
@@ -127,7 +127,7 @@ export default {
       );
     },
     deleteAlert(id) {
-      fetch(process.env.BACKEND + "/api/admin/alert/" + id, {
+      fetch(process.env.VUE_APP_BACKEND + "/api/admin/alert/" + id, {
         credentials: "include",
         method: "delete"
       })

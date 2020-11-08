@@ -352,7 +352,7 @@ export default {
     getDataTable(link) {
       if (link === undefined) {
         link =
-          process.env.BACKEND + "/api/group/" + this.$route.params.id + "/post";
+          process.env.VUE_APP_BACKEND + "/api/group/" + this.$route.params.id + "/post";
       }
       fetch(link, { credentials: "include" })
         .then(response =>
@@ -385,7 +385,7 @@ export default {
       reader.readAsDataURL(evt);
     },
     sendUpdate() {
-      fetch(process.env.BACKEND + "/api/group/" + this.$route.params.id, {
+      fetch(process.env.VUE_APP_BACKEND + "/api/group/" + this.$route.params.id, {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         method: "put",
@@ -422,7 +422,7 @@ export default {
       const body = new FormData();
       body.append("image", this.inputFile);
       fetch(
-        process.env.BACKEND + "/api/group/" +
+        process.env.VUE_APP_BACKEND + "/api/group/" +
           this.$route.params.id +
           "/" +
           endpoint,
@@ -457,7 +457,7 @@ export default {
         });
     },
     deleteGroupRequest() {
-      fetch(process.env.BACKEND + "/api/group/" + this.$route.params.id, {
+      fetch(process.env.VUE_APP_BACKEND + "/api/group/" + this.$route.params.id, {
         credentials: "include",
         method: "delete"
       })
@@ -490,7 +490,7 @@ export default {
     joinGrouphandler() {
       if (this.isMember) {
         fetch(
-          process.env.BACKEND + "/api/group/" + this.$route.params.id + "/leave",
+          process.env.VUE_APP_BACKEND + "/api/group/" + this.$route.params.id + "/leave",
           {
             credentials: "include",
             method: "delete"
@@ -506,7 +506,7 @@ export default {
         });
       } else if (!this.isMember) {
         fetch(
-          process.env.BACKEND + "/api/group/" + this.$route.params.id + "/join",
+          process.env.VUE_APP_BACKEND + "/api/group/" + this.$route.params.id + "/join",
           {
             credentials: "include",
             method: "get"
@@ -526,7 +526,7 @@ export default {
   },
 
   beforeMount() {
-    fetch(process.env.BACKEND + "/api/group/" + this.$route.params.id, {
+    fetch(process.env.VUE_APP_BACKEND + "/api/group/" + this.$route.params.id, {
       credentials: "include"
     })
       .then(response =>
