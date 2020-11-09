@@ -57,7 +57,9 @@ app.use(function (req, res, next) {
   }
 });
 
-app.use(console.log('Request entry'))
+app.use((req) => {
+    console.log("request incomming")
+})
 
 //middlewares
 app.use(helmet())
