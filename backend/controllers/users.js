@@ -70,7 +70,7 @@ exports.login = (req, res, next) => {
                 },
                 process.env.JWT_KEY,
                 { expiresIn: '24h' }
-              ), { httpOnly: true, secure: false }).json({
+              ), { httpOnly: true, secure: true, sameSite:"none" }).json({
                 firstName: account.firstName,
                 lastName: account.lastName,
                 profilImgUrl: account.profilImgUrl,
@@ -121,7 +121,7 @@ exports.verify = (req, res, next) => {
              },
             process.env.JWT_KEY,
             { expiresIn: '24h' }
-          ), { httpOnly: true, secure: false }).json({
+          ), { httpOnly: true, secure: true, sameSite:"none" }).json({
             firstName: account.firstName,
             lastName: account.lastName,
             profilImgUrl: account.profilImgUrl,

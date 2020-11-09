@@ -18,7 +18,7 @@ const normalizePort = val => {
   }
   return false;
 };
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '443');
 app.set('port', port);
 
 const errorHandler = error => {
@@ -41,18 +41,25 @@ const errorHandler = error => {
   }
 };
 
-const server = http.createServer(app);
-const sslServer = https.createServer(options, app)
+//const server = http.createServer(app);
+const server = https.createServer(options, app)
 
-sslServer.on('error', errorHandler);
-sslServer.on('listening', () => {
+server.on('error', errorHandler);
+server.on('listening', () => {
   const address = server.address();
   const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
   console.log('Listening on ' + bind);
 });
 
-sslServer.on('close', ()=>{
+server.on('close', ()=>{
   sequelize.close()
 })
-sslServer.listen(port);
+server.listen(port, "0.0.0.0");
 
+var address,
+    ifaces = require('os').networkInterfaces();
+for (var dev in ifaces) {
+    ifaces[dev].filter((details) => details.family === 'IPv4' && details.internal === false ? address = details.address: undefined);
+}
+
+console.log(address);

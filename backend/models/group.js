@@ -6,8 +6,8 @@ const sequelizePaginate = require('sequelize-paginate')
 const groups = sequelize.define('groups', {
     groupId: { type: Sequelize.INTEGER.UNSIGNED, autoIncrement: true, primaryKey: true },
     description: { type: Sequelize.TEXT, allowNull: false },
-    imgUrl: { type: Sequelize.STRING, defaultValue: 'http://localhost:3000/assets/group.svg' },
-    bannerUrl: { type: Sequelize.STRING, defaultValue: 'http://localhost:3000/assets/default_banner.jpg' },
+    imgUrl: { type: Sequelize.STRING, defaultValue: process.env.BASE_URL +'/assets/group.svg' },
+    bannerUrl: { type: Sequelize.STRING, defaultValue: process.env.BASE_URL +'/assets/default_banner.jpg' },
     groupName: { type: Sequelize.STRING, allowNull: false }
 })
 

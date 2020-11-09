@@ -34,7 +34,9 @@ app.use(
     saveUninitialized: false,
     maxAge: 1000* 60 * 60 *24 * 365,
     cookie:{
-      expires: 1000*60*60*24*7
+      expires: 1000*60*60*24*7,
+        secure: true,
+        sameSite: 'none'
     }
   })
 );
@@ -48,6 +50,18 @@ const postRoutes = require('./routes/posts')
 const groupRoutes = require('./routes/group')
 const adminRoutes = require('./routes/admin')
 
+
+//middlewares
+app.use(helmet())
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://groupomania.j-huang.fr');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.setHeader('Access-Control-Allow-Credentials', 'true')
+    next();
+  });
+
+
 //overcharge server check
 app.use(function (req, res, next) {
   if (toobusy()) {
@@ -57,26 +71,13 @@ app.use(function (req, res, next) {
   }
 });
 
-app.use((req) => {
-    console.log("request incomming")
-})
-
-//middlewares
-app.use(helmet())
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    res.setHeader('Access-Control-Allow-Credentials', 'true')
-    next();
-  });
-
 
 app.use(bodyparser.json())
 app.use(cookieParser())
+
 //serve static files
-app.use('/assets', express.static(path.join(__dirname, '\\assets')));
-app.use('/uploads', express.static(path.join(__dirname, '\\uploads')));
+app.use('/assets', express.static(path.join(__dirname, './assets')));
+app.use('/uploads', express.static(path.join(__dirname, './uploads')));
 //routes
 app.use('/api/users', userRoutes )
 app.use('/api/post', postRoutes)
