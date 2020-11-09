@@ -6,6 +6,9 @@ const session = require('express-session');
 const User = require('./../models/users');
 const fs = require('fs')
 
+const nameRegex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/
+const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
 
 var logger = fs.createWriteStream('log.txt', {
   flags: 'a' // 'a' means appending (old data will be preserved)
@@ -17,6 +20,17 @@ exports.signup = (req, res) => {
   const password = req.body.password;
   const lastName = req.body.lastName;
   const firstName = req.body.firstName;
+
+  if(!nameRegex.test(lastName) || !nameRegex.test(firstName)){
+      return res.status(400).json({message : "C'est quoi ce nom..."})
+  }
+  if(!emailRegex.test(email)){
+      return res.status(400).json({message: 'Le champs email est au mauvais format !'})
+  }
+  if(!passwordRegex.test(password)){
+      return res.status(400).json({message : 'mot de passe au mauvais format !'})
+  }
+
   bcrypt.hash(password, 10)
     .then(hash => {
       Users.create({
