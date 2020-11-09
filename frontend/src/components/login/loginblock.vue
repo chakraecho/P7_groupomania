@@ -163,8 +163,14 @@ export default {
       this.password = ""
       this.loginEmail = ""
       this.loginPassword = ""
-      this.$refs.signup.reset()
-      this.$refs.login.reset()
+      if(this.selectedBlock === "signup"){
+        this.$refs.login.reset()
+
+      }
+      if(this.selectedBlock == "login"){
+        this.$refs.signup.reset()
+
+      }
     }
   },
   methods: {
