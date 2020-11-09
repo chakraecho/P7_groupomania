@@ -57,6 +57,8 @@ app.use(function (req, res, next) {
   }
 });
 
+app.use(console.log('Request entry'))
+
 //middlewares
 app.use(helmet())
 app.use((req, res, next) => {
