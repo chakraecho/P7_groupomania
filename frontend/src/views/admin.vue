@@ -41,7 +41,7 @@
                       {{ alert.message }}
                     </td>
                     <td>
-                      <v-btn icon @click="deleteAlert(alert.id)">
+                      <v-btn name="delete_alert" icon @click="deleteAlert(alert.id)">
                         <v-icon>
                           mdi-delete
                         </v-icon>
@@ -90,8 +90,7 @@
 <script>
 export default {
   name:"adminPanel",
-  metaInfo(){
-    return {
+  metaInfo:{
       title: "Panneau de signalement - groupomania",
       meta : [{
         name :"description",
@@ -100,7 +99,6 @@ export default {
         name : "robots",
         content : "noarchive"
       }]
-    }
   },
   data() {
     return {

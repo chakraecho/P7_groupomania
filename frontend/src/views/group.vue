@@ -7,7 +7,7 @@
           <v-container>
             <v-row>
               <v-col class="mx-auto">
-                <v-btn text @click="deleteGroup = true">
+                <v-btn name="delete_group" text @click="deleteGroup = true">
                   Supprimer le groupe
                 </v-btn>
               </v-col>
@@ -21,10 +21,11 @@
               associées au groupe tels que les posts et commentaires seront
               supprimé.
             </p>
-            <v-btn text @click="deleteGroupRequest">
+            <v-btn name="confirm_group_delete" text @click="deleteGroupRequest">
               Oui
             </v-btn>
             <v-btn
+                name="go_back"
               text
               @click="
                 deleteGroup = false;
@@ -65,7 +66,7 @@
                   @change="parseImage($event)"
                   v-model="inputFile"
                 ></v-file-input>
-                <v-btn @click="updateImg('img')">
+                <v-btn name="update_profil_image" @click="updateImg('img')">
                   Mettre à jour
                 </v-btn>
               </v-col>
@@ -100,7 +101,7 @@
                   @change="parseImage($event)"
                   v-model="inputFile"
                 ></v-file-input>
-                <v-btn @click="updateImg('banner')">
+                <v-btn name="update_banner_image" @click="updateImg('banner')">
                   Mettre à jour
                 </v-btn>
               </v-col>
@@ -121,6 +122,7 @@
             class="modify--background pa-3"
             @click="modify_photo_banner = true"
             v-if="isAdmin"
+            name="admin_open_modify_banner"
             ><v-icon>mdi-pencil</v-icon>
           </v-btn>
           <v-container
@@ -140,6 +142,7 @@
                 />
               </div>
               <v-btn
+                  name="admin_modify_group_img"
                 icon
                 class="modify--profile--img pa-0 ma-0 rounded-circle"
                 @click="modify_photo_profile = true"
@@ -155,7 +158,7 @@
           </div>
         </v-row>
         <v-row>
-          <v-btn icon @click="menuDialog = true">
+          <v-btn name="open_menu" icon @click="menuDialog = true">
             <v-icon>
               mdi-dots-horizontal
             </v-icon>
@@ -164,7 +167,7 @@
       </v-container>
     </v-row>
     <v-row justify="end" class="mt-5">
-      <v-btn @click="joinGrouphandler()">
+      <v-btn name="join_group" @click="joinGrouphandler()">
         {{ isMember ? "Quitter le groupe" : "Rejoindre le groupe" }}
       </v-btn>
     </v-row>
@@ -245,6 +248,7 @@
               <h2  class="white--text">
                 Description
                 <v-btn
+                    name="edit_description"
                   class="position-absolute"
                   icon
                   v-if="isAdmin"
@@ -266,10 +270,10 @@
                 >
                 </v-text-field>
                 <div class="d-flex">
-                  <v-btn text @click="sendUpdate">
+                  <v-btn name="update_desc" text @click="sendUpdate">
                     Mettre à jour
                   </v-btn>
-                  <v-btn text @click="edit_description = false">
+                  <v-btn name="cancel_description_update" text @click="edit_description = false">
                     Annuler
                   </v-btn>
                 </div>
@@ -294,14 +298,12 @@ import optionComment from "@/components/post/option_comment.vue"
 export default {
   name:"group",
 
-  metaInfo(){
-    return {
+  metaInfo:{
       title : this.groupName + ' - groupomania',
       meta :[{
         name : "description",
         content: `La page du groupe ${this.groupName} du réseau social Groupomania`
       }]
-    }
   },
 
   components: {

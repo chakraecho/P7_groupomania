@@ -27,7 +27,7 @@
           >
             <v-card>
               <v-toolbar>
-                <v-btn icon @click="searchDialog = false">
+                <v-btn name="close" icon @click="searchDialog = false">
                   <v-icon>
                     mdi-close
                   </v-icon>
@@ -38,6 +38,7 @@
                 <v-row>
                   <v-col>
                     <v-btn
+                        name="user"
                       @click="selected = 'users'"
                       :class="selected === 'user' ? 'active-btn' : 'inactive'"
                     >
@@ -46,6 +47,7 @@
                   </v-col>
                   <v-col>
                     <v-btn
+                        name="group"
                       @click="selected = 'group'"
                       :class="selected === 'group' ? 'active-btn' : 'inactive'"
                     >
@@ -54,6 +56,7 @@
                   </v-col>
                   <v-col>
                     <v-btn
+                        name="post"
                       @click="selected = 'post'"
                       :class="selected === 'post' ? 'active-btn' : 'inactive'"
                     >
@@ -113,6 +116,7 @@
                                     </p>
                                   </v-col>
                                   <v-btn
+                                      name="user_page"
                                     class="ml-auto"
                                     @click="
                                       $router.push('/account/' + data.userId);
@@ -145,6 +149,7 @@
                                     </p>
                                   </v-col>
                                   <v-btn
+                                      name="group_page"
                                     class="ml-auto"
                                     @click="
                                       $router.push('/group/' + data.groupId);

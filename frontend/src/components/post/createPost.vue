@@ -22,8 +22,9 @@
       </v-col>
       <v-col cols="6" md="9" lg="9">
         <v-textarea
-          name="new-comment"
+          name="post"
           rows="2"
+          label="Nouveau post"
           dense
           auto-grow
           placeholder="Quelque chose à dire ?"
@@ -40,7 +41,7 @@
           @change="parseImg($event)"
         >
         </v-file-input>
-        <v-btn icon @click="sendPost()">
+        <v-btn name="send_post" icon @click="sendPost()">
           <v-icon>
             mdi-send
           </v-icon>
@@ -51,6 +52,7 @@
       <div class="img-block mx-auto">
         <img :src="srcImg" alt="photo à envoyer" class="img--inside" />
         <v-btn
+            name="close"
           icon
           class="ml-auto mr-3 mt-3 btn--close"
           @click="

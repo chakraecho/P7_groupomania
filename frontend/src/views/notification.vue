@@ -11,7 +11,7 @@
           <template v-if="notifications === null"> </template>
           <template v-else-if="notifications.length > 0">
             <v-row>
-              <v-btn @click="deleteAll">
+              <v-btn name="delete_all_notif" @click="deleteAll">
                 <v-icon>
                   mdi-delete
                 </v-icon>
@@ -52,7 +52,7 @@
                             {{ notification.group.groupName }}
                           </p>
                         </v-col>
-                        <v-btn icon @click="deleteNotif(notification.id)">
+                        <v-btn name="delete_notif" icon @click="deleteNotif(notification.id)">
                           <v-icon>
                             mdi-close
                           </v-icon>
@@ -108,8 +108,7 @@
 export default {
   name: "notification",
 
-  metaInfo() {
-    return {
+  metaInfo: {
       title: "notifications - groupomania",
       meta: [
         {
@@ -117,7 +116,6 @@ export default {
           content: "Centre de notifications de l'utilisateur groupomania."
         }
       ]
-    };
   },
 
   data() {

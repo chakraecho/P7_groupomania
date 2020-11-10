@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-dialog persistent v-model="success" width="500">
+    <v-dialog persistent v-model="success" width="400">
       <v-card>
         <v-card-text>
           <p v-if="create_group_success">
@@ -8,7 +8,7 @@
           </p>
         </v-card-text>
         <v-card-actions>
-          <v-btn text @click="$router.push('/group/' + create_groupId)">
+          <v-btn name="group_button" text @click="$router.push('/group/' + create_groupId)">
             Y aller !
           </v-btn>
         </v-card-actions>
@@ -92,7 +92,7 @@
                     </v-row>
                     <v-row>
                       <v-col cols="4" md="3">
-                        <v-btn @click="createGroup">
+                        <v-btn name="create_group" @click="createGroup">
                           Créer le groupe !
                         </v-btn>
                       </v-col>
@@ -142,6 +142,7 @@
                                       </v-col>
                                       <v-col>
                                         <v-btn
+                                            name="go_to_group"
                                           color="primary"
                                           @click="
                                             $router.push(
@@ -221,14 +222,12 @@ import getGroup from "@/components/group/ownGroup.vue";
 export default {
   name : "groupManager",
 
-  metaInfo(){
-    return {
+  metaInfo :{
       title : "Menu de groupe",
       meta : [{
         name : "description",
         content : "Créer, rechercher ou affichez vos groupe"
       }]
-    }
   },
 
 

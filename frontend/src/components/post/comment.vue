@@ -37,6 +37,7 @@
                 <p>{{ comment.content }}</p>
               </v-col>
               <v-btn
+                  name="comment_option"
                   icon
                   class="ml-auto"
                   @click="
@@ -50,6 +51,7 @@
             </v-row>
             <v-row align="center" justify="end">
               <v-btn
+                  name="dislike"
                   :disabled="
                 comment.commentLikeds[0]
                   ? comment.commentLikeds[0].type
@@ -70,6 +72,7 @@
               </v-btn>
               <p class="ma-0 pa-0">{{ comment.like - comment.dislike }}</p>
               <v-btn
+                  name="like"
                   :disabled="
                 comment.commentLikeds[0]
                   ? comment.commentLikeds[0].type
@@ -94,11 +97,11 @@
       </div>
       <div align="center" class=" d-flex flex-row input-lign">
         <v-col cols="8" md="10" lg="10">
-          <v-text-field outline label="commentez !" v-model="content">
+          <v-text-field name="comment" outline label="commentez !" v-model="content">
           </v-text-field>
         </v-col>
         <v-col cols="3" md="2" lg="1">
-          <v-btn icon @click="sendComment">
+          <v-btn name="send_post" icon @click="sendComment">
             <v-icon>
               mdi-send
             </v-icon>

@@ -79,14 +79,12 @@ import optionComment from "@/components/post/option_comment.vue";
 export default {
   name: "Acceuil",
 
-  metaInfo(){
-    return {
+  metaInfo: {
       title : "Acceuil - groupomania",
       meta:[{
         name : "description",
         content: "Toutes vos infos du réseau social groupomania avec la liste des derniers posts."
       }]
-    }
   },
 
   components: {

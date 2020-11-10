@@ -15,7 +15,7 @@
             <p class="text--minor">le {{ date }}</p>
           </v-col>
 
-          <v-btn icon class="position-absolute mr-3" @click="$store.dispatch('post/open_sideoption', dataId)">
+          <v-btn name="options" icon class="position-absolute mr-3" @click="$store.dispatch('post/open_sideoption', dataId)">
             <v-icon>
               mdi-dots-vertical
             </v-icon>
@@ -32,6 +32,7 @@
         <v-row justify-space-between>
           <v-col >
             <v-btn
+                name="dislike"
               icon
               :disabled="likefocus == true ? true : false"
               :class="likefocus == false ? 'active-btn' : 'inactive'"
@@ -41,6 +42,7 @@
             </v-btn>
             {{ likes }}
             <v-btn
+                name="like"
               icon
               :disabled="likefocus == false ? true : false"
               :class="likefocus == true ? 'active-btn' : 'inactive'"
@@ -50,7 +52,7 @@
             </v-btn>
           </v-col>
           <v-col>
-            <v-btn text @click.native="openComment">
+            <v-btn name="open_comment" text @click.native="openComment">
               commentaires
             </v-btn>
           </v-col>

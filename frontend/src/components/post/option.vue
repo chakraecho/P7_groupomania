@@ -2,17 +2,21 @@
   <v-bottom-sheet v-if="post_option" v-model="post_option">
     <v-card>
       <v-btn text
+             name="alert"
       @click="alert_dialog = true"
       >
-        <v-icon>mdi-alert</v-icon> Signaler </v-btn>
+        <v-icon>mdi-alert</v-icon> Signaler
+      </v-btn>
       <v-btn
         text
+        name="edit"
         v-if="option_post.userId === $store.state.user.userId"
         @click="open_edit_dialog()"
       >
         <v-icon>mdi-pencil</v-icon> Editer
       </v-btn>
       <v-btn
+          name="delete"
         text
         v-if="option_post.userId === $store.state.user.userId"
         @click="deletePost()"
@@ -32,6 +36,7 @@
               <v-col>
                 <v-col class="mx-auto" cols="11" md="7">
                   <v-textarea
+                      name="edit_post"
                     label="Edition du commentaire"
                     v-model="editComment"
                   >
@@ -48,7 +53,7 @@
                   </v-file-input>
                 </v-row>
                 <v-row>
-                  <v-btn @click="sendEdit()">
+                  <v-btn name="update_post" @click="sendEdit()">
                     Mettre à jour
                   </v-btn>
                 </v-row>
@@ -70,13 +75,14 @@
                 <v-row>
                   <v-col>
                     <v-textarea
+                        name="alert_post"
                         auto-grow
                         label="Décrivez le problème"
                         v-model="alert_msg"
                     >
 
                     </v-textarea>
-                    <v-btn text @click="sendAlert">
+                    <v-btn name="alert_post" text @click="sendAlert">
                       Envoyer
                     </v-btn>
                   </v-col>

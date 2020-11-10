@@ -5,14 +5,12 @@
 <script>
 export default {
   name:"404 Not Found",
-  metaInfo(){
-    return {
+  metaInfo:{
       title: "Vous êtes perdu ! Groupomania",
       meta:[{
         name : "description",
         content : "Cette page n'existe pas sur le réseau social de groupomania."
       }]
-    }
   }
 }
 </script>
