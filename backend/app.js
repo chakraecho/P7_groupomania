@@ -35,7 +35,7 @@ app.use(
     maxAge: 1000* 60 * 60 *24 * 365,
     cookie:{
       expires: 1000*60*60*24*7,
-        secure: true,
+        secure: process.env.MODE === 'production' ? true : false,
         sameSite: 'none'
     }
   })

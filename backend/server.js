@@ -41,8 +41,8 @@ const errorHandler = error => {
   }
 };
 
-//const server = http.createServer(app);
-const server = https.createServer(options, app)
+const server = (process.env.MODE === 'production') ? https.createServer(options, app) : http.createServer(app);
+
 
 server.on('error', errorHandler);
 server.on('listening', () => {

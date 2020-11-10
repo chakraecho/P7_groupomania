@@ -6,7 +6,6 @@ exports.isLoggedIn = (req, res, next) => {
         const cookie = req.cookies.aBigSecret
         const decoded = jwt.verify(cookie, process.env.JWT_KEY)
         const userId = decoded.userId
-
         if (req.session.userId === userId) {
             next()
         } else {
