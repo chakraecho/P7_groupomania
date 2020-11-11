@@ -4,11 +4,12 @@
       fluid
       class="d-flex flex-column  border-red justify-center h-100 pa-0 ma-0"
     >
-      <v-row align="center" id="grid-row">
+      <v-row align="center" class="mx-0" id="grid-row">
         <v-app-bar-nav-icon
           @click.stop="$emit('handle-nav-bar')"
           class="d-block d-md-none ml-5"
           id="hamburger-button"
+          v-if="isLoggedIn"
         ></v-app-bar-nav-icon>
 
         <router-link to="/" class="navbar-brand ml-5" id="home-link">

@@ -7,7 +7,7 @@
         <template v-if="alerts === null">
         </template>
         <template v-else-if="alerts.length === 0">
-          <p>Aucun signalement .... pour l'instant</p>
+          <p class="white--text">Aucun signalement .... pour l'instant</p>
         </template>
         <template v-else-if="alerts.length > 0">
           <v-row>

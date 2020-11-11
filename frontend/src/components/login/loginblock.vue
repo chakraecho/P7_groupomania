@@ -1,12 +1,12 @@
 <template>
   <v-container justify-space-between class="d-flex flex-column">
     <v-row>
-      <v-col>
+      <v-col cols="6">
         <v-btn text @click="selectedBlock = 'signup'">
           Inscription
         </v-btn>
       </v-col>
-      <v-col>
+      <v-col cols="6">
         <v-btn text @click="selectedBlock = 'login'">
           Connexion
         </v-btn>

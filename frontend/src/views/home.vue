@@ -12,7 +12,7 @@
       <v-container>
         <h2  class="white--text">#feeds</h2>
         <template v-if="posts === null"></template>
-        <p v-else-if="posts.length === 0">Il n'y a encore aucun post.</p>
+        <p class="white--text" v-else-if="posts.length === 0">Il n'y a encore aucun post.</p>
         <template v-else-if="posts.length > 0">
         <v-row justify="center">
           <v-col cols="11" md="6" lg="5">

@@ -187,7 +187,7 @@
             <h2  class="white--text">Posts du groupe</h2>
             <template v-if="posts === null"> </template>
             <template v-else-if="posts.length === 0">
-              <p>Aucun post dans le groupe</p>
+              <p class="white--text">Aucun post dans le groupe</p>
             </template>
             <template v-else-if="posts.length > 0">
               <v-row justify="center" class="mt-5 pt-5">

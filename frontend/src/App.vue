@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <v-snackbar v-model="snackbar" :color="snackColor" timeout="5000" top right>
+    <v-snackbar v-model="snackbar" :color="snackColor" timeout="5000" class="snackbar" top right>
       {{ snackMsg }}
     </v-snackbar>
     <headerComp
