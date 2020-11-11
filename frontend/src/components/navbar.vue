@@ -1,7 +1,7 @@
 <template>
 
   <v-navigation-drawer
-    expand-on-hover
+    :expand-on-hover="$vuetify.breakpoint.mdAndUp"
     v-model="drawerState"
     :permanent="$vuetify.breakpoint.mdAndUp"
     class="d-flex navbar flex-column align-center justify-space-between"

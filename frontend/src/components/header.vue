@@ -36,35 +36,35 @@
                 <v-toolbar-title> Recherche ... </v-toolbar-title>
               </v-toolbar>
               <v-container>
-                <v-row>
-                  <v-col>
+
+
                     <v-btn
+                        text
                         name="user"
                       @click="selected = 'users'"
-                      :class="selected === 'user' ? 'active-btn' : 'inactive'"
+                      :color="selected === 'users' ? 'primary' : 'inactive'"
                     >
                       Utilisateurs
                     </v-btn>
-                  </v-col>
-                  <v-col>
-                    <v-btn
+
+                    <v-btn text
                         name="group"
                       @click="selected = 'group'"
-                      :class="selected === 'group' ? 'active-btn' : 'inactive'"
+                      :color="selected === 'group' ? 'primary' : 'inactive'"
                     >
                       Groupes
                     </v-btn>
-                  </v-col>
-                  <v-col>
-                    <v-btn
+
+                    <v-btn text
                         name="post"
+
                       @click="selected = 'post'"
-                      :class="selected === 'post' ? 'active-btn' : 'inactive'"
+                      :color="selected === 'post' ? 'primary' : 'inactive'"
                     >
                       Post
                     </v-btn>
-                  </v-col>
-                </v-row>
+
+
                 <v-row>
                   <v-col cols="10" class="mx-auto">
                     <v-text-field
