@@ -162,8 +162,9 @@
                                   <button
                                     :disabled="links.first === links.last"
                                     @click="searchGroup(links.first)"
+                                    aria-label="first"
                                   >
-                                    <v-icon>mdi-page-first</v-icon>
+                                    <v-icon  color="black">mdi-page-first</v-icon>
                                   </button>
                                   <button
                                     :disabled="
@@ -171,8 +172,9 @@
                                         links.prev === links.next
                                     "
                                     @click="searchGroup(links.prev)"
+                                    aria-label="previous"
                                   >
-                                    <v-icon>mdi-chevron-left</v-icon>
+                                    <v-icon  color="black">mdi-chevron-left</v-icon>
                                   </button>
                                   <span class="current-page">{{
                                     current_page
@@ -183,14 +185,16 @@
                                         links.prev === links.next
                                     "
                                     @click="searchGroup(links.next)"
+                                    aria-label="next"
                                   >
-                                    <v-icon>mdi-chevron-right</v-icon>
+                                    <v-icon  color="black">mdi-chevron-right</v-icon>
                                   </button>
                                   <button
                                     :disabled="links.first === links.last"
                                     @click="searchGroup(links.last)"
+                                    aria-label="last"
                                   >
-                                    <v-icon>mdi-page-last</v-icon>
+                                    <v-icon  color="black">mdi-page-last</v-icon>
                                   </button>
                                 </div>
                               </div>

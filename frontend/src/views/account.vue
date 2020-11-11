@@ -116,6 +116,7 @@
         <v-row>
           <v-btn
               name="modify_banner_button"
+              aria-label="modify_banner"
             icon
             class="modify--background pa-3"
             @click="modify_photo_banner = true"
@@ -143,6 +144,7 @@
                 </div>
                 <v-btn
                     name="modify_profil_button"
+                    aria-label="modify_profil"
                   icon
                   class="modify--profile--img pa-0 ma-0 rounded-circle"
                   @click="modify_photo_profile = true"
@@ -170,7 +172,7 @@
                 </v-btn>
               </div>
               <div class="menu--account" v-if="isUser">
-                <v-btn name="options" icon @click="menuDialog = true">
+                <v-btn name="options" aria-label="open_option" icon @click="menuDialog = true">
                   <v-icon>
                     mdi-dots-horizontal
                   </v-icon>
@@ -221,10 +223,12 @@
                 <button
                   :disabled="links.first === links.last"
                   @click="getDataTable(links.first)"
+                  aria-label="first"
                 >
                   <v-icon>mdi-page-first</v-icon>
                 </button>
                 <button
+                    aria-label="previous"
                   :disabled="links.prev === null || links.prev === links.next"
                   @click="getDataTable(links.prev)"
                 >
@@ -232,12 +236,14 @@
                 </button>
                 <span class="current-page">{{ current_page }}</span>
                 <button
+                    aria-label="next"
                   :disabled="links.next === null || links.prev === links.next"
                   @click="getDataTable(links.next)"
                 >
                   <v-icon>mdi-chevron-right</v-icon>
                 </button>
                 <button
+                    aria-label="last"
                   :disabled="links.first === links.last"
                   @click="getDataTable(links.last)"
                 >
@@ -256,6 +262,7 @@
             </h2>
             <v-btn
                 name="modify_description_button"
+                aria-label="edit_description"
               class="position-absolute"
               icon
               v-if="isUser"

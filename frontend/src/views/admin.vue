@@ -57,12 +57,14 @@
               <button
                 :disabled="links.first === links.last"
                 @click="getDataTable(links.first)"
+                aria-label="first"
               >
                 <v-icon>mdi-page-first</v-icon>
               </button>
               <button
                 :disabled="links.prev === null || links.prev === links.next"
                 @click="getDataTable(links.prev)"
+                aria-label="previous"
               >
                 <v-icon>mdi-chevron-left</v-icon>
               </button>
@@ -70,10 +72,12 @@
               <button
                 :disabled="links.next === null || links.prev === links.next"
                 @click="getDataTable(links.next)"
+                aria-label="next"
               >
                 <v-icon>mdi-chevron-right</v-icon>
               </button>
               <button
+                  aria-label="last"
                 :disabled="links.first === links.last"
                 @click="getDataTable(links.last)"
               >

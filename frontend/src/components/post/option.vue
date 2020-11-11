@@ -2,6 +2,7 @@
   <v-bottom-sheet v-if="post_option" v-model="post_option">
     <v-card>
       <v-btn text
+             aria-label="alert"
              name="alert"
       @click="alert_dialog = true"
       >
@@ -10,6 +11,7 @@
       <v-btn
         text
         name="edit"
+        aria-label="edit"
         v-if="option_post.userId === $store.state.user.userId"
         @click="open_edit_dialog()"
       >
@@ -20,6 +22,7 @@
         text
         v-if="option_post.userId === $store.state.user.userId"
         @click="deletePost()"
+          aria-label="delete"
       >
         <v-icon>mdi-delete</v-icon> Supprimer
       </v-btn>

@@ -11,7 +11,7 @@
           <template v-if="notifications === null"> </template>
           <template v-else-if="notifications.length > 0">
             <v-row>
-              <v-btn name="delete_all_notif" @click="deleteAll">
+              <v-btn name="delete_all_notif" @click="deleteAll" aria-label="delete_all">
                 <v-icon>
                   mdi-delete
                 </v-icon>
@@ -52,7 +52,7 @@
                             {{ notification.group.groupName }}
                           </p>
                         </v-col>
-                        <v-btn name="delete_notif" icon @click="deleteNotif(notification.id)">
+                        <v-btn name="delete_notif" aria-label="delete_one" icon @click="deleteNotif(notification.id)">
                           <v-icon>
                             mdi-close
                           </v-icon>

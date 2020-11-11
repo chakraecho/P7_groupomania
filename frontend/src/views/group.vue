@@ -122,6 +122,7 @@
               class="modify--background pa-3"
               @click="modify_photo_banner = true"
               v-if="isAdmin"
+              aria-label="modify_banner"
               name="admin_open_modify_banner"
           >
             <v-icon>mdi-pencil</v-icon>
@@ -148,6 +149,7 @@
                   class="modify--profile--img pa-0 ma-0 rounded-circle"
                   @click="modify_photo_profile = true"
                   v-if="isAdmin"
+                  aria-label="modify_photo"
               >
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
@@ -174,7 +176,7 @@
                 </v-btn>
               </v-col>
 
-                <v-btn class="ml-auto" name="open_menu" icon @click="menuDialog = true">
+                <v-btn class="ml-auto" aria-label="open_options" name="open_menu" icon @click="menuDialog = true">
                   <v-icon>
                     mdi-dots-horizontal
                   </v-icon>
@@ -233,12 +235,14 @@
                   <button
                       :disabled="links.first === links.last"
                       @click="getDataTable(links.first)"
+                      aria-label="first"
                   >
                     <v-icon>mdi-page-first</v-icon>
                   </button>
                   <button
                       :disabled="links.prev === null || links.prev === links.next"
                       @click="getDataTable(links.prev)"
+                      aria-label="previous"
                   >
                     <v-icon>mdi-chevron-left</v-icon>
                   </button>
@@ -246,10 +250,12 @@
                   <button
                       :disabled="links.next === null || links.prev === links.next"
                       @click="getDataTable(links.next)"
+                      aria-label="next"
                   >
                     <v-icon>mdi-chevron-right</v-icon>
                   </button>
                   <button
+                      aria-label="last"
                       :disabled="links.first === links.last"
                       @click="getDataTable(links.last)"
                   >
@@ -272,6 +278,7 @@
                     input_description = description;
                     edit_description = true;
                   "
+                    aria-label="edit_description"
                 >
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>

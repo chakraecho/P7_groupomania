@@ -15,7 +15,12 @@
             <p class="text--minor">le {{ date }}</p>
           </v-col>
 
-          <v-btn name="options" icon class="position-absolute mr-3" @click="$store.dispatch('post/open_sideoption', dataId)">
+          <v-btn
+              name="options"
+              icon class="position-absolute mr-3"
+              aria-label="open_option"
+              @click="$store.dispatch('post/open_sideoption', dataId)"
+          >
             <v-icon>
               mdi-dots-vertical
             </v-icon>

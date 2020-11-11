@@ -4,6 +4,7 @@
       <v-btn
           name="alert"
           text
+          aria-label="alert"
           @click="sendAlert">
         <v-icon>mdi-alert</v-icon>
         Signaler
@@ -11,6 +12,7 @@
       <v-btn
           name="edit"
           text
+          aria-label="edit"
           v-if="option_comment.userId === $store.state.user.userId"
           @click="open_edit_dialog()"
       >
@@ -20,6 +22,7 @@
       <v-btn
           name="delete"
           text
+          aria-label="edit"
           v-if="option_comment.userId === $store.state.user.userId"
           @click="deleteComment()"
       >

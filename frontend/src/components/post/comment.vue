@@ -37,6 +37,7 @@
                 <p>{{ comment.content }}</p>
               </v-col>
               <v-btn
+                  aria-label="open_comment_option"
                   name="comment_option"
                   icon
                   class="ml-auto"
@@ -101,7 +102,7 @@
           </v-text-field>
         </v-col>
         <v-col cols="3" md="2" lg="1">
-          <v-btn name="send_post" icon @click="sendComment">
+          <v-btn name="send_post" aria-label="send_post" icon @click="sendComment">
             <v-icon>
               mdi-send
             </v-icon>
