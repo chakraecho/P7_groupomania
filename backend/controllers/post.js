@@ -97,8 +97,8 @@ exports.getAll = (req, res, next) => {
         ]
     })
     .then(posts => {
-        const prev = current_page === 1 ? process.env.BASE_URL + '/api/'+ req.params.id +'/post?page=1' : process.env.BASE_URL + '/api/post?page=' + (current_page-1)
-        const next = current_page === posts.pages.toString() ? process.env.BASE_URL + '/api/'+ req.params.id +'/post?page='+posts.pages : process.env.BASE_URL + '/api/post?page=' + (current_page+1)
+        const prev = current_page === 1 ? process.env.BASE_URL + '/api/post?page=1' : process.env.BASE_URL + '/api/post?page=' + (current_page-1)
+        const next = current_page.toString() === posts.pages.toString() ? process.env.BASE_URL + '/api/post?page='+ posts.pages : process.env.BASE_URL + '/api/post?page=' + (current_page+1)
         const links = {
             prev,
             next,
@@ -139,7 +139,7 @@ exports.getAllfromGroups = (req, res, next) => {
     })
     .then(posts => {
         const prev = current_page === 1 ? process.env.BASE_URL + '/api/group/'+ req.params.id +'/post?page=1' : process.env.BASE_URL + '/api/group/' + req.params.id +'/post?page=' + (current_page-1)
-        const next = posts.pages === current_page ? process.env.BASE_URL + '/api/group/'+ req.params.id +'/post?page=' + posts.pages : process.env.BASE_URL + '/api/group/' + req.params.id +'/post?page=' + next_page
+        const next = posts.pages.toString() === current_page.toString() ? process.env.BASE_URL + '/api/group/'+ req.params.id +'/post?page=' + posts.pages : process.env.BASE_URL + '/api/group/' + req.params.id +'/post?page=' + next_page
         const links = {
             prev,
             next,
