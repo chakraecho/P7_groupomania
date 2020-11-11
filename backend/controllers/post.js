@@ -20,7 +20,7 @@ exports.createOne = (req, res, next) => {
     if(!body.content || body.content.length === 0){
         return res.status(400).json({message : "il faut un contenu au post !"})
     }
-    if (req.files.length > 0) {
+    if (req.files.length === 1) {
         Post.create({
             content: body.content, like: 0, dislike: 0, userId: req.session.userId,
             imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`
@@ -160,33 +160,77 @@ exports.modifyOne = (req, res, next) => {
     const id = req.session.email
     const content = req.body.content
 
-    Post.update({content}, {
-        where: {postId}
-    })
-        .then(() => {
-            Post.findOne({
-                where: {postId: req.params.id}, include: [{
-                    model: User,
-                    attributes: ['lastName', 'firstName', 'profilImgUrl']
-                }, {
-                    model: userLiked,
-                    where: {
-                        userId: {
-                            [Op.eq]: req.session.userId
-                        }
-                    },
-                    attributes: ['type'],
-                    required: false
-                }
-                ]
+    console.log(req)
+
+    if(req.files.length === 1){
+        Post.findOne({where: {postId}})
+            .then(result => {
+                const old = result.imgUrl.split('/uploads/')[1]
+                fs.unlink('/uploads/' + old)
             })
-                .then(post => res.status(200).json({post}))
-                .catch(error => res.status(500).json({error}))
+            .then(()=>{
+                Post.update({content, imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`}, {
+                    where: {postId}
+                })
+                    .then(() => {
+                        Post.findOne({
+                            where: {postId: req.params.id}, include: [{
+                                model: User,
+                                attributes: ['lastName', 'firstName', 'profilImgUrl']
+                            }, {
+                                model: userLiked,
+                                where: {
+                                    userId: {
+                                        [Op.eq]: req.session.userId
+                                    }
+                                },
+                                attributes: ['type'],
+                                required: false
+                            }
+                            ]
+                        })
+                            .then(post => res.status(200).json({post}))
+                            .catch(error => res.status(500).json({error}))
+                    })
+                    .catch(error =>{
+                        logger.write(error)
+                        res.status(500).json({message : "Erreur lors de la mis à jour du posts."})
+                    })
+            })
+
+    }
+    else {
+
+        Post.update({content}, {
+            where: {postId}
         })
-        .catch(error =>{
-            logger.write(error)
-            res.status(500).json({message : "Erreur lors de la mis à jour du posts."})
-        })
+            .then(() => {
+                Post.findOne({
+                    where: {postId: req.params.id}, include: [{
+                        model: User,
+                        attributes: ['lastName', 'firstName', 'profilImgUrl']
+                    }, {
+                        model: userLiked,
+                        where: {
+                            userId: {
+                                [Op.eq]: req.session.userId
+                            }
+                        },
+                        attributes: ['type'],
+                        required: false
+                    }
+                    ]
+                })
+                    .then(post => res.status(200).json({post}))
+                    .catch(error => res.status(500).json({error}))
+            })
+            .catch(error =>{
+                logger.write(error)
+                res.status(500).json({message : "Erreur lors de la mis à jour du posts."})
+            })
+    }
+
+
 }
 
 exports.deleteOne = (req, res) => {

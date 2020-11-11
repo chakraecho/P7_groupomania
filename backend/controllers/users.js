@@ -159,22 +159,37 @@ exports.verify = (req, res, next) => {
 
 exports.changeImg = (req, res, next) => {
     req.files[0] ? (
-        User.update({profilImgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`}, {where: {userId: req.session.userId}})
+        User.findOne({
+            where: {
+                userId: req.session.userId
+            }
+        })
+            .then(result => {
+                if (result.profilImgUrl !== `${req.protocol}://${req.get('host')}/assets/person.svg`){
+                    const old = result.profilImgUrl.split('/uploads/')[1]
+                    fs.unlink('/uploads/' + old)
+                }
+            })
             .then(() => {
-                User.findOne({
-                    where: {userId: req.session.userId},
-                    attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"]
-                })
-                    .then(user => res.status(200).json({user, message: "Image bien modifié !"}))
+                User.update({profilImgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`}, {where: {userId: req.session.userId}})
+                    .then(() => {
+                        User.findOne({
+                            where: {userId: req.session.userId},
+                            attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"]
+                        })
+                            .then(user => res.status(200).json({user, message: "Image bien modifié !"}))
+                            .catch(error => {
+                                logger.write(error)
+                                res.status(500).json({message: "Erreur lors de la mise à jour des infos."})
+                            })
+                    })
                     .catch(error => {
                         logger.write(error)
-                        res.status(500).json({message: "Erreur lors de la mise à jour des infos."})
+                        res.status(500).json({message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.'})
                     })
             })
-            .catch(error => {
-                logger.write(error)
-                res.status(500).json({message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.'})
-            })
+
+
     ) : (
         res.status(400).json({message: 'image non upload !'})
     )
@@ -182,23 +197,36 @@ exports.changeImg = (req, res, next) => {
 
 exports.changeBanner = (req, res) => {
     req.files[0] ? (
-        User.update({bannerUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`}, {where: {userId: req.session.userId}})
-            .then(() => {
-                User.findOne({
-                    where: {userId: req.session.userId},
-                    attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"]
+            User.findOne({
+                where: {
+                    userId: req.session.userId
+                }
+            })
+                .then(result => {
+                    if (result.bannerUrl !== `${req.protocol}://${req.get('host')}/assets/default_banner.svg`){
+                        const old = result.profilImgUrl.split('/uploads/')[1]
+                        fs.unlink('/uploads/' + old)
+                    }
                 })
-                    .then(user => res.status(200).json({user, message: "Image bien modifé !"}))
-                    .catch(error => {
-                        logger.write(error)
+                .then(()=>{
+                    User.update({bannerUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`}, {where: {userId: req.session.userId}})
+                        .then(() => {
+                            User.findOne({
+                                where: {userId: req.session.userId},
+                                attributes: ['bannerUrl', "lastName", "firstName", "description", "profilImgUrl"]
+                            })
+                                .then(user => res.status(200).json({user, message: "Image bien modifé !"}))
+                                .catch(error => {
+                                    logger.write(error)
 
-                        res.status(500).json({message: "Une erreur s'est produite lors de la mise à jour de la bannière."})
-                    })
-            })
-            .catch(error => {
-                logger.write(error)
-                res.status(500).json({message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.'})
-            })
+                                    res.status(500).json({message: "Une erreur s'est produite lors de la mise à jour de la bannière."})
+                                })
+                        })
+                        .catch(error => {
+                            logger.write(error)
+                            res.status(500).json({message: 'erreur serveur, veuillez contacter un administrateur si le problème persiste.'})
+                        })
+                })
     ) : (
         res.status(400).json({message: 'image non upload !'})
     )

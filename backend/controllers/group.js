@@ -111,31 +111,54 @@ exports.modifyGroup = (req, res) => {
 exports.modifyImg = (req, res) => {
 
     const groupId = req.params.id
-    groups.findOne({where: { groupId}})
-        .then(group => {
-            groups.update({imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`}, {where: {groupId}})
-                .then(() => groups.findOne({where: {groupId}})
-                    .then(group => res.status(200).json({group}))
+    if(req.files.length === 1){
+        groups.findOne({
+            where : {groupId}
+        })
+            .then(result => {
+                if(result.imgUrl !== `${req.protocol}://${req.get('host')}/assets/group.svg`){
+                    const old = result.imgUrl.split('/uploads/')[1]
+                    fs.unlink('/uploads/' + old)
+                }
+            })
+            .then(()=>{
+                groups.findOne({where: { groupId}})
+                    .then(group => {
+                        groups.update({imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`}, {where: {groupId}})
+                            .then(() => groups.findOne({where: {groupId}})
+                                .then(group => res.status(200).json({group}))
+                                .catch(error => {
+                                    logger.write(error)
+                                    res.status(404).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
+                                }))
+                            .catch((error) => {
+                                logger.write(error)
+                                res.status(500).json({ message : "Erreur lors de la modification des données, veuillez rééssayer." })
+                            })
+                    })
                     .catch(error => {
                         logger.write(error)
                         res.status(404).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
-                    }))
-                .catch((error) => {
-                    logger.write(error)
-                    res.status(500).json({ message : "Erreur lors de la modification des données, veuillez rééssayer." })
-                })
-        })
-        .catch(error => {
-            logger.write(error)
-            res.status(404).json({ message : "Erreur lors de la récupération des données, veuillez rééssayer." })
-        })
+                    })
+            })
+            .catch(()=> res.status(500).json({message : "Erreur lors de la mise à jour."}))
+
+    }else {
+        res.status(400).json({message : "il manque une image !"})
+    }
+
+
 }
 
 exports.modifyBanner = (req, res) => {
     const groupId = req.params.id
     console.log(req)
     groups.findOne({where: {groupId}})
-        .then(() => {
+        .then(result => {
+            if(result.bannerUrl !== `${req.protocol}://${req.get('host')}/assets/default_banner.jpg`){
+                const old = result.bannerUrl.split('/uploads/')[1]
+                fs.unlink("/uploads/" + old )
+            }
 
             groups.update({bannerUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`}, {where: {groupId}})
                 .then(() => groups.findOne({where: {groupId}})
