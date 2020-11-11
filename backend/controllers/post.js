@@ -160,9 +160,7 @@ exports.modifyOne = (req, res, next) => {
     const id = req.session.email
     const content = req.body.content
 
-    console.log(req)
-
-    if(req.files.length === 1){
+    if(req.files && req.files.length === 1){
         Post.findOne({where: {postId}})
             .then(result => {
                 const old = result.imgUrl.split('/uploads/')[1]
