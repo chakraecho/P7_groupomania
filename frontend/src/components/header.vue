@@ -68,6 +68,7 @@
                 <v-row>
                   <v-col cols="10" class="mx-auto">
                     <v-text-field
+                        name="input_open_search"
                       v-model="searchInput"
                       outlined
                       label="recherchez soit un groupe, soit un utilisateur ..."

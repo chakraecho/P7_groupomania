@@ -271,7 +271,8 @@
         </div>
       </v-col>
     </v-row>
-    <options @snackbar="activateSnack($event.color, $event.msg)" />
+    <options @snackbar="activateSnack($event.color, $event.msg)" @reload-post="getDataTable()" />
+    <option-comment @snackbar="activateSnack($event.color, $event.msg)" />
   </v-container>
 </template>
 
@@ -279,6 +280,7 @@
 import postCard from "@/components/post/post.vue";
 import commentCard from "@/components/post/comment.vue";
 import options from "@/components/post/option.vue";
+import optionComment from "@/components/post/option_comment"
 
 export default {
   name: "account",
@@ -286,7 +288,7 @@ export default {
     return {
       title:
         this.$store.state.user.userId.toString() ===
-        this.$route.params.id.tostring()
+        this.$route.params.id.toString()
           ? "Mon compte - groupomania"
           : this.getFullName + " - groupomania",
       meta: [
@@ -300,7 +302,8 @@ export default {
   components: {
     postCard,
     commentCard,
-    options
+    options,
+    optionComment
   },
   data() {
     return {

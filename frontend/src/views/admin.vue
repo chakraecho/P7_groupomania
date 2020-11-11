@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <h1>Administration</h1>
-    <h2>Liste des signalements</h2>
+    <h1 class="white--text">Administration</h1>
+    <h2 class="white--text">Liste des signalements</h2>
     <v-row>
       <v-container>
         <template v-if="alerts === null">

@@ -63,8 +63,8 @@
 
       </v-container>
     </v-row>
-    <options @snackbar="activateSnack($event.color, $event.msg)" />
-    <optionComment @snackbar="activateSnack($event.color, $event.msg)" />
+    <options @snackbar="activateSnack($event.color, $event.msg)" @reload-post="getDataTable()" />
+    <optionComment @snackbar="activateSnack($event.color, $event.msg)"  />
   </v-container>
 </template>
 

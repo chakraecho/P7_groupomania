@@ -73,6 +73,10 @@ export default {
 </script>
 
 <style lang="scss">
+p{
+  overflow-wrap: anywhere;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
