@@ -20,7 +20,7 @@ exports.createOne = (req, res, next) => {
     if(!body.content || body.content.length === 0){
         return res.status(400).json({message : "il faut un contenu au post !"})
     }
-    if (req.files.length === 1) {
+    if (req.files && req.files.length === 1) {
         Post.create({
             content: body.content, like: 0, dislike: 0, userId: req.session.userId,
             imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`
@@ -43,7 +43,7 @@ exports.createOne = (req, res, next) => {
 }
 exports.postGroup = (req, res, next) => {//next for notification creation    //create a post linked followed a group
     const body = JSON.parse(req.body.body)
-    if (req.files.length > 0) {
+    if (req.files && req.files.length > 0) {
         Post.create({
             content: body.content, like: 0, dislike: 0, userId: req.session.userId,
             imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[0].filename}`, groupId: req.params.id

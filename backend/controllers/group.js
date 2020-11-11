@@ -58,7 +58,7 @@ exports.createGroup = (req, res, next) => {
         userId: user,
     })
 
-    if (req.files.length > 0) {
+    if (req.files && req.files.length === 1) {
         for (let i in req.files) {
             console.log(req.files[i])
             if (req.files[i].fieldname === 'bannerImg') {
@@ -68,8 +68,6 @@ exports.createGroup = (req, res, next) => {
                 Object.assign(body, {imgUrl: `${req.protocol}://${req.get('host')}/uploads/${req.files[i].filename}`})
             }
         }
-
-
     }
     groups.create(body).then(group => groupMembers.create({
             groupId: group.groupId,
@@ -111,7 +109,7 @@ exports.modifyGroup = (req, res) => {
 exports.modifyImg = (req, res) => {
 
     const groupId = req.params.id
-    if(req.files.length === 1){
+    if(req.files && req.files.length === 1){
         groups.findOne({
             where : {groupId}
         })
