@@ -136,9 +136,15 @@ export default {
         method: "delete",
         credentials: "include"
       })
-        .then(() => {
+        .then(response => {
+          if(!response.ok){
+            response.json()
+            .then(res =>this.$store.dispatch('activateSnack', {color: "error", msg: res.message})
+            )
+          } else {
+            this.$store.dispatch('activateSnack', {color: "success", msg: "Commentaire supprimé !"})
+          }
           this.closeAll();
-          this.$store.dispatch('activateSnack', {color: "success", msg: "Commentaire supprimé !"})
           this.$emit("reload-post")
         })
         .catch(error => {
@@ -157,13 +163,15 @@ export default {
         })
         .then(response => response.json()
         .then(res => {
+          if(response.ok){
+            this.$store.dispatch('activateSnack', {color: "success", msg: "Commentaire modifié !"})
+          }else {
+            this.$store.dispatch('activateSnack', {color: "error", msg: res.message})
+          }
           this.$store.commit('post/UPDATE_POST', res.post)
           this.closeAll();
-          this.$store.dispatch('activateSnack', {color: "success", msg: "Commentaire modifié !"})
-                    this.$emit("reload-post")
-        })
-        )
-                
+          this.$emit("reload-post")
+        }))
         .catch(error => {
           console.log(error);
           this.closeAll();
@@ -181,9 +189,17 @@ export default {
             type: 'post'
           })
         })
-      .then(()=>{
-        this.closeAll();
-        this.$store.dispatch('activateSnack', {color: "success", msg: "Post signalé !"})
+      .then(response =>{
+        if(response.ok){
+          this.closeAll();
+          this.$store.dispatch('activateSnack', {color: "success", msg: "Post signalé !"})
+        }else {
+          response.json()
+          .then(res => {
+            this.closeAll();
+            this.$store.dispatch('activateSnack', {color: "error", msg: res.message})
+          })
+        }
       })
       .catch((error )=>{
         console.log(error)

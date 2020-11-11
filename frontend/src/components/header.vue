@@ -1,30 +1,30 @@
 <template>
   <header class="indigo">
     <v-container
-      fluid
-      class="d-flex flex-column  border-red justify-center h-100 pa-0 ma-0"
+        fluid
+        class="d-flex flex-column  border-red justify-center h-100 pa-0 ma-0"
     >
       <v-row align="center" class="mx-0" id="grid-row">
         <v-app-bar-nav-icon
-          @click.stop="$emit('handle-nav-bar')"
-          class="d-block d-md-none ml-5"
-          id="hamburger-button"
-          v-if="isLoggedIn"
+            @click.stop="$emit('handle-nav-bar')"
+            class="d-block d-md-none ml-5"
+            id="hamburger-button"
+            v-if="isLoggedIn"
         ></v-app-bar-nav-icon>
 
         <router-link to="/" class="navbar-brand ml-5" id="home-link">
           <img
-            src="./../assets/logo/icon-left-font-monochrome-white.png"
-            width="150"
-            alt="logo de groupomania"
-            class="ml-2"
+              src="./../assets/logo/icon-left-font-monochrome-white.png"
+              width="150"
+              alt="logo de groupomania"
+              class="ml-2"
           />
         </router-link>
         <template v-if="isLoggedIn">
           <v-dialog
-            v-model="searchDialog"
-            fullscreen
-            transition="dialog-bottom-transition"
+              v-model="searchDialog"
+              fullscreen
+              transition="dialog-bottom-transition"
           >
             <v-card>
               <v-toolbar>
@@ -33,46 +33,45 @@
                     mdi-close
                   </v-icon>
                 </v-btn>
-                <v-toolbar-title> Recherche ... </v-toolbar-title>
+                <v-toolbar-title> Recherche ...</v-toolbar-title>
               </v-toolbar>
               <v-container>
 
+<!-- select block -->
+                <v-btn
+                    text
+                    name="user"
+                    @click="selected = 'users'"
+                    :color="selected === 'users' ? 'primary' : 'inactive'"
+                >
+                  Utilisateurs
+                </v-btn>
 
-                    <v-btn
-                        text
-                        name="user"
-                      @click="selected = 'users'"
-                      :color="selected === 'users' ? 'primary' : 'inactive'"
-                    >
-                      Utilisateurs
-                    </v-btn>
+                <v-btn text
+                       name="group"
+                       @click="selected = 'group'"
+                       :color="selected === 'group' ? 'primary' : 'inactive'"
+                >
+                  Groupes
+                </v-btn>
 
-                    <v-btn text
-                        name="group"
-                      @click="selected = 'group'"
-                      :color="selected === 'group' ? 'primary' : 'inactive'"
-                    >
-                      Groupes
-                    </v-btn>
-
-                    <v-btn text
-                        name="post"
-
-                      @click="selected = 'post'"
-                      :color="selected === 'post' ? 'primary' : 'inactive'"
-                    >
-                      Post
-                    </v-btn>
+                <v-btn text
+                       name="post"
+                       @click="selected = 'post'"
+                       :color="selected === 'post' ? 'primary' : 'inactive'"
+                >
+                  Post
+                </v-btn>
 
 
                 <v-row>
                   <v-col cols="10" class="mx-auto">
                     <v-text-field
                         name="input_open_search"
-                      v-model="searchInput"
-                      outlined
-                      label="recherchez soit un groupe, soit un utilisateur ..."
-                      @change="retrieveData"
+                        v-model="searchInput"
+                        outlined
+                        label="recherchez soit un groupe, soit un utilisateur ..."
+                        @change="retrieveData"
                     >
                     </v-text-field>
                   </v-col>
@@ -90,9 +89,9 @@
                         <p>Aucune données n'a été trouvé !</p>
                       </v-row>
                       <v-row
-                        v-else
-                        v-for="(data, i) in datas"
-                        :key="selected + '_' + i"
+                          v-else
+                          v-for="(data, i) in datas"
+                          :key="selected + '_' + i"
                       >
                         <template v-if="selected === 'users'">
                           <v-col>
@@ -101,14 +100,14 @@
                                 <v-row justify="space-between" class="px-4">
                                   <div class="img--wrapper rounded-circle">
                                     <img
-                                      :src="data.profilImgUrl"
-                                      :alt="
+                                        :src="data.profilImgUrl"
+                                        :alt="
                                         'image de ' +
                                           data.firstName +
                                           ' ' +
                                           data.lastName
                                       "
-                                      class="img--in"
+                                        class="img--in"
                                     />
                                   </div>
 
@@ -119,8 +118,8 @@
                                   </v-col>
                                   <v-btn
                                       name="user_page"
-                                    class="ml-auto"
-                                    @click="
+                                      class="ml-auto"
+                                      @click="
                                       $router.push('/account/' + data.userId);
                                       searchDialog = false;
                                     "
@@ -139,9 +138,9 @@
                                 <v-row justify="space-between" class="px-4">
                                   <div class="img--wrapper rounded-circle">
                                     <img
-                                      :src="data.imgUrl"
-                                      :alt="'image de ' + data.groupName"
-                                      class="img--in"
+                                        :src="data.imgUrl"
+                                        :alt="'image de ' + data.groupName"
+                                        class="img--in"
                                     />
                                   </div>
 
@@ -152,8 +151,8 @@
                                   </v-col>
                                   <v-btn
                                       name="group_page"
-                                    class="ml-auto"
-                                    @click="
+                                      class="ml-auto"
+                                      @click="
                                       $router.push('/group/' + data.groupId);
                                       searchDialog = false;
                                     "
@@ -167,9 +166,9 @@
                         </template>
                         <template v-else-if="selected === 'post'">
                           <v-col cols="10" md="7">
-                            <post :post="data" :dataId="data.postId" />
+                            <post :post="data" :dataId="data.postId"/>
                           </v-col>
-                          <v-col cols="11" md="5"> </v-col>
+                          <v-col cols="11" md="5"></v-col>
                         </template>
                       </v-row>
                       <div class="pagination" v-if="datas !== null && datas.length > 0">
@@ -209,12 +208,13 @@
           </v-dialog>
           <v-col cols="3" id="searchInputBlock">
             <v-text-field
-              @click="searchDialog = true"
-              solo
-              dense
-              hide-details
-              readonly
-              id="searchInput"
+                @click="searchDialog = true"
+                solo
+                dense
+                name="searchInput"
+                hide-details
+                readonly
+                id="searchInput"
             >
             </v-text-field>
           </v-col>
@@ -237,7 +237,7 @@ export default {
       searchInput: "",
       datas: null,
       selected: "users",
-      links : {},
+      links: {},
       current_page: 0
     };
   },
@@ -257,15 +257,15 @@ export default {
   methods: {
     retrieveData() {
       fetch(
-        process.env.VUE_APP_BACKEND + "/api/" +
+          process.env.VUE_APP_BACKEND + "/api/" +
           this.selected +
           "/search?" +
           this.selected +
           "=" +
           this.searchInput,
-        {
-          credentials: "include"
-        }
+          {
+            credentials: "include"
+          }
       ).then(async response => {
         const res = await response.json();
         this.datas = res.result.docs;
@@ -281,11 +281,13 @@ export default {
 .h-100 {
   height: 100%;
 }
+
 .navbar-brand {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
+
 .img {
   &--wrapper {
     overflow: hidden;
@@ -295,12 +297,13 @@ export default {
     justify-content: center;
     align-items: center;
   }
+
   &--in {
     width: 100%;
   }
 }
 
-.border-red{
+.border-red {
   border-bottom: 3px solid #d74949;
 }
 

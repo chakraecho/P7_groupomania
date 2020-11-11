@@ -118,6 +118,8 @@ export default {
           .then(res => {
             if (res.ok) {
               this.loading = false;
+              this.content = "";
+              this.image = undefined;
               res.json().then(response => {
                 this.$store.dispatch("activateSnack", {
                   color: "success",
@@ -155,6 +157,8 @@ export default {
           .then(res => {
             if (res.ok) {
               this.loading = false;
+              this.content = "";
+              this.image = undefined;
               res.json().then(response => {
                 this.$store.dispatch("activateSnack", {
                   color: "success",

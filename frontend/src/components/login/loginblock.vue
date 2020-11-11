@@ -241,7 +241,8 @@ export default {
           "Content-Type": "application/json"
         }
       })
-          .then(response =>
+          .then(response =>{
+            if(response.ok){
               response.json().then(() => {
                 fetch(process.env.VUE_APP_BACKEND + "/api/users/auth/login", {
                   body: JSON.stringify({
@@ -276,8 +277,13 @@ export default {
                   }
                 });
               })
-          )
-
+            } else {
+              response.json()
+              .then(res => {
+                this.activateSnack('error', res.message)
+              })
+            }
+          })
           .catch(error => console.log(error));
     }
   }

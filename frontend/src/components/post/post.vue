@@ -121,6 +121,9 @@ export default {
       }).then(response =>
         response.json().then(res => {
           this.$store.commit("post/UPDATE_POST", res.post);
+          if(!response.ok){
+            this.$store.dispatch("activateSnack", {color :"error", msg : res.message})
+          }
         })
       );
     }

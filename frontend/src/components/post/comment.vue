@@ -142,8 +142,7 @@ export default {
           headers: {
             "Content-Type": "application/json"
           }
-        }
-      ).then(response => {
+        }).then(response => {
         this.$store.dispatch("comment/setId", {
           postId: this.$store.state.comment.postId
         });

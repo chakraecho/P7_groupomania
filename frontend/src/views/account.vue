@@ -380,7 +380,7 @@ export default {
           process.env.VUE_APP_BACKEND + "/api/users/follow/" + this.$route.params.id,
           { credentials: "include", method: "delete" }
         )
-          .then(() => {
+          .then(response => {
             this.followed = false;
           })
           .catch(error => console.log(error));
