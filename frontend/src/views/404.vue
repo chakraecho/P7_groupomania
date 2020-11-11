@@ -1,5 +1,5 @@
 <template>
-  <h1>Vous vous êtes perdu !</h1>
+  <h1 class="white--text">Vous vous êtes perdu !</h1>
 </template>
 
 <script>
