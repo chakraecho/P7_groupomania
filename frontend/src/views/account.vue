@@ -5,7 +5,7 @@
         <v-card>
           <v-container>
             <v-row>
-              <v-btn text @click="deleteUser = true">
+              <v-btn name="delete_account" text @click="deleteUser = true">
                 Supprimer mon compte
               </v-btn>
             </v-row>
@@ -18,10 +18,11 @@
                 Etes vous sûre de vouloir supprimer votre Compte ? Toutes les
                 données relative tels que post et commentaires seront supprimé
               </p>
-              <v-btn @click="deleteUserRequest()" class="mr-3">
+              <v-btn name="confirm_delete" @click="deleteUserRequest()" class="mr-3">
                 Oui
               </v-btn>
               <v-btn
+                  name="cancel_delete"
                 @click="
                   deleteUser = false;
                   menuDialog = false;
@@ -63,7 +64,7 @@
                   @change="parseImage($event)"
                   v-model="inputFile"
                 ></v-file-input>
-                <v-btn @click="updateImg('profil')">
+                <v-btn name="update_profil_img" @click="updateImg('profil')">
                   Mettre à jour
                 </v-btn>
               </v-col>
@@ -98,7 +99,7 @@
                   @change="parseImage($event)"
                   v-model="inputFile"
                 ></v-file-input>
-                <v-btn @click="updateImg('banner')">
+                <v-btn name="update_banner" @click="updateImg('banner')">
                   Mettre à jour
                 </v-btn>
               </v-col>
@@ -114,6 +115,7 @@
       <v-container fluid class="pt-0">
         <v-row>
           <v-btn
+              name="modify_banner_button"
             icon
             class="modify--background pa-3"
             @click="modify_photo_banner = true"
@@ -140,6 +142,7 @@
                   </div>
                 </div>
                 <v-btn
+                    name="modify_profil_button"
                   icon
                   class="modify--profile--img pa-0 ma-0 rounded-circle"
                   @click="modify_photo_profile = true"
@@ -152,7 +155,7 @@
                   <h1>{{ firstName }} {{ lastName }}</h1>
                 </v-card>
                 <div class="menu--account">
-                  <v-btn icon @click="menuDialog = true">
+                  <v-btn name="options" icon @click="menuDialog = true">
                     <v-icon>
                       mdi-dots-horizontal
                     </v-icon>
@@ -162,7 +165,7 @@
             </div>
           </v-container>
           <div class="ml-auto mt-2 mr-2" v-if="!isUser">
-            <v-btn color="primary" @click="follow">
+            <v-btn name="follow" color="primary" @click="follow">
               {{ followed ? "Ne plus suivre" : "Suivre" }}
             </v-btn>
           </div>
@@ -239,6 +242,7 @@
               Description
             </h2>
             <v-btn
+                name="modify_description_button"
               class="position-absolute"
               icon
               v-if="isUser"
@@ -253,13 +257,13 @@
 
           <p v-if="!edit_description"  class="white--text">{{ description }}</p>
           <template v-else-if="edit_description">
-            <v-text-field outlined label="edition"  class="white--text" v-model="input_description">
+            <v-text-field name="edit" outlined label="edition"  class="white--text" v-model="input_description">
             </v-text-field>
             <div class="d-flex">
-              <v-btn text @click="sendUpdate">
+              <v-btn name="update" text @click="sendUpdate">
                 Mettre à jour
               </v-btn>
-              <v-btn text @click="edit_description = false">
+              <v-btn name="cancel" text @click="edit_description = false">
                 Annuler
               </v-btn>
             </div>
