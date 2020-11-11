@@ -5,7 +5,7 @@ exports.isUsersPost = (req, res, next) => {
     try {
         Post.findOne({ where: { postId: req.params.id } })
             .then(result => {
-                if (result.userId.toString()=== req.session.userId){
+                if (result.userId.toString()=== req.session.userId.toString()){
                     next()
                 }
                 else {
