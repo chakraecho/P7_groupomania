@@ -6,6 +6,8 @@ import vuetify from './plugins/vuetify';
 import { ValidationObserver, ValidationProvider, extend, localize } from 'vee-validate';
 import * as rules from 'vee-validate/dist/rules';
 import {setInteractionMode} from 'vee-validate'
+import VueMeta from 'vue-meta'
+
 
 setInteractionMode('eager') //eager validation
 
@@ -28,6 +30,7 @@ extend('password', value => {
   return 'Le mdp doit contenir au moins huit caractère dont une lettre majuscule, miniscule, un chiffre et un caractère spécial.';
 });
 
+Vue.use(VueMeta)
 
 
 new Vue({
