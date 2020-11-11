@@ -95,6 +95,10 @@ export default {
       reader.readAsDataURL(evt);
     },
     sendPost() {
+      if(this.content.length === 0){
+        return false;
+      }
+
       this.loading = true;
       let body = new FormData();
       body.append(

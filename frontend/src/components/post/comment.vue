@@ -128,6 +128,9 @@ export default {
   },
   methods: {
     sendComment() {
+      if(this.content.length === 0){
+        return false ;
+      }
       fetch(
         process.env.VUE_APP_BACKEND + "/api/post/" +
           this.$store.state.comment.postId +
