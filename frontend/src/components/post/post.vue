@@ -9,7 +9,7 @@
             <img :src="User.profilImgUrl" :alt="'image de profil de ' + fullName" class="w-100"/>
           </div>
           <v-col class="py-0 pl-10 ml-10 ml-md-5">
-            <p>{{ fullName }} <template v-if="group">dans le groupe {{group.groupName}}</template></p>
+            <p>{{ fullName }} <template v-if="group">dans le groupe <span class="hoverable_link" @click="$router.push('/group/' + groupId)">{{group.groupName}}</span> </template></p>
           </v-col>
 
 
@@ -188,5 +188,12 @@ export default {
 
 .position-relative {
   position: relative;
+}
+
+.hoverable_link{
+  cursor: pointer;
+  &:hover{
+    color: blue
+  }
 }
 </style>
