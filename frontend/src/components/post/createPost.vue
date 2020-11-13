@@ -13,13 +13,13 @@
       </v-card>
     </v-dialog>
     <v-row class="align-center justify-center">
-      <v-col cols="2" md="1">
+
         <img
           :src="profilImgUrl"
           :alt="'photo de profil du compte'"
-          class="w-100 img-profil rounded-circle"
+          class=" img-profil rounded-circle"
         />
-      </v-col>
+
       <v-col cols="6" md="9" lg="9">
         <v-textarea
           name="post"
@@ -227,6 +227,8 @@ export default {
 
 .img-profil {
   border: 2px grey solid;
+  width:50px;
+  height:50px;
 }
 
 /**
