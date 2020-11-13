@@ -4,8 +4,8 @@ const https = require('https')
 const fs = require('fs')
 
 const options = {
-  key: fs.readFileSync('selfsigned.key'),
-  cert: fs.readFileSync('selfsigned.crt')};
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')};
 
 const normalizePort = val => {
   const port = parseInt(val, 10);
