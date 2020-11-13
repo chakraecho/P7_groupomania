@@ -69,26 +69,26 @@
                   :disabled="links.first === links.last"
                   @click="getDataTable(links.first)"
                 >
-                  <v-icon>mdi-page-first</v-icon>
+                  <v-icon color="white">mdi-page-first</v-icon>
                 </button>
                 <button
                   :disabled="links.prev === null || links.prev === links.next"
                   @click="getDataTable(links.prev)"
                 >
-                  <v-icon>mdi-chevron-left</v-icon>
+                  <v-icon color="white">mdi-chevron-left</v-icon>
                 </button>
-                <span class="current-page">{{ current_page }}</span>
+                <span class="current-page white--text">{{ current_page }}</span>
                 <button
                   :disabled="links.next === null || links.prev === links.next"
                   @click="getDataTable(links.next)"
                 >
-                  <v-icon>mdi-chevron-right</v-icon>
+                  <v-icon color="white">mdi-chevron-right</v-icon>
                 </button>
                 <button
                   :disabled="links.first === links.last"
                   @click="getDataTable(links.last)"
                 >
-                  <v-icon>mdi-page-last</v-icon>
+                  <v-icon color="white">mdi-page-last</v-icon>
                 </button>
               </div>
             </div>

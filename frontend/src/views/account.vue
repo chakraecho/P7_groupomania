@@ -217,36 +217,36 @@
                 <commentCard id="comment-wrapper" />
               </v-col>
             </v-row>
-            <div class="pagination">
+            <div class="pagination text--white">
               <div class="block-icon">
                 <button
                   :disabled="links.first === links.last"
                   @click="getDataTable(links.first)"
                   aria-label="first"
                 >
-                  <v-icon>mdi-page-first</v-icon>
+                  <v-icon color="white">mdi-page-first</v-icon>
                 </button>
                 <button
                     aria-label="previous"
                   :disabled="links.prev === null || links.prev === links.next"
                   @click="getDataTable(links.prev)"
                 >
-                  <v-icon>mdi-chevron-left</v-icon>
+                  <v-icon color="white">mdi-chevron-left</v-icon>
                 </button>
-                <span class="current-page">{{ current_page }}</span>
+                <span class="current-page white--text">{{ current_page }}</span>
                 <button
                     aria-label="next"
                   :disabled="links.next === null || links.prev === links.next"
                   @click="getDataTable(links.next)"
                 >
-                  <v-icon>mdi-chevron-right</v-icon>
+                  <v-icon color="white">mdi-chevron-right</v-icon>
                 </button>
                 <button
                     aria-label="last"
                   :disabled="links.first === links.last"
                   @click="getDataTable(links.last)"
                 >
-                  <v-icon>mdi-page-last</v-icon>
+                  <v-icon color="white">mdi-page-last</v-icon>
                 </button>
               </div>
             </div>
