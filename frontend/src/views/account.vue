@@ -38,7 +38,6 @@
       <v-dialog
         v-if="modify_photo_profile"
         width="500"
-        :fullscreen="$vuetify.breakpoint.xsOnly"
         v-model="modify_photo_profile"
         @input="
           newsrcimg = undefined;
@@ -48,10 +47,10 @@
         <v-card>
           <v-container>
             <v-row>
-              <v-col cols="12" class="mx-auto" md="6">
-                <div class="img-profil-wrapper rounded-circle">
+              <v-col cols="12"  md="6">
+                <div class="img-profil-wrapper rounded-circle mx-auto">
                   <img
-                    class="img-profile"
+                    class="img-profil"
                     alt="image à changer"
                     :src="newsrcimg"
                     v-if="newsrcimg"
@@ -85,9 +84,9 @@
         <v-card>
           <v-container>
             <v-row>
-              <v-col cols="12" class="mx-auto" md="6">
+              <v-col cols="12"  md="6">
                 <img
-                  class="img-profile"
+                  class="img-banner-change mx-auto"
                   alt="image à changer"
                   :src="newsrcimg"
                   v-if="newsrcimg"
@@ -370,13 +369,22 @@ export default {
       }
     }
   },
+  watch:{
+    inputFile(){
+      if(this.inputFile===undefined){
+        this.newsrcimg = null
+      }
+    }
+  },
   methods: {
     parseImage(evt) {
       var reader = new FileReader();
       reader.onload = e => {
         this.newsrcimg = e.target.result;
       };
-      reader.readAsDataURL(evt);
+      if(typeof evt === 'object'){
+        reader.readAsDataURL(evt);
+      }
     },
     activateSnack(color, msg) {
       this.$store.dispatch("activateSnack", { color, msg });
@@ -598,9 +606,14 @@ export default {
   &-banner {
     height: 100%;
     border: solid 1px grey;
+    &-change{
+      height:100px;
+      width:200px;
+    }
   }
   &-profil {
-    width: 100%;
+    width: 10vw;
+    height: 10vw;
 
     &-wrapper {
       width: 10vw;
@@ -654,6 +667,10 @@ export default {
   .img-profil-wrapper {
     width: 100px;
     height: 100px;
+  }
+  .img-profil{
+    width:100px;
+    height:100px;
   }
 }
 </style>

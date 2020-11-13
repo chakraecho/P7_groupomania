@@ -40,7 +40,6 @@
       <v-dialog
           v-if="modify_photo_profile"
           width="500"
-          :fullscreen="$vuetify.breakpoint.xsOnly"
           v-model="modify_photo_profile"
           @input="
           newsrcimg = undefined;
@@ -50,10 +49,10 @@
         <v-card>
           <v-container>
             <v-row>
-              <v-col cols="12" class="mx-auto" md="6">
-                <div class="img-profil-wrapper rounded-circle">
+              <v-col cols="12" md="6">
+                <div class="img-profile-change-wrapper mx-auto rounded-circle">
                   <img
-                      class="img-profile"
+                      class="img-profile-change"
                       alt="image à changer"
                       :src="newsrcimg"
                       v-if="newsrcimg"
@@ -77,7 +76,6 @@
       <v-dialog
           v-if="modify_photo_banner"
           width="500"
-          :fullscreen="$vuetify.breakpoint.xsOnly"
           v-model="modify_photo_banner"
           @input="
           newsrcimg = undefined;
@@ -87,9 +85,9 @@
         <v-card>
           <v-container>
             <v-row>
-              <v-col cols="12" class="mx-auto" md="6">
+              <v-col cols="12"  md="6">
                 <img
-                    class="img-profile"
+                    class="img-banner-change mx-auto"
                     alt="image à changer"
                     :src="newsrcimg"
                     v-if="newsrcimg"
@@ -372,6 +370,13 @@ export default {
       }
     }
   },
+  watch:{
+    inputFile(){
+      if(this.inputFile===undefined){
+        this.newsrcimg = null
+      }
+    }
+  },
   methods: {
     activateSnack(color, msg) {
       this.$store.dispatch("activateSnack", {color, msg});
@@ -409,7 +414,9 @@ export default {
       reader.onload = e => {
         this.newsrcimg = e.target.result;
       };
-      reader.readAsDataURL(evt);
+      if(typeof evt === 'object'){
+        reader.readAsDataURL(evt);
+      }
     },
     sendUpdate() {
       fetch(process.env.VUE_APP_BACKEND + "/api/group/" + this.$route.params.id, {
@@ -615,6 +622,10 @@ export default {
   &-banner {
     height: 100%;
     border: solid 1px grey;
+    &-change{
+      height:100px;
+      width:200px;
+    }
   }
 
   &-profil {
@@ -626,6 +637,18 @@ export default {
       background-color: white;
       overflow: hidden;
       position: relative;
+    }
+  }
+  &-profile{
+    &-change{
+      width:100%;
+      &-wrapper{
+        width: 10vw;
+        height: 10vw;
+        background-color: white;
+        overflow: hidden;
+        position: relative;
+      }
     }
   }
 }
@@ -653,6 +676,13 @@ export default {
   .img-profil-wrapper {
     width: 100px;
     height: 100px;
+  }
+  .img-profile-change{
+    width:100%;
+  }
+  .img-profile-change-wrapper{
+    width:200px;
+    height:200px;
   }
 }
 </style>
