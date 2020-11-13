@@ -6,7 +6,7 @@
 
         <v-row>
           <div class="rounded-circle img-profil" @click="$router.push('/account/' + userId)">
-            <img :src="User.profilImgUrl" :alt="'image de profil de ' + fullName" class="w-100"/>
+            <img :src="User.profilImgUrl" :alt="'image de profil de ' + fullName" class="w-100 d-flex justify-center align-center"/>
           </div>
           <v-col class="py-0 pl-10 ml-10 ml-md-5">
             <p>{{ fullName }} <template v-if="group">dans le groupe <span class="hoverable_link" @click="$router.push('/group/' + groupId)">{{group.groupName}}</span> </template></p>
@@ -150,8 +150,7 @@ export default {
   }
 
   &--wrapper--img {
-    max-width: 200px !important;
-    max-height: 200px !important;
+    max-width: 65% !important;
     border: 1px grey solid;
     margin: auto
   }
