@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const {Op} = require('sequelize')
 const noctification = require('./../models/noctification')
 const follow = require('./../models/follow')
-const {groupMembers} = require('./../models/group')
+const {groupMembers, groups} = require('./../models/group')
 const sequelizePagination = require('sequelize-paginate')
 const fs = require('fs')
 
@@ -93,7 +93,11 @@ exports.getAll = (req, res, next) => {
             },
             attributes: ['type'],
             required: false
-        }
+        },{
+            model : groups,
+             attributes: ['groupName'],
+             required:false
+         }
         ]
     })
     .then(posts => {
