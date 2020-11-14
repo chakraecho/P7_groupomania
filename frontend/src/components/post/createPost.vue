@@ -41,7 +41,7 @@
           @change="parseImg($event)"
         >
         </v-file-input>
-        <v-btn name="send_post" aria-label="send_post" icon @click="sendPost()">
+        <v-btn name="send_post" aria-label="send_post" class="w-100" icon @click="sendPost()">
           <v-icon>
             mdi-send
           </v-icon>
@@ -55,7 +55,7 @@
             aria-label="close"
             name="close"
           icon
-          class="ml-auto mr-3 mt-3 btn--close"
+          class="ml-auto mr-3 mt-3 btn--close "
           @click="
             srcImg = '';
             image = undefined;
