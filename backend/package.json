@@ -20,6 +20,7 @@
     "mysql2": "^2.1.0",
     "nodemon": "^2.0.6",
     "pm2": "^4.5.0",
+    "prompt": "^1.0.0",
     "sequelize": "^6.3.4",
     "sequelize-paginate": "^1.1.6",
     "tedious": "^9.1.0",
@@ -28,7 +29,9 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "init--user" : "node init/user-admin.js",
+    "init--db" : "node init/populate.js"
   },
   "author": "",
   "license": "ISC"
