@@ -16,7 +16,13 @@ build :
 Les fichiers à servir seront situé dans le dossier dist/
 
 # Backend :
-lancement du serveur :
+### à effectuer avant premier lancement
+lancez ```npm run init--db``` pour initialiser certaines données dans la DB
+
+### création d'utilisateur admin
+lancez ```npm run init--user``` et entrez les données dans la console pour créer un utilisateur
+
+### lancement du serveur :
 ```node server.js```  
 Le module PM2 est fortement conseillé sur une instance de Prod.
 Certificats SSL obligatoires ! -> cert.pem et key.pem
