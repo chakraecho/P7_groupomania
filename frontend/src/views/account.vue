@@ -153,36 +153,34 @@
               </div>
             </div>
           </v-container>
-          <v-row>
-            <v-col cols="3">
+          <v-container>
+            <v-row>
+              <v-col cols="3">
 
-            </v-col>
-            <v-col cols="6">
-              <div class="name-card-wrapper mt-2">
-                <v-card class="name-card">
-                  <h1>{{ firstName }} {{ lastName }}</h1>
-                </v-card>
-              </div>
-            </v-col>
-            <v-col cols="3">
-              <div class="ml-auto mt-2 mr-2" v-if="!isUser">
-                <v-btn name="follow" color="primary" @click="follow">
-                  {{ followed ? "Ne plus suivre" : "Suivre" }}
-                </v-btn>
-              </div>
-              <div class="menu--account" v-if="isUser">
-                <v-btn name="options" aria-label="open_option" icon @click="menuDialog = true">
-                  <v-icon>
-                    mdi-dots-horizontal
-                  </v-icon>
-                </v-btn>
-              </div>
-            </v-col>
-
-
-
-          </v-row>
-
+              </v-col>
+              <v-col cols="6">
+                <div class="name-card-wrapper mt-2">
+                  <v-card class="name-card">
+                    <h1>{{ firstName }} {{ lastName }}</h1>
+                  </v-card>
+                </div>
+              </v-col>
+              <v-col cols="3">
+                <div class="ml-auto mt-2 mr-2" v-if="!isUser">
+                  <v-btn name="follow" color="primary" @click="follow">
+                    {{ followed ? "Ne plus suivre" : "Suivre" }}
+                  </v-btn>
+                </div>
+                <div class="menu--account" v-if="isUser">
+                  <v-btn name="options" aria-label="open_option" icon @click="menuDialog = true">
+                    <v-icon>
+                      mdi-dots-horizontal
+                    </v-icon>
+                  </v-btn>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-row>
       </v-container>
     </v-row>

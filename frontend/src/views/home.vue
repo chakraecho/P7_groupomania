@@ -3,12 +3,12 @@
     <v-dialog v-if="$vuetify.breakpoint.xs" v-model="activeComment">
       <commentCard />
     </v-dialog>
-    <v-row>
+    <v-row class="ma-0">
       <v-col cols="12" md="6" class="mx-auto">
         <postCreator ref="postcreator" @send-post="getDataTable()" />
       </v-col>
     </v-row>
-    <v-row>
+    <v-row class="ma-0">
       <v-container>
         <h2  class="white--text">#feeds</h2>
         <template v-if="posts === null"></template>

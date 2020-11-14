@@ -56,11 +56,13 @@
             </v-btn>
           </v-col>
 
-            <p class="text--minor mt-auto mb-5">le {{ date }}</p>
+            <p class="text--minor text-center mt-auto mb-5">le {{ date }}</p>
 
           <v-col>
-            <v-btn name="open_comment" text @click.native="openComment">
-              commentaires
+            <v-btn name="open_comment" aria-label="commentaires" icon @click.native="openComment">
+              <v-icon>
+                mdi-comment
+              </v-icon>
             </v-btn>
           </v-col>
         </v-row>
