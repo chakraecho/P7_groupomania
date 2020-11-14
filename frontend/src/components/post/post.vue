@@ -5,7 +5,7 @@
       <v-card-title class="pa-0 post-header">
 
         <v-row>
-          <div class="rounded-circle img-profil" @click="$router.push('/account/' + userId)">
+          <div class="rounded-circle img-profil d-flex justify-center align-center" @click="$router.push('/account/' + userId)">
             <img :src="User.profilImgUrl" :alt="'image de profil de ' + fullName" class="w-100 d-flex justify-center align-center"/>
           </div>
           <v-col class="py-0 pl-10 ml-10 ml-md-5">
