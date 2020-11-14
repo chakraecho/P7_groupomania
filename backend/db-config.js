@@ -6,7 +6,6 @@ const sequelize = new Sequelize(process.env.DB, process.env.DB_USERNAME, process
     freezeTableName: true
   },
   dialectOptions: {
-    useUTC: false, //for reading from database
     dateStrings: true,
     typeCast: function (field, next) { // for reading from database
       if (field.type === 'DATETIME') {
