@@ -30,7 +30,7 @@
                     ' ' +
                     comment.User.lastName
                 "
-                    class="rounded-circle w-100 border"
+                    class="rounded-circle comment_img border"
                 />
               </v-col>
               <v-col cols="7">
@@ -201,6 +201,10 @@ export default {
 }
 .w-100{
   width:100%
+}
+.comment_img{
+  height:40px;
+  width:40px;
 }
 
 .input-lign{

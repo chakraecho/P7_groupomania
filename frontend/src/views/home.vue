@@ -15,7 +15,7 @@
         <p class="white--text" v-else-if="posts.length === 0">Il n'y a encore aucun post.</p>
         <template v-else-if="posts.length > 0">
         <v-row justify="center">
-          <v-col cols="11" md="6" lg="5">
+          <v-col cols="12" md="6" lg="5">
             <v-row
               justify="center"
               v-for="post in posts"
