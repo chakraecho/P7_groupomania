@@ -9,25 +9,17 @@
     </p>
     <v-row v-for="(group, i) in groupList" :key="'group_' + i">
       <v-col>
-        <v-card>
-          <v-row>
+        <v-card  class="hoverable-item"               @click="$router.push('/group/' + group.group.groupId)">
+          <v-row align="center">
             <v-col cols="4" md="2" lg="1">
               <img
                 :src="group.group.imgUrl"
                 :alt="'image de groupe de ' + group.group.name"
-                class="ml-2 rounded-circle border"
+                class="ml-2 group-img rounded-circle border"
               />
             </v-col>
             <v-col>
               {{ group.group.groupName }}
-            </v-col>
-            <v-col>
-              <v-btn
-                color="primary"
-                @click="$router.push('/group/' + group.group.groupId)"
-              >
-                Y aller
-              </v-btn>
             </v-col>
           </v-row>
         </v-card>
@@ -57,5 +49,14 @@ export default {
 .border {
   border: solid 2px grey;
   object-fit: contain;
+}
+
+.group-img{
+  width:60px;
+  height:60px;
+}
+
+.hoverable-item{
+  cursor: pointer;
 }
 </style>

@@ -43,9 +43,19 @@
             </v-row>
             <v-row>
               <v-col>
+                <!-- LOAD group -->
+                <!-- LOAD group -->
+                <!-- LOAD group -->
+                <!-- LOAD group -->
+                <!-- LOAD group -->
                 <v-expand-transition v-if="selectedBlock === 'loadGroup'">
                   <getGroup />
                 </v-expand-transition>
+                <!-- CREATE group -->
+                <!-- CREATE group -->
+                <!-- CREATE group -->
+                <!-- CREATE group -->
+                <!-- CREATE group -->
                 <v-expand-transition v-if="selectedBlock === 'createGroup'">
                   <v-container>
                     <v-row>
@@ -99,6 +109,12 @@
                     </v-row>
                   </v-container>
                 </v-expand-transition>
+                <!-- SEARCH group -->
+                <!-- SEARCH group -->
+                <!-- SEARCH group -->
+                <!-- SEARCH group -->
+                <!-- SEARCH group -->
+
                 <v-expand-transition v-if="selectedBlock === 'searchBlock'">
                   <v-container>
                     <v-row>
