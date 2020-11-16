@@ -5,7 +5,7 @@ projet de création de réseau social d'entreprise dans le cadre du parcours dev
 
 ## Installation
 Une base de données au nom de groupomania doit être créé.   
-un .env.example est fourni et doit être modifié en .env avec les valeurs des variables modifiées.
+un .env.example est fourni et doit être modifié en .env avec les valeurs correspondantes.
 
 ## Installation des modules 
 lancer ``` npm i ```
